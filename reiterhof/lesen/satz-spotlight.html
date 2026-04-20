@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satz-Spotlight – Lesen mit Luna</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .spotlight-container {
+    max-width: 700px; margin: 0 auto;
+  }
+  .big-nav-btn {
+    min-width: 160px; padding: 20px 36px;
+    font-size: var(--fs-lg); border-radius: 50px;
+    font-weight: 900; border: none; cursor: pointer;
+    font-family: inherit; transition: transform .12s, box-shadow .12s;
+  }
+  .big-nav-btn:active { transform: scale(0.95); }
+  .btn-listen {
+    background: var(--purple); color: #fff;
+    box-shadow: 0 4px 14px rgba(123,31,162,0.3);
+  }
+  .btn-listen:hover { box-shadow: 0 6px 20px rgba(123,31,162,0.4); transform: translateY(-2px); }
+  .btn-next {
+    background: var(--pink); color: #fff;
+    box-shadow: 0 4px 14px rgba(216,27,96,0.35);
+  }
+  .btn-next:hover { box-shadow: 0 6px 20px rgba(216,27,96,0.45); transform: translateY(-2px); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .reading-progress {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .reading-progress .label { font-size: var(--fs-md); color: var(--text-soft); white-space: nowrap; }
+  .reading-progress .bar-wrap { flex: 1; }
+
+  .story-title {
+    font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark);
+    text-align: center; margin-bottom: 6px;
+  }
+  .story-sub {
+    font-size: var(--fs-md); color: var(--text-soft);
+    text-align: center; margin-bottom: 24px;
+  }
+
+  .horse-mini {
+    font-size: 3rem; display: inline-block;
+    margin-right: 8px; vertical-align: middle;
+  }
+
+  /* MCQ am Ende */
+  .story-quiz { margin-top: 32px; }
+  .story-quiz h3 { font-size: var(--fs-lg); font-weight: 900; color: var(--pink-dark); margin-bottom: 16px; }
+  .q-block { margin-bottom: 28px; }
+  .q-text  { font-size: var(--fs-lg); font-weight: 800; margin-bottom: 14px; }
+
+  .reading-done {
+    text-align: center; padding: 32px;
+    background: linear-gradient(135deg, var(--pink-light), var(--purple-light));
+    border: 3px solid var(--pink-mid); border-radius: var(--radius);
+    margin: 24px 0;
+  }
+  .reading-done .big-icon { font-size: 5rem; margin-bottom: 12px; }
+  .reading-done h2 { font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/reiterhof/">← Reiterhof</a>
+  <span class="header-title">✨ Satz-Spotlight</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="spotlight-container">
+    <div class="page-title">✨ Lesen mit Luna</div>
+
+    <div class="info-box mb-md">
+      <h3><span class="horse-mini">🐴</span> So funktioniert es</h3>
+      <p>Der Text kommt <strong>Satz für Satz</strong>.<br>
+      Drücke <strong style="color:var(--purple)">🔊 Vorlesen</strong> – jedes Wort leuchtet auf.<br>
+      Wenn du bereit bist: drücke <strong style="color:var(--pink)">→ Weiter</strong>.<br>
+      Am Ende gibt es ein paar Fragen! 🌟</p>
+    </div>
+
+    <!-- FORTSCHRITTSBALKEN -->
+    <div class="reading-progress mb-md">
+      <span class="label" id="progress-label">Satz 1 von 8</span>
+      <div class="bar-wrap">
+        <div class="progress-wrap">
+          <div class="progress-bar" id="reading-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORY TITEL -->
+    <div class="story-title">🐴 Lunas Reiterhof</div>
+    <div class="story-sub">Eine kurze Geschichte zum Lesen</div>
+
+    <!-- READING AREA (wird angezeigt während Lesen) -->
+    <div id="reading-area">
+      <!-- Vorheriger Satz -->
+      <div class="spotlight-prev" id="prev-sentence"></div>
+
+      <!-- Aktueller Satz – Spotlight -->
+      <div class="spotlight-box" id="spotlight-box">
+        <!-- Wörter werden per JS eingefügt -->
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex-center mb-md" style="margin-top:20px">
+        <button class="big-nav-btn btn-listen" id="btn-listen" onclick="listenCurrent()">🔊 Vorlesen</button>
+        <button class="big-nav-btn btn-next"   id="btn-next"   onclick="nextSentence()" disabled>→ Weiter</button>
+      </div>
+    </div>
+
+    <!-- QUIZ (wird nach dem Lesen eingeblendet) -->
+    <div id="quiz-area" style="display:none">
+      <div class="reading-done">
+        <div class="big-icon">🎉</div>
+        <h2>Toll! Alles gelesen!</h2>
+        <p style="font-size:var(--fs-md);color:var(--text-soft)">Luna ist so stolz auf dich! Jetzt 3 Fragen zum Text:</p>
+      </div>
+
+      <div class="story-quiz">
+        <!-- Frage 1 -->
+        <div class="q-block" id="qblock0">
+          <div class="q-text">🔎 Wie heißt das Pferd in der Geschichte?</div>
+          <div class="mcq-grid cols2">
+            <button class="mcq-btn" onclick="answerQ(0, this, true)">Luna</button>
+            <button class="mcq-btn" onclick="answerQ(0, this, false)">Emma</button>
+            <button class="mcq-btn" onclick="answerQ(0, this, false)">Bella</button>
+            <button class="mcq-btn" onclick="answerQ(0, this, false)">Star</button>
+          </div>
+          <div class="feedback" id="qfb0"></div>
+        </div>
+
+        <!-- Frage 2 -->
+        <div class="q-block" id="qblock1">
+          <div class="q-text">🔎 Was frisst Luna am liebsten?</div>
+          <div class="mcq-grid cols2">
+            <button class="mcq-btn" onclick="answerQ(1, this, false)">Äpfel</button>
+            <button class="mcq-btn" onclick="answerQ(1, this, true)">Möhren</button>
+            <button class="mcq-btn" onclick="answerQ(1, this, false)">Gras</button>
+            <button class="mcq-btn" onclick="answerQ(1, this, false)">Heu</button>
+          </div>
+          <div class="feedback" id="qfb1"></div>
+        </div>
+
+        <!-- Frage 3 -->
+        <div class="q-block" id="qblock2">
+          <div class="q-text">🔎 Welche Farbe hat Lunas Mähne?</div>
+          <div class="mcq-grid cols2">
+            <button class="mcq-btn" onclick="answerQ(2, this, false)">Schwarz</button>
+            <button class="mcq-btn" onclick="answerQ(2, this, false)">Weiß</button>
+            <button class="mcq-btn" onclick="answerQ(2, this, true)">Golden</button>
+            <button class="mcq-btn" onclick="answerQ(2, this, false)">Braun</button>
+          </div>
+          <div class="feedback" id="qfb2"></div>
+        </div>
+      </div>
+
+      <div class="flex-center mb-md">
+        <button class="btn btn-primary" id="btn-finish" onclick="finishQuiz()" style="display:none">📊 Ergebnis anzeigen</button>
+      </div>
+    </div>
+
+    <div id="result-area"></div>
+  </div>
+</main>
+
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/speech.js"></script>
+<script>
+
+// ── GESCHICHTE ────────────────────────────────────
+const SENTENCES = [
+  "Luna ist ein Pferd.",
+  "Luna lebt auf einem Reiterhof.",
+  "Der Reiterhof hat einen großen Stall.",
+  "Luna hat eine goldene Mähne.",
+  "Jeden Morgen bekommt Luna Heu.",
+  "Luna frisst am liebsten Möhren.",
+  "Das Mädchen putzt Luna jeden Tag.",
+  "Luna ist das schönste Pferd auf dem Reiterhof."
+];
+
+const TOTAL = SENTENCES.length;
+let currentIdx   = 0;
+let hasListened  = false;
+let quizCorrect  = 0;
+let quizAnswered = 0;
+const QUIZ_TOTAL = 3;
+
+// ── LESEN ─────────────────────────────────────────
+function renderSentence(idx) {
+  const box = document.getElementById('spotlight-box');
+  const sentence = SENTENCES[idx];
+  const words = sentence.split(' ');
+  box.innerHTML = '';
+  words.forEach((w, i) => {
+    const span = document.createElement('span');
+    span.className = 'spotlight-word';
+    span.id = 'sw-' + i;
+    span.textContent = w;
+    box.appendChild(span);
+  });
+
+  // Fortschritt
+  document.getElementById('progress-label').textContent = 'Satz ' + (idx+1) + ' von ' + TOTAL;
+  document.getElementById('reading-bar').style.width = Math.round(((idx) / TOTAL) * 100) + '%';
+
+  // Vorheriger Satz
+  const prev = document.getElementById('prev-sentence');
+  prev.textContent = idx > 0 ? SENTENCES[idx-1] : '';
+
+  // Weiter-Button sperren bis gehört
+  hasListened = false;
+  document.getElementById('btn-next').disabled = true;
+}
+
+function listenCurrent() {
+  const sentence = SENTENCES[currentIdx];
+  const words    = sentence.split(' ');
+
+  // Alle zurücksetzen
+  words.forEach((_, i) => {
+    const el = document.getElementById('sw-' + i);
+    if (el) el.className = 'spotlight-word';
+  });
+
+  // Wort-Highlighting via boundary events
+  const utt = Speech.speakWithHighlight(
+    sentence,
+    (charIdx, charLen) => {
+      // Finde das Wort anhand des charIndex
+      let pos = 0;
+      words.forEach((w, i) => {
+        const el = document.getElementById('sw-' + i);
+        if (!el) return;
+        if (pos === charIdx) {
+          // Vorherige als gelesen markieren
+          for (let j = 0; j < i; j++) {
+            const prev = document.getElementById('sw-' + j);
+            if (prev) { prev.className = 'spotlight-word read'; }
+          }
+          el.className = 'spotlight-word active';
+        }
+        pos += w.length + 1;
+      });
+    },
+    () => {
+      // Ende: alle als gelesen
+      words.forEach((_, i) => {
+        const el = document.getElementById('sw-' + i);
+        if (el) el.className = 'spotlight-word read';
+      });
+      hasListened = true;
+      document.getElementById('btn-next').disabled = false;
+    }
+  );
+
+  // Fallback: boundary events nicht überall unterstützt (Safari)
+  // Nach 3 Sekunden Button freischalten
+  setTimeout(() => {
+    hasListened = true;
+    document.getElementById('btn-next').disabled = false;
+  }, Math.max(2500, sentence.length * 65));
+}
+
+function nextSentence() {
+  currentIdx++;
+  if (currentIdx >= TOTAL) {
+    // Text fertig gelesen
+    document.getElementById('reading-bar').style.width = '100%';
+    document.getElementById('progress-label').textContent = '✅ Alles gelesen!';
+    document.getElementById('reading-area').style.display = 'none';
+    document.getElementById('quiz-area').style.display    = 'block';
+    Speech.speakDE('Toll! Du hast alles gelesen! Jetzt kommen drei Fragen.');
+    return;
+  }
+  renderSentence(currentIdx);
+}
+
+// ── QUIZ ─────────────────────────────────────────
+const qAnswered = [false, false, false];
+
+function answerQ(qIdx, btn, correct) {
+  if (qAnswered[qIdx]) return;
+  qAnswered[qIdx] = true;
+  quizAnswered++;
+
+  const block = document.getElementById('qblock' + qIdx);
+  block.querySelectorAll('.mcq-btn').forEach(b => b.disabled = true);
+
+  if (correct) {
+    btn.classList.add('correct');
+    quizCorrect++;
+    document.getElementById('qfb' + qIdx).textContent = '✅ Richtig! Super!';
+    document.getElementById('qfb' + qIdx).className   = 'feedback show fb-correct';
+    Speech.speakDE('Richtig!');
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('qfb' + qIdx).textContent = '❌ Nicht ganz – schau nochmal in den Text!';
+    document.getElementById('qfb' + qIdx).className   = 'feedback show fb-wrong';
+    // Richtige Antwort grün zeigen
+    block.querySelectorAll('.mcq-btn').forEach(b => {
+      if (b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+    });
+  }
+
+  if (quizAnswered >= QUIZ_TOTAL) {
+    document.getElementById('btn-finish').style.display = 'inline-flex';
+  }
+}
+
+function finishQuiz() {
+  showResult('result-area', 'satz-spotlight', quizCorrect, QUIZ_TOTAL);
+  document.getElementById('btn-finish').style.display = 'none';
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── START ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init();
+  renderSentence(0);
+  document.querySelector('.header-stars').textContent = '★ ' + LP.getTotalStars();
+});
+</script>
+</body>
+</html>

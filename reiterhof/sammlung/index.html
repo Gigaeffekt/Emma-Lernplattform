@@ -1,0 +1,380 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartensammlung – Lunas Reiterhof</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+/* ── PACK AREA ── */
+.pack-area {
+  background: linear-gradient(135deg, var(--pink-light), var(--purple-light));
+  border: 4px solid var(--pink-mid); border-radius: var(--radius);
+  padding: 28px 24px; text-align: center; margin-bottom: 28px;
+}
+.pack-area h2 { font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark); margin-bottom: 8px; }
+.pack-count   { font-size: var(--fs-lg); font-weight: 800; color: var(--purple); margin-bottom: 18px; }
+.pack-bag     {
+  font-size: 5rem; display: inline-block; cursor: pointer;
+  transition: transform .15s; user-select: none;
+  filter: drop-shadow(0 4px 10px rgba(216,27,96,0.3));
+}
+.pack-bag:hover { transform: scale(1.12) rotate(-5deg); }
+.pack-bag.shake {
+  animation: bag-shake .45s ease;
+}
+@keyframes bag-shake {
+  0%,100%{ transform: scale(1) rotate(0); }
+  20%    { transform: scale(1.2) rotate(-12deg); }
+  40%    { transform: scale(1.25) rotate(12deg); }
+  60%    { transform: scale(1.15) rotate(-6deg); }
+  80%    { transform: scale(1.05) rotate(4deg); }
+}
+.pack-empty { font-size: var(--fs-md); color: var(--text-soft); }
+
+/* ── CARD REVEAL ── */
+.reveal-area {
+  display: none; padding: 24px 0 36px; text-align: center;
+}
+.reveal-area.show { display: block; }
+.reveal-title { font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark); margin-bottom: 24px; }
+.reveal-cards { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+/* ── CARD 3D ── */
+.card-scene  { width: 180px; height: 270px; perspective: 700px; cursor: pointer; }
+.card-3d     {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.4,0,.2,1);
+}
+.card-3d.flipped { transform: rotateY(180deg); }
+.card-back, .card-front {
+  position: absolute; width: 100%; height: 100%;
+  border-radius: 18px; backface-visibility: hidden;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+}
+/* Card back: decorative pink gradient, shown first */
+.card-back {
+  background: linear-gradient(135deg, #d81b60 0%, #7b1fa2 60%, #4a148c 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px;
+  border: 3px solid rgba(255,255,255,0.35);
+}
+.card-back-icon { font-size: 4rem; opacity: 0.9; }
+.card-back-text { font-size: .85rem; font-weight: 900; color: rgba(255,255,255,0.7); letter-spacing: 2px; }
+/* Card front: horse info */
+.card-front {
+  transform: rotateY(180deg);
+  display: flex; flex-direction: column; padding: 14px 12px;
+  border: 3px solid rgba(255,255,255,0.5);
+  overflow: hidden;
+}
+.card-rarity-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.rarity-badge {
+  font-size: .8rem; font-weight: 900; padding: 3px 10px;
+  border-radius: 20px; background: rgba(0,0,0,0.18);
+  color: inherit;
+}
+.card-emoji  { font-size: 3.5rem; text-align: center; margin: 6px 0; line-height: 1; }
+.card-name   { font-size: 1.05rem; font-weight: 900; text-align: center; margin-bottom: 2px; line-height: 1.2; }
+.card-type   { font-size: .78rem; text-align: center; opacity: .75; margin-bottom: 6px; }
+.card-origin { font-size: .78rem; text-align: center; opacity: .8; margin-bottom: 8px; }
+.card-trait  {
+  font-size: .75rem; font-style: italic; margin: 0 2px 6px;
+  background: rgba(0,0,0,0.12); border-radius: 8px; padding: 5px 7px;
+  text-align: center; line-height: 1.3;
+}
+.card-fact   { font-size: .7rem; text-align: center; opacity: .7; line-height: 1.3; flex: 1; }
+.card-new-badge {
+  position: absolute; top: -6px; right: -6px;
+  background: #ffd700; color: #1a1a00; font-size: .75rem; font-weight: 900;
+  padding: 3px 8px; border-radius: 12px; z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Holo shimmer for Episch + Legendär */
+.card-front.holo::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.45) 50%, transparent 60%);
+  animation: holo-shine 3s linear infinite;
+  pointer-events: none;
+}
+@keyframes holo-shine {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ── COLLECTION GRID ── */
+.collection-section { margin-bottom: 40px; }
+.collection-title {
+  font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark);
+  margin-bottom: 6px;
+}
+.collection-sub { font-size: var(--fs-md); color: var(--text-soft); margin-bottom: 18px; }
+.card-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+
+/* Collection card = smaller, owns = full colour, missing = greyscale card */
+.coll-card-scene { width: 150px; height: 225px; perspective: 600px; cursor: default; }
+.coll-card-inner {
+  width: 100%; height: 100%; position: relative; border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.4);
+}
+.coll-card-inner.missing {
+  filter: grayscale(1) opacity(.45);
+  cursor: not-allowed;
+}
+.coll-card-inner .card-front { transform: none; backface-visibility: visible; position: relative; height: 100%; padding: 10px 9px; }
+.coll-card-inner .card-front.holo::after { display: none; } /* no shimmer in grid */
+.miss-label {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.35);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 2.2rem; font-weight: 900;
+  border-radius: 13px;
+}
+
+/* RARITY TAB FILTERS */
+.rarity-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.rf-btn {
+  padding: 9px 20px; border-radius: 30px; font-size: var(--fs-sm); font-weight: 900;
+  border: 3px solid var(--border); background: var(--surface); color: var(--text);
+  cursor: pointer; font-family: inherit; transition: background .12s, color .12s;
+}
+.rf-btn.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+
+/* Progress bar */
+.progress-bar-wrap { margin-bottom: 20px; }
+.progress-label { font-size: var(--fs-md); font-weight: 800; color: var(--pink-dark); margin-bottom: 6px; }
+.progress-track { background: var(--pink-light); border-radius: 20px; height: 18px; overflow: hidden; border: 2px solid var(--pink-mid); }
+.progress-fill  { height: 100%; background: linear-gradient(90deg, var(--pink), var(--purple)); border-radius: 20px; transition: width .5s ease; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/reiterhof/">← Reiterhof</a>
+  <span class="header-title">🃏 Kartensammlung</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+
+  <!-- PACK OPEN AREA -->
+  <div class="pack-area" id="pack-area">
+    <h2>🎴 Booster-Packs</h2>
+    <div class="pack-count" id="pack-count">Lade…</div>
+    <div id="pack-cta">
+      <div class="pack-bag" id="pack-bag" onclick="openPack()" title="Pack öffnen!">🎴</div>
+      <div style="font-size:var(--fs-sm);color:var(--text-soft);margin-top:10px">Tippe auf das Pack um es zu öffnen!</div>
+    </div>
+    <div class="pack-empty" id="pack-empty" style="display:none">
+      Du hast noch keine Packs. Tippe Wörter richtig um Packs zu verdienen! 💪<br><br>
+      <a class="btn btn-primary" href="/reiterhof/tippen/lunas-reiterhof.html">⌨️ Zum Tippen</a>
+    </div>
+  </div>
+
+  <!-- CARD REVEAL AREA (3 Karten) -->
+  <div class="reveal-area" id="reveal-area">
+    <div class="reveal-title">✨ Du hast diese Karten bekommen! ✨</div>
+    <div class="reveal-cards" id="reveal-cards"></div>
+    <div style="margin-top:28px">
+      <button class="btn btn-primary" id="open-more-btn" onclick="checkMorePacks()" style="display:none">🎴 Nächstes Pack öffnen</button>
+      <button class="btn btn-secondary" onclick="closeReveal()" style="margin-left:10px">✓ Fertig</button>
+    </div>
+  </div>
+
+  <!-- COLLECTION SECTION -->
+  <div class="collection-section">
+    <div class="collection-title">🐎 Meine Sammlung</div>
+
+    <!-- PROGRESS -->
+    <div class="progress-bar-wrap">
+      <div class="progress-label" id="coll-progress">0 / 20 Karten gesammelt</div>
+      <div class="progress-track"><div class="progress-fill" id="coll-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- RARITY FILTER -->
+    <div class="rarity-filters">
+      <button class="rf-btn active" onclick="filterRarity(-1,this)">Alle</button>
+      <button class="rf-btn" onclick="filterRarity(0,this)">⬜ Gewöhnlich</button>
+      <button class="rf-btn" onclick="filterRarity(1,this)">⭐ Selten</button>
+      <button class="rf-btn" onclick="filterRarity(2,this)">🌟 Episch</button>
+      <button class="rf-btn" onclick="filterRarity(3,this)">💎 Legendär</button>
+    </div>
+
+    <!-- CARDS -->
+    <div class="card-grid" id="card-grid"></div>
+  </div>
+
+</main>
+
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+let currentFilter = -1;
+
+// ── PACK ÖFFNEN ─────────────────────────────────────────
+function openPack() {
+  const packs = CARDS.getPacks();
+  if (packs <= 0) return;
+
+  // Shake animation
+  const bag = document.getElementById('pack-bag');
+  bag.classList.remove('shake');
+  void bag.offsetWidth;
+  bag.classList.add('shake');
+
+  setTimeout(() => {
+    const cards = CARDS.openPack();
+    CARDS.usePack();
+    updatePackUI();
+    showReveal(cards);
+    fireConfetti();
+  }, 480);
+}
+
+function showReveal(cards) {
+  const area    = document.getElementById('reveal-area');
+  const cont    = document.getElementById('reveal-cards');
+  const moreBtn = document.getElementById('open-more-btn');
+
+  area.classList.add('show');
+  cont.innerHTML = '';
+
+  cards.forEach((card, i) => {
+    const isNew  = CARDS.addCard(card.id);
+    const scene  = buildRevealCard(card, isNew);
+    cont.appendChild(scene);
+    // Flip one by one with delay
+    setTimeout(() => scene.querySelector('.card-3d').classList.add('flipped'), 400 + i * 600);
+    // Shimmer effects for rare cards
+    if (card.rarity >= 2) {
+      setTimeout(() => {
+        if (card.rarity === 3) epicConfetti();
+      }, 400 + i * 600 + 400);
+    }
+  });
+
+  moreBtn.style.display = CARDS.getPacks() > 0 ? 'inline-flex' : 'none';
+  updateCollection();
+  area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildRevealCard(card, isNew) {
+  const scene = document.createElement('div');
+  scene.className = 'card-scene';
+  const isHolo = card.rarity >= 2;
+
+  scene.innerHTML = `
+    <div class="card-3d">
+      <div class="card-back">
+        <span class="card-back-icon">🐎</span>
+        <span class="card-back-text">LUNAS REITERHOF</span>
+      </div>
+      <div class="card-front ${isHolo ? 'holo' : ''}" style="background:${card.bg};color:${card.textColor||'#2d1b3d'};--glow:${CARDS.RARITY_COLORS[card.rarity]}">
+        ${isNew ? '<span class="card-new-badge">NEU!</span>' : ''}
+        <div class="card-rarity-row">
+          <span class="rarity-badge">${CARDS.RARITY_EMOJIS[card.rarity]} ${CARDS.RARITY_NAMES[card.rarity]}</span>
+        </div>
+        <div class="card-emoji">${card.emoji}</div>
+        <div class="card-name">${card.name}</div>
+        <div class="card-type">${card.type}</div>
+        <div class="card-origin">${card.origin}</div>
+        <div class="card-trait">${card.trait}</div>
+        <div class="card-fact">${card.fact}</div>
+      </div>
+    </div>`;
+  return scene;
+}
+
+function checkMorePacks() {
+  document.getElementById('reveal-cards').innerHTML = '';
+  document.getElementById('reveal-area').classList.remove('show');
+  setTimeout(openPack, 100);
+}
+
+function closeReveal() {
+  document.getElementById('reveal-area').classList.remove('show');
+}
+
+// ── UPDATE PACK UI ───────────────────────────────────────
+function updatePackUI() {
+  const n = CARDS.getPacks();
+  document.getElementById('pack-count').textContent =
+    n > 0 ? n + ' Pack' + (n > 1 ? 's' : '') + ' verfügbar!' : '0 Packs – mehr tippen zum Verdienen!';
+  document.getElementById('pack-cta').style.display   = n > 0 ? 'block' : 'none';
+  document.getElementById('pack-empty').style.display = n <= 0 ? 'block' : 'none';
+}
+
+// ── KOLLEKTION RENDERN ───────────────────────────────────
+function filterRarity(rarity, btn) {
+  currentFilter = rarity;
+  document.querySelectorAll('.rf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function updateCollection() {
+  const owned = CARDS.getCollection();
+  const total = CARDS.data.length;
+  const pct   = Math.round(owned.length / total * 100);
+  document.getElementById('coll-progress').textContent = owned.length + ' / ' + total + ' Karten gesammelt';
+  document.getElementById('coll-bar').style.width = pct + '%';
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid   = document.getElementById('card-grid');
+  const owned  = CARDS.getCollection();
+  const sorted = [...CARDS.data].sort((a, b) => b.rarity - a.rarity || a.name.localeCompare(b.name));
+  const list   = currentFilter >= 0 ? sorted.filter(c => c.rarity === currentFilter) : sorted;
+
+  grid.innerHTML = '';
+  list.forEach(card => {
+    const have   = owned.includes(card.id);
+    const isHolo = card.rarity >= 2;
+    const scene  = document.createElement('div');
+    scene.className = 'coll-card-scene';
+
+    scene.innerHTML = `
+      <div class="coll-card-inner${have ? '' : ' missing'}">
+        <div class="card-front ${have && isHolo ? 'holo' : ''}" style="background:${card.bg};color:${card.textColor||'#2d1b3d'}">
+          <div class="card-rarity-row">
+            <span class="rarity-badge">${CARDS.RARITY_EMOJIS[card.rarity]} ${CARDS.RARITY_NAMES[card.rarity]}</span>
+          </div>
+          <div class="card-emoji">${card.emoji}</div>
+          <div class="card-name">${card.name}</div>
+          <div class="card-type">${card.type}</div>
+          <div class="card-origin">${card.origin}</div>
+          <div class="card-trait">${card.trait}</div>
+        </div>
+        ${!have ? '<div class="miss-label">?</div>' : ''}
+      </div>`;
+    grid.appendChild(scene);
+  });
+}
+
+// ── KONFETTI ────────────────────────────────────────────
+function fireConfetti() {
+  const c = ['#d81b60','#f48fb1','#ce93d8','#7b1fa2','#ffd700','#fff'];
+  confetti({ particleCount: 90, spread: 80, origin: {y:0.5}, colors: c });
+}
+function epicConfetti() {
+  const c = ['#ffd700','#ffec6e','#fffacd','#ff8c00','#fff'];
+  confetti({ particleCount: 160, spread: 110, origin: {y:0.4}, colors: c });
+  setTimeout(() => confetti({ particleCount: 80, spread: 140, origin: {x:0.1, y:0.4}, colors: c }), 300);
+  setTimeout(() => confetti({ particleCount: 80, spread: 140, origin: {x:0.9, y:0.4}, colors: c }), 600);
+}
+
+// ── START ────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  updatePackUI();
+  updateCollection();
+  document.querySelector('.header-stars').textContent = '★ ' + LP.getTotalStars();
+});
+</script>
+</body>
+</html>

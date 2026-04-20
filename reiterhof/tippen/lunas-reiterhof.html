@@ -1,0 +1,529 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tippen mit Luna – Lunas Reiterhof</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+/* ── STALL RENOVATION ── */
+.stall-box {
+  border-radius: var(--radius); margin-bottom: 24px;
+  overflow: hidden; border: 4px solid var(--wood-light);
+  padding: 20px 24px; background: #9e9e9e; color: #fff;
+  transition: background 0.8s;
+}
+.stall-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.stall-name   { font-size: var(--fs-lg); font-weight: 900; }
+.stall-pts    { font-size: var(--fs-md); font-weight: 800; background: rgba(255,255,255,0.25); padding: 5px 16px; border-radius: 20px; }
+.stall-visual { font-size: 3rem; text-align: center; margin: 10px 0 6px; min-height: 52px; display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; }
+.stall-desc   { font-size: var(--fs-sm); text-align: center; opacity: 0.88; }
+.stall-next   { font-size: var(--fs-xs); text-align: right; margin-top: 6px; opacity: 0.7; }
+.stall-bar-bg { margin-top: 10px; background: rgba(0,0,0,0.2); border-radius: 20px; height: 13px; overflow: hidden; }
+.stall-bar    { height: 100%; background: rgba(255,255,255,0.55); border-radius: 20px; transition: width 0.5s ease; }
+@keyframes stall-unlock {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.05); filter: brightness(1.3); }
+  70%  { transform: scale(0.98); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.stall-pop { animation: stall-unlock 0.7s ease; }
+
+/* ── LUNA ── */
+.luna-area { text-align: center; padding: 20px 0 14px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.luna-horse {
+  font-size: 5.5rem; display: inline-block; cursor: default; user-select: none;
+  filter: drop-shadow(0 4px 10px rgba(216,27,96,0.3));
+}
+@keyframes luna-happy {
+  0%,100% { transform: scale(1) rotate(0deg) translateY(0); }
+  20%     { transform: scale(1.3) rotate(-10deg) translateY(-14px); }
+  50%     { transform: scale(1.2) rotate(8deg) translateY(-10px); }
+  75%     { transform: scale(1.05) rotate(-3deg) translateY(-4px); }
+}
+.luna-horse.happy { animation: luna-happy 0.65s ease; }
+.luna-msg  { font-size: var(--fs-sm); color: var(--text-soft); min-height:1.5em; transition: opacity 0.3s; }
+
+/* ── LEVEL TABS ── */
+.level-tabs { display: flex; gap: 10px; margin-bottom: 0; flex-wrap: wrap; }
+.ltab {
+  padding: 13px 24px; border-radius: 14px 14px 0 0;
+  font-size: var(--fs-md); font-weight: 900;
+  cursor: pointer; border: 3px solid var(--border); border-bottom: none;
+  background: var(--surface); color: var(--text); font-family: inherit;
+  transition: background .15s;
+}
+.ltab.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+.ltab.locked { opacity: 0.4; cursor: not-allowed; }
+.ltab-panel {
+  display: none; border: 3px solid var(--border);
+  border-radius: 0 var(--radius) var(--radius) var(--radius);
+  padding: 24px; background: var(--surface); margin-bottom: 28px;
+}
+.ltab-panel.active { display: block; }
+
+/* ── TASK BOX ── */
+.task-box {
+  background: var(--pink-pale); border: 4px solid var(--pink-mid);
+  border-radius: var(--radius); padding: 28px 20px;
+  text-align: center; margin: 14px 0; min-height: 180px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+}
+.task-hint    { font-size: var(--fs-md); color: var(--text-soft); }
+.task-prompt  {
+  font-size: 3.2rem; font-weight: 900; color: var(--pink-dark);
+  letter-spacing: 4px; text-shadow: 2px 2px 0 rgba(216,27,96,0.15);
+}
+.task-prompt.sentence { font-size: var(--fs-xl); letter-spacing: 0; }
+.task-input-wrap { width: 100%; max-width: 440px; }
+.q-counter    { font-size: var(--fs-sm); color: var(--text-soft); text-align: center; margin-bottom: 10px; }
+.btn-listen   {
+  background: var(--purple); color: #fff; border: none; padding: 11px 26px;
+  border-radius: 30px; font-size: var(--fs-md); font-weight: 900;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 12px rgba(123,31,162,0.3);
+  transition: transform .12s, box-shadow .12s;
+}
+.btn-listen:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(123,31,162,0.4); }
+
+/* ── RESULTS ── */
+.level-task.hide   { display: none; }
+.level-result      { display: none; text-align: center; padding: 28px 16px; }
+.level-result.show { display: block; }
+
+/* ── PACK POPUP ── */
+.pack-popup {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.72); z-index: 990;
+  display: none; align-items: center; justify-content: center;
+}
+.pack-popup.show { display: flex; animation: fadein .3s ease; }
+@keyframes fadein { from { opacity:0; } to { opacity:1; } }
+.pack-popup-box {
+  background: #fff; border-radius: 28px; padding: 40px 36px 30px;
+  text-align: center; max-width: 360px; width: 90%;
+  border: 4px solid var(--pink);
+  box-shadow: 0 20px 60px rgba(216,27,96,0.45);
+  animation: pop-in .4s cubic-bezier(.34,1.56,.64,1);
+}
+.pack-icon  { font-size: 4.5rem; display: block; margin-bottom: 12px; }
+.pack-title { font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark); margin-bottom: 6px; }
+.pack-sub   { font-size: var(--fs-md); color: var(--text-soft); margin-bottom: 22px; }
+</style>
+</head>
+<body>
+
+<!-- PACK POPUP -->
+<div class="pack-popup" id="pack-popup">
+  <div class="pack-popup-box">
+    <span class="pack-icon" id="pack-icon">🎴</span>
+    <div class="pack-title" id="pack-title">Pack verdient!</div>
+    <div class="pack-sub" id="pack-sub">Du hast ein Booster-Pack gewonnen!</div>
+    <button class="btn btn-primary" onclick="goToCollection()">🃏 Zur Kartensammlung</button>
+    <br><br>
+    <button class="btn btn-secondary" style="font-size:var(--fs-sm)" onclick="closePackPopup()">↩ Weiter üben</button>
+  </div>
+</div>
+
+<header>
+  <a class="nav-back" href="/reiterhof/">← Reiterhof</a>
+  <span class="header-title">⌨️ Tippen mit Luna</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+
+  <!-- LUNA -->
+  <div class="luna-area">
+    <span class="luna-horse" id="luna">🐴</span>
+    <div class="luna-msg" id="luna-msg">Tippen macht Spaß! 🌟</div>
+  </div>
+
+  <!-- STALL RENOVATION -->
+  <div class="stall-box" id="stall-box">
+    <div class="stall-header">
+      <span class="stall-name" id="stall-name">🏚️ Verfallener Stall</span>
+      <span class="stall-pts">⭐ <span id="pts-display">0</span> Punkte</span>
+    </div>
+    <div class="stall-visual" id="stall-visual">🏚️</div>
+    <div class="stall-desc" id="stall-desc">Hilf Luna – tippe Wörter um den Stall zu reparieren!</div>
+    <div class="stall-bar-bg"><div class="stall-bar" id="stall-bar" style="width:0%"></div></div>
+    <div class="stall-next" id="stall-next"></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="level-tabs">
+    <button class="ltab active" id="tab0" onclick="switchLevel(0)">🔤 Level 1</button>
+    <button class="ltab locked"  id="tab1" onclick="trySwitch(1)">📝 Level 2</button>
+    <button class="ltab locked"  id="tab2" onclick="trySwitch(2)">✍️ Level 3</button>
+  </div>
+
+  <!-- PANEL 0: Buchstaben -->
+  <div class="ltab-panel active" id="panel-0">
+    <div id="task-0" class="level-task">
+      <div class="q-counter" id="qc0">Buchstabe 1 von 20</div>
+      <div class="task-box">
+        <div class="task-hint">Tippe diesen Buchstaben:</div>
+        <button class="btn-listen" onclick="speakCurrent()">🔊 Anhören</button>
+        <div class="task-prompt" id="prompt0"></div>
+        <div class="task-input-wrap">
+          <input class="big-input" id="input0" type="text" maxlength="2"
+            autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="→ hier tippen">
+        </div>
+      </div>
+      <div class="flex-center"><button class="btn btn-primary" onclick="checkAnswer(0)">✅ Prüfen</button></div>
+      <div class="feedback" id="fb0"></div>
+    </div>
+    <div id="result-0" class="level-result">
+      <div class="result-emoji" id="re0">🎉</div>
+      <div class="result-score" id="rs0"></div>
+      <div class="result-stars" id="rst0"></div>
+      <div class="result-msg"  id="rm0"></div>
+      <div class="flex-center" style="margin-top:20px;gap:12px">
+        <button class="btn btn-primary"   onclick="restartLevel(0)">🔄 Nochmal</button>
+        <button class="btn btn-secondary" onclick="switchLevel(1)">➡️ Level 2</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 1: Wörter -->
+  <div class="ltab-panel" id="panel-1">
+    <div id="task-1" class="level-task">
+      <div class="q-counter" id="qc1">Wort 1 von 30</div>
+      <div class="task-box">
+        <div class="task-hint">Tippe dieses Wort:</div>
+        <button class="btn-listen" onclick="speakCurrent()">🔊 Anhören</button>
+        <div class="task-prompt" id="prompt1"></div>
+        <div class="task-input-wrap">
+          <input class="big-input" id="input1" type="text"
+            autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="→ hier tippen">
+        </div>
+      </div>
+      <div class="flex-center"><button class="btn btn-primary" onclick="checkAnswer(1)">✅ Prüfen</button></div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+    <div id="result-1" class="level-result">
+      <div class="result-emoji" id="re1">🎉</div>
+      <div class="result-score" id="rs1"></div>
+      <div class="result-stars" id="rst1"></div>
+      <div class="result-msg"  id="rm1"></div>
+      <div class="flex-center" style="margin-top:20px;gap:12px">
+        <button class="btn btn-primary"   onclick="restartLevel(1)">🔄 Nochmal</button>
+        <button class="btn btn-secondary" onclick="switchLevel(2)">➡️ Level 3</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Sätze -->
+  <div class="ltab-panel" id="panel-2">
+    <div id="task-2" class="level-task">
+      <div class="q-counter" id="qc2">Satz 1 von 10</div>
+      <div class="task-box" style="min-height:220px">
+        <div class="task-hint">Tippe diesen Satz:</div>
+        <button class="btn-listen" onclick="speakCurrent()">🔊 Anhören</button>
+        <div class="task-prompt sentence" id="prompt2"></div>
+        <div class="task-input-wrap" style="max-width:600px">
+          <input class="big-input" id="input2" type="text"
+            autocomplete="off" autocorrect="off" spellcheck="false"
+            placeholder="→ hier tippen" style="font-size:var(--fs-lg)">
+        </div>
+      </div>
+      <div class="flex-center"><button class="btn btn-primary" onclick="checkAnswer(2)">✅ Prüfen</button></div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+    <div id="result-2" class="level-result">
+      <div class="result-emoji" id="re2">🎉</div>
+      <div class="result-score" id="rs2"></div>
+      <div class="result-stars" id="rst2"></div>
+      <div class="result-msg"  id="rm2"></div>
+      <div class="flex-center" style="margin-top:20px;gap:12px">
+        <button class="btn btn-primary" onclick="restartLevel(2)">🔄 Nochmal</button>
+        <a class="btn btn-secondary" href="/reiterhof/sammlung/">🃏 Zur Sammlung</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/speech.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+// ── WORTPOOLS ────────────────────────────────────────────
+const POOL_RAW = [
+  // Level 0: Buchstaben (20)
+  ['a','e','i','o','u','m','l','n','r','s','t','h','d','k','g','f','w','z','b','p'],
+
+  // Level 1: 50 Wörter →  30 pro Runde zufällig
+  ['ich','du','er','sie','wir','und','das','die','der','ein','ist','hat','bin',
+   'auf','zu','in','von','mit','für','man','war','noch','so','bei','auch','aus',
+   'ja','nein','wie','was','Heu','Hof','Pferd','Stall','Mähne','Sattel','Hufe',
+   'Zopf','Fuchs','Schimmel','Luna','Möhre','Weide','Halfter','Galopp','Trab',
+   'Reiterin','Schleich','schön','groß'],
+
+  // Level 2: Sätze (10)
+  [
+    'Luna ist ein schönes Pferd.',
+    'Ich liebe Pferde sehr.',
+    'Der Stall ist groß und warm.',
+    'Luna bekommt Heu und Möhren.',
+    'Wir reiten jeden Tag.',
+    'Das Fjordpferd hat einen Aalstrich.',
+    'Ein Haflinger hat eine goldene Mähne.',
+    'Der Lipizzaner wird erst später weiß.',
+    'Ich putze Luna jeden Morgen.',
+    'Das Shetlandpony ist sehr klein aber stark.'
+  ]
+];
+
+// ── STALL STAGES ────────────────────────────────────────
+const STALL_STAGES = [
+  { pts:0,   bg:'#7b7b7b', visual:'🏚️',            name:'Verfallener Stall',   desc:'Hilf Luna – tippe Wörter um den Stall zu reparieren!' },
+  { pts:15,  bg:'#a0522d', visual:'🔨 🧱',          name:'Fundament gelegt',    desc:'Die neuen Wände entstehen! Luna schaut neugierig zu!' },
+  { pts:35,  bg:'#7b5e3c', visual:'🏗️',            name:'Dach im Bau',         desc:'Das Holzdach kommt! Bald hat Luna ein trockenes Zuhause!' },
+  { pts:70,  bg:'#6d4c41', visual:'🏠',             name:'Stall fertig gebaut', desc:'Ein solider Stall! Luna schaut schon neugierig rein!' },
+  { pts:120, bg:'#d81b60', visual:'🌸 🏡 🌸',       name:'Rosa Reiterhof',      desc:'Lunas Stall erstrahlt in Pink – zu schön!' },
+  { pts:200, bg:'#880e4f', visual:'✨ 🌺 🏡 🐴 ✨', name:'💎 Traumreiterhof!',  desc:'Der schönste Reiterhof der Welt! Luna ist überglücklich!' }
+];
+
+// ── ZUSTAND ─────────────────────────────────────────────
+let currentLevel = 0;
+let pools  = [[], [], []];
+let qi     = [0, 0, 0];
+let correct= [0, 0, 0];
+
+// ── STALL UPDATE ────────────────────────────────────────
+function getStageIdx(pts) {
+  let idx = 0;
+  STALL_STAGES.forEach((s, i) => { if (pts >= s.pts) idx = i; });
+  return idx;
+}
+
+function updateStall(pts, pop) {
+  const idx   = getStageIdx(pts);
+  const stage = STALL_STAGES[idx];
+  const next  = STALL_STAGES[idx + 1];
+  const box   = document.getElementById('stall-box');
+
+  box.style.background = stage.bg;
+  document.getElementById('stall-name').textContent   = stage.name;
+  document.getElementById('stall-visual').textContent = stage.visual;
+  document.getElementById('stall-desc').textContent   = stage.desc;
+  document.getElementById('pts-display').textContent  = pts;
+
+  if (next) {
+    const pct = Math.min(100, Math.round((pts - stage.pts) / (next.pts - stage.pts) * 100));
+    document.getElementById('stall-bar').style.width  = pct + '%';
+    document.getElementById('stall-next').textContent = 'Nächste Stufe: ' + next.pts + ' Punkte (noch ' + (next.pts - pts) + ')';
+  } else {
+    document.getElementById('stall-bar').style.width  = '100%';
+    document.getElementById('stall-next').textContent = '🏆 Maximale Stufe!';
+  }
+
+  if (pop) {
+    box.classList.remove('stall-pop');
+    void box.offsetWidth;
+    box.classList.add('stall-pop');
+    setTimeout(() => box.classList.remove('stall-pop'), 800);
+  }
+}
+
+// ── POOL SHUFFLE ────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initPools() {
+  pools[0] = shuffle(POOL_RAW[0]);
+  pools[1] = shuffle(POOL_RAW[1]).slice(0, 30);
+  pools[2] = shuffle(POOL_RAW[2]);
+  [0,1,2].forEach(lv => { updatePrompt(lv); updateCounter(lv); });
+}
+
+function updatePrompt(lv) {
+  const el = document.getElementById('prompt' + lv);
+  if (el && pools[lv].length) el.textContent = pools[lv][qi[lv]] || '';
+}
+
+function updateCounter(lv) {
+  const el = document.getElementById('qc' + lv);
+  const labels = ['Buchstabe', 'Wort', 'Satz'];
+  const total  = lv === 0 ? 20 : lv === 1 ? 30 : 10;
+  if (el) el.textContent = labels[lv] + ' ' + (qi[lv] + 1) + ' von ' + total;
+}
+
+// ── LEVEL WECHSEL ───────────────────────────────────────
+function isUnlocked(lv) {
+  if (lv === 0) return true;
+  if (lv === 1) return correct[0] >= 10 || qi[0] >= pools[0].length;
+  if (lv === 2) return correct[1] >= 15 || qi[1] >= pools[1].length;
+  return false;
+}
+
+function checkUnlocks() {
+  if (isUnlocked(1)) document.getElementById('tab1').classList.remove('locked');
+  if (isUnlocked(2)) document.getElementById('tab2').classList.remove('locked');
+}
+
+function switchLevel(lv) {
+  if (!isUnlocked(lv)) return;
+  [0,1,2].forEach(i => {
+    document.getElementById('panel-'+ i).classList.toggle('active', i === lv);
+    document.getElementById('tab'   + i).classList.toggle('active', i === lv);
+  });
+  currentLevel = lv;
+  document.getElementById('input' + lv).focus();
+}
+
+function trySwitch(lv) {
+  if (isUnlocked(lv)) switchLevel(lv);
+  else setLunaMsg('Erst mehr Wörter richtig tippen! 💪');
+}
+
+// ── SPRECHEN ─────────────────────────────────────────────
+function speakCurrent() {
+  const item = pools[currentLevel][qi[currentLevel]];
+  if (!item) return;
+  const rate = currentLevel === 0 ? 0.65 : currentLevel === 2 ? 0.82 : 0.88;
+  Speech.speakDE(item, rate);
+}
+
+// ── ANTWORT PRÜFEN ───────────────────────────────────────
+function norm(s) {
+  return s.trim().toLowerCase().replace(/[.,!?]/g,'').replace(/\s+/g,' ');
+}
+
+function checkAnswer(lv) {
+  const inp = document.getElementById('input' + lv);
+  const fb  = document.getElementById('fb'    + lv);
+  const val = inp.value;
+  const ans = pools[lv][qi[lv]];
+  if (!val.trim()) { fb.textContent='✏️ Tippe zuerst etwas!'; fb.className='feedback show fb-warn'; inp.focus(); return; }
+
+  const ok = lv === 0 ? val.trim().toLowerCase() === ans.toLowerCase() : norm(val) === norm(ans);
+  inp.classList.toggle('ok',  ok);
+  inp.classList.toggle('err', !ok);
+
+  if (ok) {
+    correct[lv]++;
+    const oldIdx = getStageIdx(CARDS.getPoints());
+    const newPts = CARDS.addPoints(1);
+    const newIdx = getStageIdx(newPts);
+    updateStall(newPts, newIdx > oldIdx);
+    const msg = nextPositive();
+    fb.textContent = msg; fb.className = 'feedback show fb-correct';
+    setLunaMsg(msg); lunaHappy();
+    checkUnlocks();
+    Speech.speakDE('Richtig!', 1.0);
+    setTimeout(() => advance(lv), 1200);
+  } else {
+    fb.textContent = '🔄 Fast! „' + ans + '" – versuch nochmal!';
+    fb.className = 'feedback show fb-wrong';
+    inp.focus(); inp.select();
+  }
+}
+
+function advance(lv) {
+  qi[lv]++;
+  document.getElementById('fb'    + lv).classList.remove('show');
+  document.getElementById('input' + lv).value = '';
+  document.getElementById('input' + lv).classList.remove('ok','err');
+  if (qi[lv] >= pools[lv].length) { finishLevel(lv); return; }
+  updatePrompt(lv); updateCounter(lv);
+  document.getElementById('input' + lv).focus();
+}
+
+// ── LEVEL ABSCHLUSS ──────────────────────────────────────
+function finishLevel(lv) {
+  const total = pools[lv].length;
+  const pct   = Math.round(correct[lv] / total * 100);
+  const stars = LP.scoreToStars(pct);
+  LP.setStars('lunas-reiterhof', stars);
+
+  const packs = lv + 1;  // Lv1→1 Pack, Lv2→2, Lv3→3
+  CARDS.addPack(packs);
+
+  document.getElementById('task-'  + lv).classList.add('hide');
+  const res = document.getElementById('result-' + lv);
+  res.classList.add('show');
+
+  const icons = ['😐','🙂','😄','🎉'];
+  document.getElementById('re' + lv).textContent = icons[Math.min(stars, 3)];
+  document.getElementById('rs' + lv).textContent = correct[lv] + ' von ' + total + ' richtig (' + pct + '%)';
+  document.getElementById('rst'+ lv).innerHTML   = LP.starsHTML(stars);
+  document.getElementById('rm' + lv).textContent =
+    stars >= 3 ? 'Fantastisch! Luna ist so stolz! 🏆' :
+    stars >= 2 ? 'Super gemacht! Weiter üben! 🐴' :
+                 'Gut angefangen – du lernst das! 💪';
+
+  fireworks();
+  setTimeout(() => showPackPopup(packs), 1100);
+}
+
+function restartLevel(lv) {
+  qi[lv] = 0; correct[lv] = 0;
+  pools[lv] = lv === 1 ? shuffle(POOL_RAW[1]).slice(0, 30) : shuffle([...POOL_RAW[lv]]);
+  document.getElementById('task-'  + lv).classList.remove('hide');
+  document.getElementById('result-'+ lv).classList.remove('show');
+  const inp = document.getElementById('input' + lv);
+  inp.value = ''; inp.classList.remove('ok','err');
+  document.getElementById('fb' + lv).classList.remove('show');
+  updatePrompt(lv); updateCounter(lv);
+  inp.focus();
+}
+
+// ── LUNA MSGS ────────────────────────────────────────────
+const MSGS = [
+  '🐴 Toll! Luna wiehert!', '🥕 Richtig! Luna freut sich!', '🌟 Super!',
+  '✨ Klasse getippt!', '🏠 Weiter so – der Stall wächst!', '🎉 Perfekt!',
+  '🌺 Wunderschön!', '⭐ Fantastisch!', '🐎 Luna galoppiert vor Freude!'
+];
+let msgIdx = 0;
+function nextPositive() { return MSGS[msgIdx++ % MSGS.length]; }
+function setLunaMsg(t)  { const el = document.getElementById('luna-msg'); if (el) el.textContent = t; }
+function lunaHappy()    {
+  const l = document.getElementById('luna');
+  if (!l) return;
+  l.classList.remove('happy'); void l.offsetWidth; l.classList.add('happy');
+  setTimeout(() => l.classList.remove('happy'), 700);
+}
+
+// ── PACK POPUP ───────────────────────────────────────────
+function showPackPopup(n) {
+  document.getElementById('pack-icon').textContent  = n >= 3 ? '🎴🎴🎴' : n === 2 ? '🎴🎴' : '🎴';
+  document.getElementById('pack-title').textContent = n + ' Booster-Pack' + (n > 1 ? 's' : '') + ' verdient!';
+  document.getElementById('pack-sub').textContent   = 'Du hast ' + n + ' Pack' + (n > 1 ? 's' : '') + ' gewonnen! Öffne sie in der Kartensammlung.';
+  document.getElementById('pack-popup').classList.add('show');
+}
+function closePackPopup() { document.getElementById('pack-popup').classList.remove('show'); }
+function goToCollection() { window.location.href = '/reiterhof/sammlung/'; }
+
+// ── KONFETTI ─────────────────────────────────────────────
+function fireworks() {
+  const c = ['#d81b60','#f48fb1','#ce93d8','#7b1fa2','#ffd700','#fff'];
+  confetti({ particleCount:130, spread:90, origin:{y:0.6}, colors:c });
+  setTimeout(() => confetti({ particleCount:60, spread:110, origin:{x:0.1,y:0.5}, colors:c }), 400);
+  setTimeout(() => confetti({ particleCount:60, spread:110, origin:{x:0.9,y:0.5}, colors:c }), 700);
+}
+
+// ── ENTER-TASTE ──────────────────────────────────────────
+document.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(currentLevel); });
+
+// ── START ────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init();
+  initPools();
+  checkUnlocks();
+  updateStall(CARDS.getPoints(), false);
+  document.querySelector('.header-stars').textContent = '★ ' + LP.getTotalStars();
+  document.getElementById('input0').focus();
+});
+</script>
+</body>
+</html>

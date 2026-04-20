@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lunas Reiterhof – Lernplattform</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+  .hero { text-align: center; padding: 32px 0 16px; }
+  .hero h1 { font-size: var(--fs-xxl); color: var(--pink-dark); font-weight: 900; }
+  .hero p   { font-size: var(--fs-md); color: var(--text-soft); margin-top: 8px; }
+  .total-stars-line {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .total-stars-line span { font-size: var(--fs-md); }
+  .horse-welcome {
+    display: flex; align-items: center; gap: 24px;
+    background: linear-gradient(135deg, var(--pink-light), var(--purple-light));
+    border: 3px solid var(--pink-mid); border-radius: var(--radius);
+    padding: 24px 28px; margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .horse-welcome .horse { font-size: 6rem; flex-shrink: 0; }
+  .horse-welcome .text h2 { font-size: var(--fs-xl); font-weight: 900; color: var(--pink-dark); margin-bottom: 8px; }
+  .horse-welcome .text p  { font-size: var(--fs-md); color: var(--text-soft); }
+  .coming-soon {
+    opacity: 0.5; pointer-events: none;
+    background: #f5f5f5 !important;
+    border-style: dashed !important;
+  }
+  .coming-soon .card-title::after { content: " (bald)"; font-size: var(--fs-sm); color: #aaa; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-logo">🐴</span>
+  <span class="header-title">Lunas Reiterhof</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+
+  <!-- WILLKOMMEN -->
+  <div class="horse-welcome">
+    <div class="horse">🐴</div>
+    <div class="text">
+      <h2>Hallo! Luna wartet auf dich!</h2>
+      <p>Jeden Tag ein bisschen üben – und Luna bekommt Heu, Möhren und ein neues Zuhause! 🥕🏠</p>
+    </div>
+  </div>
+
+  <!-- GESAMTFORTSCHRITT -->
+  <div class="mb-lg">
+    <div class="total-stars-line">
+      <span style="color:var(--text-soft)">Dein Fortschritt</span>
+      <span id="star-total" style="color:var(--pink);font-weight:900">0 / 6 Sterne</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="total-bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- ── TIPPEN ── -->
+  <div class="section-label">⌨️ Tippen lernen – mit Luna!</div>
+  <div class="cards-grid">
+
+    <a href="tippen/lunas-reiterhof.html" class="card" id="c-tippen">
+      <div class="card-icon">🐴</div>
+      <div class="card-title">Lunas Reiterhof</div>
+      <div class="card-desc">Tippe Buchstaben, Wörter und Sätze – Luna freut sich über jede richtige Antwort! Sie bekommt Heu und ihr Stall wächst!</div>
+      <div class="card-stars" id="s-tippen">☆☆☆</div>
+    </a>
+
+    <div class="card coming-soon">
+      <div class="card-icon">🏆</div>
+      <div class="card-title">Schnell-Tipper Challenge</div>
+      <div class="card-desc">Wer tippt das Wort zuerst? Tippe so schnell du kannst – gegen die Zeit!</div>
+      <div class="card-stars">☆☆☆</div>
+    </div>
+
+  </div>
+
+  <!-- ── LESEN ── -->
+  <div class="section-label">📖 Lesen – Satz für Satz</div>
+  <div class="cards-grid">
+
+    <a href="lesen/satz-spotlight.html" class="card" id="c-lesen">
+      <div class="card-icon">✨</div>
+      <div class="card-title">Satz-Spotlight</div>
+      <div class="card-desc">Ein Satz nach dem anderen – jedes Wort leuchtet auf wenn es vorgelesen wird. Kein Verlieren in langen Texten!</div>
+      <div class="card-stars" id="s-lesen">☆☆☆</div>
+    </a>
+
+    <div class="card coming-soon">
+      <div class="card-icon">📚</div>
+      <div class="card-title">Schultext-Abenteuer</div>
+      <div class="card-desc">Die Texte vom Unterricht – interaktiv erkunden mit Fragen und Rätseln. Kommt nach dem Lehrertreffen!</div>
+      <div class="card-stars">☆☆☆</div>
+    </div>
+
+  </div>
+
+  <!-- ── KARTENSAMMLUNG ── -->
+  <div class="section-label">🃏 Pferdekarten sammeln!</div>
+  <div class="cards-grid">
+
+    <a href="sammlung/" class="card" id="c-sammlung">
+      <div class="card-icon">🃏</div>
+      <div class="card-title">Kartensammlung</div>
+      <div class="card-desc">20 echte Pferderassen sammeln! Öffne Booster-Packs und entdecke seltene Karten – von Gewöhnlich bis Legendär! 💎</div>
+      <div class="card-stars" id="s-sammlung">☆ 0 / 20 Karten</div>
+    </a>
+
+  </div>
+
+  <!-- ── LEHRER-INFO ── -->
+  <div class="section-label">ℹ️ Für den Unterricht</div>
+  <div class="info-box mb-lg">
+    <h3>🏫 Diese Plattform ist noch im Aufbau</h3>
+    <p>Die Inhalte aus dem Unterricht kommen nach dem Gespräch mit dem Lehrer am Dienstag.
+    Dann werden hier passende Texte, Aufgaben und Übungen erscheinen –
+    genau auf <strong style="color:var(--pink)">0309</strong> zugeschnitten. 🐴</p>
+  </div>
+
+</main>
+
+<script src="assets/js/core.js"></script>
+<script>
+const mods = [
+  { id: 'lunas-reiterhof', elId: 's-tippen', cardId: 'c-tippen' },
+  { id: 'satz-spotlight',  elId: 's-lesen',  cardId: 'c-lesen'  }
+];
+
+const MAX = mods.length * 3;
+let total = 0;
+mods.forEach(m => {
+  const stars = LP.getStars(m.id);
+  total += stars;
+  const el = document.getElementById(m.elId);
+  if (el) el.innerHTML = LP.starsHTML(stars);
+  const card = document.getElementById(m.cardId);
+  if (card && stars >= 1) card.classList.add('completed');
+});
+
+document.getElementById('star-total').textContent = total + ' / ' + MAX + ' Sterne';
+document.getElementById('total-bar').style.width = Math.round((total / MAX) * 100) + '%';
+document.querySelector('.header-stars').textContent = '★ ' + total;
+
+// Sammlung Tile
+try {
+  const owned = JSON.parse(localStorage.getItem('reiterhof_cards') || '[]');
+  const packs = parseInt(localStorage.getItem('reiterhof_packs') || '0');
+  const sammEl = document.getElementById('s-sammlung');
+  if (sammEl) sammEl.textContent = '🃏 ' + owned.length + ' / 20 · ' + packs + ' Pack' + (packs !== 1 ? 's' : '');
+  if (owned.length >= 1) document.getElementById('c-sammlung').classList.add('completed');
+} catch(e) {}
+</script>
+
+</body>
+</html>
