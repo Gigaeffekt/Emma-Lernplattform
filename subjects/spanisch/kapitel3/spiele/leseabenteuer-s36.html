@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leseabenteuer S.36 – Villa Wewersbusch</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .lese-text {
+    font-size: var(--fs-lg); line-height: 2.8;
+    background: var(--surface); padding: 28px 32px;
+    border-radius: var(--radius); border: 2px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .tw {
+    display: inline-block;
+    background: var(--surface2); border: 2px solid #666;
+    border-radius: 8px; padding: 1px 12px;
+    cursor: pointer; font-weight: 800;
+    transition: border-color .15s, background .12s, transform .08s;
+    white-space: nowrap;
+  }
+  .tw:hover, .tw:focus { border-color: var(--accent); color: var(--accent); outline: none; transform: scale(1.06); }
+  .tw.lit  { border-color: var(--correct); background: #002a15; color: var(--correct) !important; cursor: default; pointer-events: none; }
+  .tw.bad  { border-color: var(--wrong); background: #2a0000; animation: wshake .4s ease; }
+  @keyframes wshake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .mission-box {
+    background: #1a1800; border: 3px solid var(--accent);
+    border-radius: var(--radius); padding: 20px 26px; margin-bottom: 18px;
+  }
+  .mission-num { font-size: var(--fs-md); color: var(--accent); font-weight: 800; margin-bottom: 6px; }
+  .mission-q   { font-size: var(--fs-lg); font-weight: 900; line-height: 1.45; }
+
+  /* PUZZLE */
+  .puzzle-wrap {
+    background: var(--surface); border: 3px solid var(--accent);
+    border-radius: var(--radius); padding: 18px 16px;
+    text-align: center; margin-bottom: 22px;
+  }
+  .puzzle-label { font-size: var(--fs-md); color: var(--accent); font-weight: 800; margin-bottom: 10px; }
+  .puzzle-grid  {
+    display: grid; grid-template-columns: repeat(3, 80px);
+    gap: 8px; justify-content: center; margin: 0 auto 10px;
+  }
+  .ptile {
+    width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;
+    border-radius: 12px; font-size: 0px; border: 3px solid #333; background: #111;
+    transition: all .4s cubic-bezier(.34,1.56,.64,1); position: relative;
+  }
+  .ptile::after { content: '❔'; font-size: 30px; color: #444; }
+  .ptile.revealed { border-color: var(--correct); background: #002a15; font-size: 42px; }
+  .ptile.revealed::after { content: ''; }
+  .puzzle-info { font-size: var(--fs-sm); color: #888; margin-top: 4px; }
+  .puzzle-info.done { color: var(--correct); font-weight: 800; }
+
+  /* SCHATZKISTE */
+  .schatzkiste {
+    display: none; background: #001800;
+    border: 3px solid var(--correct); border-radius: var(--radius); padding: 28px; margin-top: 28px;
+  }
+  .schatzkiste h3 { color: var(--correct); font-size: var(--fs-xl); margin-bottom: 14px; }
+  .satz-pill {
+    display: inline-block;
+    background: var(--surface2); border: 2px solid var(--correct);
+    border-radius: var(--radius); padding: 12px 20px;
+    margin: 8px 4px; font-size: var(--fs-md); cursor: pointer;
+    color: var(--correct); font-weight: 700; transition: background .12s;
+  }
+  .satz-pill:hover { background: #002a10; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Leseabenteuer S.36 🔍</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">🔍 Leseabenteuer – Seite 36</div>
+
+  <div class="info-box mb-md">
+    <h3>📖 Wie geht das?</h3>
+    <p>Lies den Text laut mit (🔊 Button!). Für jede Aufgabe tippst du bestimmte <strong style="color:var(--accent)">Wörter im Text an</strong>.<br>
+    Jedes richtige Wort → ein <strong style="color:var(--accent)">🧩 Puzzleteil</strong>!<br>
+    Am Ende bekommst du Sätze, die du für deinen <strong style="color:var(--accent)">eigenen spanischen Schultext</strong> nutzen kannst.</p>
+  </div>
+
+  <!-- PUZZLE -->
+  <div class="puzzle-wrap">
+    <div class="puzzle-label">🧩 Dein Puzzle – vollständig wenn alle Aufgaben gelöst!</div>
+    <div class="puzzle-grid">
+      <div class="ptile" id="pt0">🏫</div>
+      <div class="ptile" id="pt1">📚</div>
+      <div class="ptile" id="pt2">🎵</div>
+      <div class="ptile" id="pt3">🏃</div>
+      <div class="ptile" id="pt4">⭐</div>
+      <div class="ptile" id="pt5">🍽️</div>
+      <div class="ptile" id="pt6">🎓</div>
+      <div class="ptile" id="pt7">📖</div>
+      <div class="ptile" id="pt8">🎉</div>
+    </div>
+    <div class="puzzle-info" id="pinfo">0 / 9 Teile gefunden</div>
+  </div>
+
+  <!-- MISSION BOX -->
+  <div class="mission-box" id="mbox">
+    <div class="mission-num" id="mnum">🔍 Aufgabe 1 von 3</div>
+    <div class="mission-q"  id="mq"></div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="flex-row mb-md">
+    <button class="btn-audio" onclick="Speech.speakES(VOLLTEXT)">🔊 Ganzen Text vorlesen</button>
+    <div style="flex:1;text-align:right;font-size:var(--fs-md);color:#aaa">
+      Gefunden: <strong style="color:var(--accent)" id="fc">0</strong> / <strong id="tc">7</strong>
+    </div>
+  </div>
+
+  <!-- READING TEXT S.36 -->
+  <div class="lese-text">
+    La Villa Wewersbusch es una escuela muy
+    <span class="tw" tabindex="0" data-cat="adj" data-word="especial" data-de="besonders">especial</span>
+    y
+    <span class="tw" tabindex="0" data-cat="adj" data-word="moderna" data-de="modern">moderna</span>.
+    ¡Tiene todo!<br>
+    En la Villa Wewersbusch hay un
+    <span class="tw" tabindex="0" data-cat="raum" data-word="gimnasio" data-de="Turnhalle">gimnasio</span>
+    <span class="tw" tabindex="0" data-cat="adj" data-word="grande" data-de="groß">grande</span>
+    y hay un
+    <span class="tw" tabindex="0" data-cat="raum" data-word="patio" data-de="Schulhof">patio</span>
+    <span class="tw" tabindex="0" data-cat="adj" data-word="bonito" data-de="schön">bonito</span>.
+    También hay una
+    <span class="tw" tabindex="0" data-cat="raum" data-word="biblioteca" data-de="Bibliothek">biblioteca</span>
+    y una
+    <span class="tw" tabindex="0" data-cat="raum" data-word="cafetería" data-de="Cafeteria">cafetería</span>.
+    Los estudiantes comen en el
+    <span class="tw" tabindex="0" data-cat="raum" data-word="comedor" data-de="Speisesaal">comedor</span>.
+    Hay también un
+    <span class="tw" tabindex="0" data-cat="raum" data-word="aula de música" data-de="Musikraum">aula&nbsp;de&nbsp;música</span>
+    y un
+    <span class="tw" tabindex="0" data-cat="raum" data-word="estudio de grabación" data-de="Aufnahmestudio">estudio&nbsp;de&nbsp;grabación</span>.
+    ¿Cuántos estudiantes hay? Hay doscientos estudiantes.<br>
+    La Villa Wewersbusch no es una escuela normal. ¡Es
+    <span class="tw" tabindex="0" data-cat="adj" data-word="fantástica" data-de="fantastisch">fantástica</span>!
+  </div>
+
+  <!-- FEEDBACK -->
+  <div class="feedback" id="fb"></div>
+
+  <!-- NEXT -->
+  <div class="flex-center mb-md">
+    <button class="btn btn-primary hidden" id="nxt" onclick="goNext()">Weiter zur nächsten Aufgabe →</button>
+  </div>
+
+  <!-- MCQ MISSION 3 -->
+  <div class="hidden" id="mcq-area">
+    <div class="mission-box">
+      <div class="mission-num">🔍 Aufgabe 3 von 3 – Verständnisfrage</div>
+      <div class="mission-q" style="color:var(--accent)">¿Cuántos estudiantes hay en la Villa Wewersbusch?</div>
+    </div>
+    <div class="options-grid" id="mcq-grid">
+      <button class="opt">Hay cien estudiantes.</button>
+      <button class="opt correct-opt">Hay doscientos estudiantes.</button>
+      <button class="opt">Hay trescientos estudiantes.</button>
+      <button class="opt">Hay quinientos estudiantes.</button>
+    </div>
+    <div class="feedback" id="fb2"></div>
+    <div class="flex-center mt-sm hidden" id="fin-row">
+      <button class="btn btn-primary" onclick="finishAll()">🎉 Abenteuer abschließen!</button>
+    </div>
+  </div>
+
+  <!-- SCHATZKISTE -->
+  <div class="schatzkiste" id="schatzkiste">
+    <h3>💎 Deine Schatz-Sätze für deinen eigenen Text!</h3>
+    <p style="font-size:var(--fs-sm);color:#aaa;margin-bottom:14px">
+      Tippe einen Satz an → du hörst ihn auf Spanisch. Nutze ihn für deine Schulbeschreibung!
+    </p>
+    <div>
+      <div class="satz-pill" onclick="sp('La Villa Wewersbusch es una escuela especial y moderna.')">🔊 La [Name] es una escuela especial y moderna.</div>
+      <div class="satz-pill" onclick="sp('Hay un gimnasio grande y hay un patio bonito.')">🔊 Hay un gimnasio grande y hay un patio bonito.</div>
+      <div class="satz-pill" onclick="sp('También hay una biblioteca y una cafetería.')">🔊 También hay una biblioteca y una cafetería.</div>
+      <div class="satz-pill" onclick="sp('Los estudiantes comen en el comedor.')">🔊 Los estudiantes comen en el comedor.</div>
+      <div class="satz-pill" onclick="sp('Hay un aula de música y un estudio de grabación.')">🔊 Hay un aula de música y un estudio de grabación.</div>
+      <div class="satz-pill" onclick="sp('La Villa Wewersbusch no es una escuela normal. ¡Es fantástica!')">🔊 ¡No es normal. ¡Es fantástica!</div>
+    </div>
+    <div class="flex-center" style="margin-top:22px;flex-wrap:wrap;">
+      <a href="/Lernplattform/subjects/spanisch/kapitel3/spiele/leseabenteuer-s42.html" class="btn btn-primary">📖 Weiter zu Seite 42 →</a>
+      <a href="/Lernplattform/subjects/spanisch/kapitel3/spiele/schreibhilfe.html" class="btn btn-secondary">✍️ Text schreiben!</a>
+      <a href="/Lernplattform/" class="btn btn-secondary">🏠 Dashboard</a>
+    </div>
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+const VOLLTEXT = 'La Villa Wewersbusch es una escuela muy especial y moderna. ¡Tiene todo! En la Villa Wewersbusch hay un gimnasio grande y hay un patio bonito. También hay una biblioteca y una cafetería. Los estudiantes comen en el comedor. Hay también un aula de música y un estudio de grabación. ¿Cuántos estudiantes hay? Hay doscientos estudiantes. La Villa Wewersbusch no es una escuela normal. ¡Es fantástica!';
+
+const MISSIONS = [
+  { cat:'raum', count:7, hint:'🔍 Aufgabe 1 von 3',
+    q:'Welche <strong style="color:var(--accent)">Räume und Orte</strong> gibt es in der Villa Wewersbusch?<br><span style="font-size:var(--fs-md);font-weight:400;color:#aaa">Tippe alle 7 Räume / Orte im Text an!</span>' },
+  { cat:'adj', count:5, hint:'✨ Aufgabe 2 von 3',
+    q:'Wie wird die Villa Wewersbusch beschrieben? Tippe alle <strong style="color:var(--accent)">5 Adjektive (Eigenschaftswörter)</strong> an!<br><span style="font-size:var(--fs-md);font-weight:400;color:#aaa">Adjektive sagen: wie ist etwas?</span>' }
+];
+
+let mIdx = 0, foundSet = new Set(), pieces = 0;
+
+function setMission(i) {
+  mIdx = i; foundSet.clear();
+  const m = MISSIONS[i];
+  document.getElementById('mnum').textContent  = m.hint;
+  document.getElementById('mq').innerHTML      = m.q;
+  document.getElementById('fc').textContent    = '0';
+  document.getElementById('tc').textContent    = m.count;
+  document.getElementById('fb').classList.remove('show','fb-correct','fb-wrong');
+  document.getElementById('nxt').classList.add('hidden');
+}
+
+function tap(el) {
+  if (el.classList.contains('lit')) return;
+  const cat  = el.dataset.cat, word = el.dataset.word, de = el.dataset.de;
+  const m    = MISSIONS[mIdx];
+  if (cat === m.cat && !foundSet.has(word)) {
+    foundSet.add(word); el.classList.add('lit');
+    Speech.speakES(word); revealTile();
+    document.getElementById('fc').textContent = foundSet.size;
+    showFb('✅ ' + word + (de ? ' = ' + de : ''), true);
+    if (foundSet.size >= m.count) {
+      setTimeout(() => {
+        showFb('🎉 Alle ' + m.count + ' Wörter gefunden! Weiter geht\'s!', true);
+        document.getElementById('nxt').classList.remove('hidden');
+      }, 700);
+    }
+  } else if (cat !== m.cat) {
+    el.classList.add('bad'); setTimeout(() => el.classList.remove('bad'), 500);
+    const what  = cat === 'adj'  ? 'ein Adjektiv (Eigenschaftswort)' : 'ein Raum';
+    const need  = m.cat === 'adj' ? 'Adjektive' : 'Räume';
+    showFb('❌ Das ist ' + what + '! Suche im Text nach ' + need + '!', false);
+    setTimeout(() => document.getElementById('fb').classList.remove('show'), 2000);
+  }
+}
+
+function goNext() {
+  document.getElementById('nxt').classList.add('hidden');
+  document.getElementById('fb').classList.remove('show','fb-correct','fb-wrong');
+  mIdx++;
+  if (mIdx < MISSIONS.length) {
+    setMission(mIdx);
+  } else {
+    document.getElementById('mbox').style.display = 'none';
+    document.querySelector('.flex-row.mb-md').style.display  = 'none';
+    document.getElementById('mcq-area').classList.remove('hidden');
+    document.querySelectorAll('#mcq-grid .opt').forEach(b => b.addEventListener('click', () => answerMCQ(b)));
+  }
+}
+
+function answerMCQ(btn) {
+  document.querySelectorAll('#mcq-grid .opt').forEach(b => b.disabled = true);
+  const isCorrect = btn.classList.contains('correct-opt');
+  const fb2 = document.getElementById('fb2');
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb2.textContent = '✅ Richtig! Hay doscientos (200) estudiantes!';
+    fb2.className   = 'feedback show fb-correct';
+    Speech.speakES('Hay doscientos estudiantes.'); revealTile();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#mcq-grid .opt').forEach(b => { if (b.classList.contains('correct-opt')) b.classList.add('correct'); });
+    fb2.textContent = '❌ Schau nochmal! "doscientos" = 200. Hay doscientos estudiantes.';
+    fb2.className   = 'feedback show fb-wrong';
+    revealTile(); // still reveal tile so puzzle can complete
+  }
+  setTimeout(() => document.getElementById('fin-row').classList.remove('hidden'), 1500);
+}
+
+function finishAll() {
+  document.getElementById('fin-row').classList.add('hidden');
+  showResult('result-area', 'leseabenteuer-s36', pieces, 9);
+  const sk = document.getElementById('schatzkiste');
+  sk.style.display = 'block';
+  setTimeout(() => sk.scrollIntoView({ behavior: 'smooth' }), 200);
+}
+
+function revealTile() {
+  if (pieces >= 9) return;
+  const t = document.getElementById('pt' + pieces);
+  if (t) { t.classList.add('revealed'); }
+  pieces++;
+  const info = document.getElementById('pinfo');
+  if (pieces >= 9) { info.textContent = '🎉 Puzzle vollständig! Du bist super!'; info.className = 'puzzle-info done'; }
+  else             { info.textContent = pieces + ' / 9 Teile gefunden'; }
+}
+
+function showFb(txt, ok) {
+  const fb = document.getElementById('fb');
+  fb.textContent = txt; fb.className = 'feedback show ' + (ok ? 'fb-correct' : 'fb-wrong');
+}
+
+function sp(text) { Speech.speakES(text); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init(); Speech.bindAll();
+  document.querySelectorAll('.tw').forEach(tw => {
+    tw.addEventListener('click',   () => tap(tw));
+    tw.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); tap(tw); } });
+  });
+  setMission(0);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schreibhilfe Level 2 – Sätze übersetzen</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .ue-card {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 24px 26px; margin-bottom: 20px;
+  }
+  .ue-card.ok-card   { border-color: var(--correct); background: #001a0a; }
+  .ue-card.err-card  { border-color: var(--wrong);   background: #1a0000; }
+  .qnum   { font-size: var(--fs-sm); color: #888; margin-bottom: 8px; font-weight: 700; }
+  .de-satz {
+    font-size: var(--fs-lg); font-weight: 800; color: var(--text);
+    background: #1a1a1a; border-left: 5px solid var(--accent);
+    padding: 12px 18px; border-radius: 0 8px 8px 0; margin-bottom: 14px;
+  }
+  .hint-row {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+  }
+  .hint-chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 12px;
+    font-size: var(--fs-sm); color: #aaa; cursor: default;
+  }
+  .hint-chip strong { color: var(--accent); }
+  .es-input {
+    width: 100%; background: var(--surface2); border: 3px solid var(--border);
+    color: var(--text); font-size: var(--fs-lg); font-weight: 700;
+    padding: 14px 18px; border-radius: var(--radius); font-family: inherit;
+    outline: none; resize: none; transition: border-color .15s;
+    line-height: 1.5;
+  }
+  .es-input:focus { border-color: var(--accent); }
+  .es-input.ok    { border-color: var(--correct); color: var(--correct); }
+  .es-input.err   { border-color: var(--wrong); }
+  .ue-fb { font-size: var(--fs-md); font-weight: 800; margin-top: 10px; min-height: 30px; }
+  .ue-fb.ok  { color: var(--correct); }
+  .ue-fb.err { color: var(--wrong); }
+  .correct-reveal { font-size: var(--fs-md); color: var(--correct); margin-top: 6px; }
+
+  .accent-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 10px 16px; margin-bottom: 20px;
+    position: sticky; top: 76px; z-index: 50;
+  }
+  .accent-bar .label { font-size: var(--fs-sm); color: #aaa; }
+  .acc-btn {
+    background: var(--surface2); border: 2px solid var(--border-hi);
+    color: var(--text); font-size: var(--fs-lg); font-weight: 900;
+    padding: 4px 16px; border-radius: 8px; cursor: pointer; font-family: inherit;
+    transition: border-color .12s;
+  }
+  .acc-btn:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Übersetzungs-Training 🔤</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">🔤 Schreibhilfe Level 2 – Sätze übersetzen</div>
+
+  <div class="info-box mb-md">
+    <h3>🎯 Deine Aufgabe</h3>
+    <p>Übersetze die deutschen Sätze ins Spanische!<br>
+    Die <strong style="color:var(--accent)">Tipps</strong> helfen dir mit den wichtigsten Wörtern.<br>
+    Drücke <strong style="color:var(--accent)">🔊 Musterlösung hören</strong> um die richtige Antwort zu hören.<br>
+    <span style="color:#aaa">Sonderzeichen brauchst du nicht perfekt – der Text wird flexibel geprüft.</span></p>
+  </div>
+
+  <!-- ACCENT BAR -->
+  <div class="accent-bar">
+    <span class="label">Sonderzeichen:</span>
+    <button class="acc-btn" onclick="ins('á')">á</button>
+    <button class="acc-btn" onclick="ins('é')">é</button>
+    <button class="acc-btn" onclick="ins('í')">í</button>
+    <button class="acc-btn" onclick="ins('ó')">ó</button>
+    <button class="acc-btn" onclick="ins('ú')">ú</button>
+    <button class="acc-btn" onclick="ins('ñ')">ñ</button>
+    <button class="acc-btn" onclick="ins('¡')">¡</button>
+    <button class="acc-btn" onclick="ins('¿')">¿</button>
+  </div>
+
+  <!-- Satz 1 -->
+  <div class="ue-card" id="c1">
+    <div class="qnum">Satz 1 von 8</div>
+    <div class="de-satz">Die Villa Wewersbusch ist sehr modern.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>ist</strong> → es</div>
+      <div class="hint-chip"><strong>modern</strong> → moderna</div>
+      <div class="hint-chip"><strong>sehr</strong> → muy</div>
+    </div>
+    <textarea class="es-input" id="inp1" rows="2" placeholder="La Villa Wewersbusch…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb1"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(1)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="La Villa Wewersbusch es muy moderna." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 2 -->
+  <div class="ue-card" id="c2">
+    <div class="qnum">Satz 2 von 8</div>
+    <div class="de-satz">Es gibt eine Turnhalle und einen Schulhof.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Es gibt</strong> → Hay</div>
+      <div class="hint-chip"><strong>Turnhalle</strong> → un gimnasio</div>
+      <div class="hint-chip"><strong>Schulhof</strong> → un patio</div>
+    </div>
+    <textarea class="es-input" id="inp2" rows="2" placeholder="Hay…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb2"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(2)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Hay un gimnasio y un patio." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 3 -->
+  <div class="ue-card" id="c3">
+    <div class="qnum">Satz 3 von 8</div>
+    <div class="de-satz">Es gibt 200 Schüler.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Es gibt</strong> → Hay</div>
+      <div class="hint-chip"><strong>200</strong> → doscientos</div>
+      <div class="hint-chip"><strong>Schüler</strong> → estudiantes</div>
+    </div>
+    <textarea class="es-input" id="inp3" rows="2" placeholder="Hay…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb3"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(3)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Hay doscientos estudiantes." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 4 -->
+  <div class="ue-card" id="c4">
+    <div class="qnum">Satz 4 von 8</div>
+    <div class="de-satz">Die Schüler essen im Speisesaal.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Schüler</strong> → Los estudiantes</div>
+      <div class="hint-chip"><strong>essen (sie)</strong> → comen</div>
+      <div class="hint-chip"><strong>Speisesaal</strong> → el comedor</div>
+    </div>
+    <textarea class="es-input" id="inp4" rows="2" placeholder="Los estudiantes…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb4"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(4)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Los estudiantes comen en el comedor." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 5 -->
+  <div class="ue-card" id="c5">
+    <div class="qnum">Satz 5 von 8</div>
+    <div class="de-satz">Es hat einen Musikraum und ein Aufnahmestudio.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Musikraum</strong> → un aula de música</div>
+      <div class="hint-chip"><strong>Aufnahmestudio</strong> → un estudio de grabación</div>
+      <div class="hint-chip"><strong>Es hat / Es gibt</strong> → Hay</div>
+    </div>
+    <textarea class="es-input" id="inp5" rows="2" placeholder="Hay…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb5"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(5)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Hay un aula de música y un estudio de grabación." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 6 -->
+  <div class="ue-card" id="c6">
+    <div class="qnum">Satz 6 von 8</div>
+    <div class="de-satz">Ich wohne in Deutschland.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Ich</strong> → Yo</div>
+      <div class="hint-chip"><strong>wohne</strong> → vivo (vivir, yo)</div>
+      <div class="hint-chip"><strong>Deutschland</strong> → Alemania</div>
+    </div>
+    <textarea class="es-input" id="inp6" rows="2" placeholder="Yo vivo…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb6"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(6)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Yo vivo en Alemania." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 7 -->
+  <div class="ue-card" id="c7">
+    <div class="qnum">Satz 7 von 8</div>
+    <div class="de-satz">Wir lernen Spanisch und Mathematik.</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Wir</strong> → Nosotros</div>
+      <div class="hint-chip"><strong>lernen</strong> → estudiamos (estudiar, nosotros)</div>
+      <div class="hint-chip"><strong>Mathematik</strong> → matemáticas</div>
+    </div>
+    <textarea class="es-input" id="inp7" rows="2" placeholder="Nosotros estudiamos…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb7"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(7)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Nosotros estudiamos español y matemáticas." data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <!-- Satz 8 -->
+  <div class="ue-card" id="c8">
+    <div class="qnum">Satz 8 von 8</div>
+    <div class="de-satz">Meine Schule ist fantastisch!</div>
+    <div class="hint-row">
+      <div class="hint-chip"><strong>Meine Schule</strong> → Mi escuela</div>
+      <div class="hint-chip"><strong>ist</strong> → es</div>
+      <div class="hint-chip"><strong>fantastisch</strong> → fantástica</div>
+      <div class="hint-chip">Ausrufezeichen vorne: <strong>¡</strong></div>
+    </div>
+    <textarea class="es-input" id="inp8" rows="2" placeholder="¡Mi escuela…" autocorrect="off" spellcheck="false"></textarea>
+    <div class="ue-fb" id="fb8"></div>
+    <div class="flex-row" style="margin-top:10px">
+      <button class="btn btn-primary btn-sm" onclick="check(8)">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="¡Mi escuela es fantástica!" data-lang="es-ES">🔊 Musterlösung hören</button>
+    </div>
+  </div>
+
+  <div class="flex-center mb-md">
+    <button class="btn btn-primary" onclick="showTotal()">📊 Gesamtergebnis</button>
+    <a href="/Lernplattform/subjects/spanisch/kapitel3/spiele/schreibhilfe.html" class="btn btn-secondary">✍️ Weiter zum Schreiben!</a>
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+// Correct answers (normalized) – a list of acceptable versions per sentence
+const ANSWERS = {
+  1: ['la villa wewersbusch es muy moderna', 'la villa wewersbusch es moderna y muy', 'la villa wewersbusch es muy moderna.'],
+  2: ['hay un gimnasio y un patio', 'hay un gimnasio y hay un patio'],
+  3: ['hay doscientos estudiantes'],
+  4: ['los estudiantes comen en el comedor'],
+  5: ['hay un aula de musica y un estudio de grabacion', 'hay un aula de música y un estudio de grabación'],
+  6: ['yo vivo en alemania', 'vivo en alemania'],
+  7: ['nosotros estudiamos espanol y matematicas', 'nosotros estudiamos español y matemáticas', 'estudiamos espanol y matematicas'],
+  8: ['mi escuela es fantastica', '¡mi escuela es fantástica!', 'mi escuela es fantástica']
+};
+
+const CORRECT_ES = {
+  1:'La Villa Wewersbusch es muy moderna.',
+  2:'Hay un gimnasio y un patio.',
+  3:'Hay doscientos estudiantes.',
+  4:'Los estudiantes comen en el comedor.',
+  5:'Hay un aula de música y un estudio de grabación.',
+  6:'Yo vivo en Alemania.',
+  7:'Nosotros estudiamos español y matemáticas.',
+  8:'¡Mi escuela es fantástica!'
+};
+
+let results = {};
+let focusedInput = null;
+document.addEventListener('focusin', e => { if (e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT') focusedInput = e.target; });
+
+function ins(char) {
+  if (!focusedInput) return;
+  const el = focusedInput, s = el.selectionStart, e2 = el.selectionEnd;
+  el.value = el.value.slice(0, s) + char + el.value.slice(e2);
+  el.selectionStart = el.selectionEnd = s + 1; el.focus();
+}
+
+function norm(s) {
+  return s.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[¡!¿?.]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function check(n) {
+  const inp = document.getElementById('inp' + n);
+  const fb  = document.getElementById('fb' + n);
+  const card= document.getElementById('c' + n);
+  const val = inp.value;
+  if (!val.trim()) { fb.textContent='Bitte tippe einen Satz ein!'; fb.className='ue-fb err'; return; }
+  const normVal = norm(val);
+  // Check if any key words from any correct answer are present
+  const correct = ANSWERS[n];
+  let best = 0;
+  correct.forEach(a => {
+    const words = norm(a).split(' ').filter(w => w.length > 3);
+    const found = words.filter(w => normVal.includes(w)).length;
+    const ratio = found / words.length;
+    if (ratio > best) best = ratio;
+  });
+  // Exact match check
+  const exact = correct.some(a => norm(a) === normVal);
+  if (exact || best >= 0.8) {
+    results[n] = 1;
+    inp.classList.add('ok'); card.classList.add('ok-card'); card.classList.remove('err-card');
+    fb.textContent = '✅ Super! ' + CORRECT_ES[n]; fb.className = 'ue-fb ok';
+    Speech.speakES(CORRECT_ES[n]);
+  } else if (best >= 0.5) {
+    results[n] = 0.5;
+    card.classList.remove('ok-card','err-card');
+    fb.textContent = '🟡 Fast! Schau dir die Musterlösung an: ' + CORRECT_ES[n]; fb.className = 'ue-fb err';
+    inp.focus();
+  } else {
+    results[n] = 0;
+    inp.classList.add('err'); card.classList.add('err-card'); card.classList.remove('ok-card');
+    fb.textContent = '❌ Noch mal! Nutze die Tipps und Musterlösung: ' + CORRECT_ES[n]; fb.className = 'ue-fb err';
+  }
+}
+
+function showTotal() {
+  const vals = Object.values(results);
+  if (vals.length < 8) { alert('Bearbeite erst alle 8 Sätze!'); return; }
+  const cor = vals.filter(v => v >= 0.8).length + Math.round(vals.filter(v => v === 0.5).length * 0.5);
+  showResult('result-area', 'uebersetzung', Math.round(cor), 8);
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init(); Speech.bindAll();
+});
+</script>
+</body>
+</html>

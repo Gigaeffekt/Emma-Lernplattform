@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pronomen Level 3 – Sätze ergänzen</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .satz-box {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 24px 26px; margin-bottom: 18px;
+  }
+  .satz-box.correct-box { border-color: var(--correct); background: #001a0a; }
+  .satz-box.wrong-box   { border-color: var(--wrong);   background: #1a0000; }
+  .satz-de { font-size: var(--fs-md); color: #aaa; margin-bottom: 10px; }
+  .satz-es { font-size: var(--fs-xl); font-weight: 900; line-height: 1.5; }
+
+  .blank-input {
+    display: inline-block;
+    background: var(--surface2);
+    border: none; border-bottom: 3px solid var(--accent);
+    color: var(--text); font-size: var(--fs-xl); font-weight: 900;
+    font-family: inherit; text-align: center;
+    padding: 2px 10px; min-width: 140px;
+    outline: none; transition: border-color .15s;
+  }
+  .blank-input:focus { border-bottom-color: var(--accent); }
+  .blank-input.ok   { border-bottom-color: var(--correct); color: var(--correct); }
+  .blank-input.err  { border-bottom-color: var(--wrong);   color: var(--wrong); }
+
+  .satz-fb { font-size: var(--fs-md); font-weight: 700; margin-top: 10px; min-height: 28px; }
+  .satz-fb.ok  { color: var(--correct); }
+  .satz-fb.err { color: var(--wrong); }
+
+  .qnum { font-size: var(--fs-sm); color: #888; margin-bottom: 6px; font-weight: 700; }
+
+  .accent-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 10px 16px; margin-bottom: 20px;
+    position: sticky; top: 76px; z-index: 50;
+  }
+  .accent-bar .label { font-size: var(--fs-sm); color: #aaa; }
+  .acc-btn {
+    background: var(--surface2); border: 2px solid var(--border-hi);
+    color: var(--text); font-size: var(--fs-lg); font-weight: 900;
+    padding: 4px 16px; border-radius: 8px; cursor: pointer; font-family: inherit;
+    transition: border-color .12s;
+  }
+  .acc-btn:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Pronomen Level 3 🧩</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">🧩 Pronomen Level 3 – Sätze vervollständigen</div>
+
+  <div class="info-box mb-md">
+    <h3>💡 Was zu tun ist</h3>
+    <p>Ergänze die Lücken in den spanischen Sätzen.<br>
+    Bei <strong style="color:var(--accent)">Auswahl-Aufgaben</strong>: Tippe das richtige Wort an!<br>
+    Bei <strong style="color:var(--accent)">Schreib-Aufgaben</strong>: Tippe die Verbform ein.<br>
+    Die Sätze kommen aus den Texten S.36 und S.42 – die kennst du schon!</p>
+  </div>
+
+  <!-- ACCENT BAR -->
+  <div class="accent-bar">
+    <span class="label">Sonderzeichen:</span>
+    <button class="acc-btn" onclick="ins('á')">á</button>
+    <button class="acc-btn" onclick="ins('é')">é</button>
+    <button class="acc-btn" onclick="ins('í')">í</button>
+    <button class="acc-btn" onclick="ins('ó')">ó</button>
+    <button class="acc-btn" onclick="ins('ú')">ú</button>
+    <button class="acc-btn" onclick="ins('ñ')">ñ</button>
+  </div>
+
+  <div class="section-heading">🃏 Teil 1 – Wähle das richtige Pronomen</div>
+
+  <!-- Q1 MCQ -->
+  <div class="satz-box" id="sb-1">
+    <div class="qnum">Frage 1 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Ich heiße Emma." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-1" style="color:var(--accent)">___</span> me llamo Emma.</div>
+    <div class="options-grid" id="og-1" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(1,'Yo','Yo')">Yo</button>
+      <button class="opt" onclick="pickPron(1,'Tú','Yo')">Tú</button>
+      <button class="opt" onclick="pickPron(1,'Él','Yo')">Él</button>
+      <button class="opt" onclick="pickPron(1,'Ellos','Yo')">Ellos</button>
+    </div>
+    <div class="satz-fb" id="fb-1"></div>
+  </div>
+
+  <!-- Q2 MCQ -->
+  <div class="satz-box" id="sb-2">
+    <div class="qnum">Frage 2 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Du sprichst sehr gut Spanisch." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-2" style="color:var(--accent)">___</span> hablas muy bien español.</div>
+    <div class="options-grid" id="og-2" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(2,'Yo','Tú')">Yo</button>
+      <button class="opt" onclick="pickPron(2,'Tú','Tú')">Tú</button>
+      <button class="opt" onclick="pickPron(2,'Ella','Tú')">Ella</button>
+      <button class="opt" onclick="pickPron(2,'Vosotros','Tú')">Vosotros</button>
+    </div>
+    <div class="satz-fb" id="fb-2"></div>
+  </div>
+
+  <!-- Q3 MCQ -->
+  <div class="satz-box" id="sb-3">
+    <div class="qnum">Frage 3 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Der Lehrer erklärt die Grammatik." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-3" style="color:var(--accent)">___</span> explica la gramática.</div>
+    <div class="options-grid" id="og-3" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(3,'Yo','Él')">Yo</button>
+      <button class="opt" onclick="pickPron(3,'Él','Él')">Él</button>
+      <button class="opt" onclick="pickPron(3,'Nosotros','Él')">Nosotros</button>
+      <button class="opt" onclick="pickPron(3,'Ellas','Él')">Ellas</button>
+    </div>
+    <div class="satz-fb" id="fb-3"></div>
+  </div>
+
+  <!-- Q4 MCQ -->
+  <div class="satz-box" id="sb-4">
+    <div class="qnum">Frage 4 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Emma und Lena machen ihre Hausaufgaben zusammen." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-4" style="color:var(--accent)">___</span> hacen los deberes juntas.</div>
+    <div class="options-grid" id="og-4" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(4,'Él','Ellas')">Él</button>
+      <button class="opt" onclick="pickPron(4,'Ellas','Ellas')">Ellas</button>
+      <button class="opt" onclick="pickPron(4,'Nosotros','Ellas')">Nosotros</button>
+      <button class="opt" onclick="pickPron(4,'Vosotros','Ellas')">Vosotros</button>
+    </div>
+    <div class="satz-fb" id="fb-4"></div>
+  </div>
+
+  <!-- Q5 MCQ -->
+  <div class="satz-box" id="sb-5">
+    <div class="qnum">Frage 5 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Wir essen im Speisesaal." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-5" style="color:var(--accent)">___</span> comemos en el comedor.</div>
+    <div class="options-grid" id="og-5" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(5,'Nosotros','Nosotros')">Nosotros</button>
+      <button class="opt" onclick="pickPron(5,'Vosotros','Nosotros')">Vosotros</button>
+      <button class="opt" onclick="pickPron(5,'Ellos','Nosotros')">Ellos</button>
+      <button class="opt" onclick="pickPron(5,'Yo','Nosotros')">Yo</button>
+    </div>
+    <div class="satz-fb" id="fb-5"></div>
+  </div>
+
+  <!-- Q6 MCQ -->
+  <div class="satz-box" id="sb-6">
+    <div class="qnum">Frage 6 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Ihr lernt Spanisch in der Schule." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-6" style="color:var(--accent)">___</span> estudiáis español en la escuela.</div>
+    <div class="options-grid" id="og-6" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(6,'Yo','Vosotros')">Yo</button>
+      <button class="opt" onclick="pickPron(6,'Tú','Vosotros')">Tú</button>
+      <button class="opt" onclick="pickPron(6,'Vosotros','Vosotros')">Vosotros</button>
+      <button class="opt" onclick="pickPron(6,'Ellos','Vosotros')">Ellos</button>
+    </div>
+    <div class="satz-fb" id="fb-6"></div>
+  </div>
+
+  <!-- Q7 MCQ -->
+  <div class="satz-box" id="sb-7">
+    <div class="qnum">Frage 7 von 10 – Pronomen auswählen</div>
+    <div class="satz-de">„Die Lehrerinnen unterrichten Spanisch." → auf Spanisch:</div>
+    <div class="satz-es"><span id="ans-7" style="color:var(--accent)">___</span> enseñan español.</div>
+    <div class="options-grid" id="og-7" style="margin-top:16px">
+      <button class="opt" onclick="pickPron(7,'Ellos','Ellas')">Ellos</button>
+      <button class="opt" onclick="pickPron(7,'Ellas','Ellas')">Ellas</button>
+      <button class="opt" onclick="pickPron(7,'Nosotras','Ellas')">Nosotras</button>
+      <button class="opt" onclick="pickPron(7,'Vosotras','Ellas')">Vosotras</button>
+    </div>
+    <div class="satz-fb" id="fb-7"></div>
+  </div>
+
+  <div class="section-heading">✏️ Teil 2 – Verbform eintippen</div>
+
+  <!-- Q8 TYPE -->
+  <div class="satz-box" id="sb-8">
+    <div class="qnum">Frage 8 von 10 – Verbform eintippen (ser)</div>
+    <div class="satz-de">„Die Villa Wewersbusch ist eine besondere Schule."</div>
+    <div class="satz-es">La Villa Wewersbusch <input class="blank-input" id="inp-8" placeholder="ser…" autocomplete="off" autocorrect="off" spellcheck="false"> una escuela especial.</div>
+    <div class="satz-fb" id="fb-8"></div>
+    <div class="flex-row" style="margin-top:12px">
+      <button class="btn btn-primary btn-sm" onclick="checkType(8,'es',['es'])">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="La Villa Wewersbusch es una escuela especial." data-lang="es-ES">🔊 Hören</button>
+    </div>
+  </div>
+
+  <!-- Q9 TYPE -->
+  <div class="satz-box" id="sb-9">
+    <div class="qnum">Frage 9 von 10 – Verbform eintippen (cenar – yo)</div>
+    <div class="satz-de">„Ich esse jeden Abend im Speisesaal zu Abend."</div>
+    <div class="satz-es">Yo <input class="blank-input" id="inp-9" placeholder="cenar…" autocomplete="off" autocorrect="off" spellcheck="false"> en el comedor cada día.</div>
+    <div class="satz-fb" id="fb-9"></div>
+    <div class="flex-row" style="margin-top:12px">
+      <button class="btn btn-primary btn-sm" onclick="checkType(9,'ceno',['ceno'])">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Yo ceno en el comedor cada día." data-lang="es-ES">🔊 Hören</button>
+    </div>
+  </div>
+
+  <!-- Q10 TYPE -->
+  <div class="satz-box" id="sb-10">
+    <div class="qnum">Frage 10 von 10 – Verbform eintippen (estudiar – ellos)</div>
+    <div class="satz-de">„Die Schüler lernen Spanisch, Mathe und Naturwissenschaften."</div>
+    <div class="satz-es">Los estudiantes <input class="blank-input" id="inp-10" placeholder="estudiar…" autocomplete="off" autocorrect="off" spellcheck="false"> español, matemáticas y ciencias.</div>
+    <div class="satz-fb" id="fb-10"></div>
+    <div class="flex-row" style="margin-top:12px">
+      <button class="btn btn-primary btn-sm" onclick="checkType(10,'estudian',['estudian'])">✅ Prüfen</button>
+      <button class="btn-audio" data-speak="Los estudiantes estudian español, matemáticas y ciencias." data-lang="es-ES">🔊 Hören</button>
+    </div>
+  </div>
+
+  <div class="flex-center mb-md">
+    <button class="btn btn-primary" onclick="showFinalResult()">📊 Gesamtergebnis anzeigen</button>
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+let scored = {}, focusedInput = null;
+
+document.addEventListener('focusin', e => {
+  if (e.target.tagName === 'INPUT') focusedInput = e.target;
+});
+
+function ins(char) {
+  if (!focusedInput) return;
+  const el = focusedInput, s = el.selectionStart, e2 = el.selectionEnd;
+  el.value = el.value.slice(0, s) + char + el.value.slice(e2);
+  el.selectionStart = el.selectionEnd = s + 1; el.focus();
+}
+
+function norm(s) {
+  return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function pickPron(q, chosen, correct) {
+  if (scored[q] !== undefined) return;
+  document.querySelectorAll('#og-' + q + ' .opt').forEach(b => b.disabled = true);
+  const fb  = document.getElementById('fb-' + q);
+  const ans = document.getElementById('ans-' + q);
+  const box = document.getElementById('sb-' + q);
+  if (chosen === correct) {
+    scored[q] = 1;
+    ans.textContent = correct; ans.style.color = 'var(--correct)';
+    fb.textContent = '✅ Richtig! ' + correct; fb.className = 'satz-fb ok';
+    box.classList.add('correct-box');
+    Speech.speakES(correct);
+  } else {
+    scored[q] = 0;
+    ans.textContent = correct; ans.style.color = 'var(--correct)';
+    fb.textContent = '❌ Falsch! Die richtige Antwort ist: ' + correct; fb.className = 'satz-fb err';
+    box.classList.add('wrong-box');
+    // highlight correct button
+    document.querySelectorAll('#og-' + q + ' .opt').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+      else if (b.textContent === chosen) b.classList.add('wrong');
+    });
+  }
+}
+
+function checkType(q, correct, alternates) {
+  if (scored[q] !== undefined) return;
+  const inp = document.getElementById('inp-' + q);
+  const fb  = document.getElementById('fb-' + q);
+  const box = document.getElementById('sb-' + q);
+  const val = inp.value;
+  if (!val.trim()) { fb.textContent = 'Bitte etwas eintippen!'; fb.className = 'satz-fb err'; return; }
+  const isOk = alternates.some(a => norm(val) === norm(a));
+  if (isOk) {
+    scored[q] = 1;
+    inp.classList.add('ok'); box.classList.add('correct-box');
+    fb.textContent = '✅ Richtig! ' + correct; fb.className = 'satz-fb ok';
+    Speech.speakES(correct);
+  } else {
+    scored[q] = 0;
+    inp.classList.add('err'); inp.value = correct; box.classList.add('wrong-box');
+    fb.textContent = '❌ Falsch! Richtig wäre: ' + correct; fb.className = 'satz-fb err';
+  }
+}
+
+function showFinalResult() {
+  const total = 10;
+  const cor   = Object.values(scored).filter(v => v === 1).length;
+  if (Object.keys(scored).length < total) {
+    alert('Beantworte erst alle 10 Fragen!');
+    return;
+  }
+  showResult('result-area', 'pronomen-level3', cor, total);
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init(); Speech.bindAll();
+  // Enter in type inputs
+  [8, 9, 10].forEach(q => {
+    const inp = document.getElementById('inp-' + q);
+    if (inp) inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.querySelector(`#sb-${q} .btn-primary`).click();
+    });
+  });
+});
+</script>
+</body>
+</html>

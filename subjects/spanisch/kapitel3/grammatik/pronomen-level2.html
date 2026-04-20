@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personalpronomen – Level 2 – Tabelle ausfüllen</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .accent-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 12px 18px; margin-bottom: 20px;
+    position: sticky; top: 76px; z-index: 50;
+  }
+  .accent-bar .label { font-size: var(--fs-sm); color: #aaa; margin-right: 4px; }
+  .acc-btn {
+    background: var(--surface2); border: 2px solid var(--border-hi);
+    color: var(--text); font-size: var(--fs-lg); font-weight: 900;
+    padding: 6px 18px; border-radius: 8px; cursor: pointer; font-family: inherit;
+    min-width: 52px; transition: border-color .12s, color .12s;
+  }
+  .acc-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .pron-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+  .pron-table th, .pron-table td {
+    border: 2px solid var(--border); padding: 14px 18px; font-size: var(--fs-md);
+  }
+  .pron-table th { background: var(--surface2); color: var(--accent); font-size: var(--fs-lg); font-weight: 800; }
+  .pron-table td.de-col { font-size: var(--fs-md); color: #ccc; font-weight: 700; }
+  .pron-table td.hint-col { font-size: var(--fs-sm); color: #888; }
+  .pron-table tr.correct-row td { background: #001a0a; }
+  .pron-table tr.wrong-row   td { background: #1a0000; }
+
+  .pron-input {
+    width: 100%; background: var(--surface2);
+    border: 3px solid var(--border); color: var(--text);
+    font-size: var(--fs-xl); font-weight: 900;
+    padding: 10px 14px; border-radius: 8px;
+    font-family: inherit; outline: none; text-align: center;
+    transition: border-color .15s;
+  }
+  .pron-input:focus { border-color: var(--accent); }
+  .pron-input.ok    { border-color: var(--correct); color: var(--correct); background: #001a0a; }
+  .pron-input.err   { border-color: var(--wrong);   color: var(--wrong);   background: #1a0000; }
+
+  .result-inline {
+    font-size: var(--fs-md); font-weight: 800; padding-left: 10px;
+  }
+  .result-inline.ok  { color: var(--correct); }
+  .result-inline.err { color: var(--wrong); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Pronomen Level 2 ✏️</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">👤 Pronomen Level 2 – Tabelle ausfüllen</div>
+
+  <div class="info-box mb-md">
+    <h3>✏️ Deine Aufgabe</h3>
+    <p>Tippe die richtigen <strong style="color:var(--accent)">spanischen Pronomen</strong> in jede Zelle der Tabelle.<br>
+    Nutze die Sonderzeichen-Leiste für Akzente (á, é, ú…). Akzente werden beim Prüfen <strong style="color:var(--accent)">auch ohne akzeptiert</strong> – aber versuch es richtig zu schreiben!<br>
+    Drücke <strong style="color:var(--accent)">Enter</strong> nach jeder Eingabe oder klicke <strong style="color:var(--accent)">✅ Alles prüfen</strong>.</p>
+  </div>
+
+  <!-- ACCENT BAR (sticky) -->
+  <div class="accent-bar">
+    <span class="label">Sonderzeichen:</span>
+    <button class="acc-btn" onclick="ins('á')">á</button>
+    <button class="acc-btn" onclick="ins('é')">é</button>
+    <button class="acc-btn" onclick="ins('í')">í</button>
+    <button class="acc-btn" onclick="ins('ó')">ó</button>
+    <button class="acc-btn" onclick="ins('ú')">ú</button>
+    <button class="acc-btn" onclick="ins('ñ')">ñ</button>
+    <button class="acc-btn" onclick="ins('ü')">ü</button>
+    <button class="acc-btn" onclick="ins('¡')">¡</button>
+    <button class="acc-btn" onclick="ins('¿')">¿</button>
+  </div>
+
+  <!-- TABELLE SINGULAR -->
+  <div class="section-heading">📋 Singular (Einzahl)</div>
+  <table class="pron-table" id="tbl-sg">
+    <thead>
+      <tr><th>Deutsch</th><th>Wann?</th><th>Spanisch –→ tippe ein!</th><th>🔊</th></tr>
+    </thead>
+    <tbody>
+      <tr data-ans="yo">
+        <td class="de-col">ich</td>
+        <td class="hint-col">immer für mich selbst</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="yo" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="tú">
+        <td class="de-col">du</td>
+        <td class="hint-col">eine Person, die du kennst</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="tú" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="él">
+        <td class="de-col">er</td>
+        <td class="hint-col">eine männliche Person</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="él" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="ella">
+        <td class="de-col">sie (Sg.)</td>
+        <td class="hint-col">eine weibliche Person</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="ella" data-lang="es-ES">▶</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TABELLE PLURAL -->
+  <div class="section-heading">📋 Plural (Mehrzahl)</div>
+  <table class="pron-table" id="tbl-pl">
+    <thead>
+      <tr><th>Deutsch</th><th>Wann?</th><th>Spanisch –→ tippe ein!</th><th>🔊</th></tr>
+    </thead>
+    <tbody>
+      <tr data-ans="nosotros">
+        <td class="de-col">wir ♂/gemischt</td>
+        <td class="hint-col">Jungs dabei oder gemischte Gruppe</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="nosotros" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="nosotras">
+        <td class="de-col">wir ♀</td>
+        <td class="hint-col">nur Mädchen / Frauen</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="nosotras" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="vosotros">
+        <td class="de-col">ihr ♂/gemischt</td>
+        <td class="hint-col">mehrere Personen (Jungs dabei)</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="vosotros" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="vosotras">
+        <td class="de-col">ihr ♀</td>
+        <td class="hint-col">nur Mädchen / Frauen</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="vosotras" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="ellos">
+        <td class="de-col">sie (Pl., gemischt)</td>
+        <td class="hint-col">mehrere Personen über die ich spreche (Jungs dabei)</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="ellos" data-lang="es-ES">▶</button></td>
+      </tr>
+      <tr data-ans="ellas">
+        <td class="de-col">sie (Pl., nur ♀)</td>
+        <td class="hint-col">nur Mädchen / Frauen, über die ich spreche</td>
+        <td><input class="pron-input" type="text" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false"></td>
+        <td><button class="btn-audio" data-speak="ellas" data-lang="es-ES">▶</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="flex-center mb-md">
+    <button class="btn btn-primary" onclick="checkAll()">✅ Alles prüfen</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetAll()">🔄 Neu versuchen</button>
+  </div>
+
+  <div class="feedback" id="fb"></div>
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+let focusedInput = null;
+document.addEventListener('focusin', e => {
+  if (e.target.tagName === 'INPUT') focusedInput = e.target;
+});
+
+function ins(char) {
+  if (!focusedInput) return;
+  const el = focusedInput, s = el.selectionStart, e2 = el.selectionEnd;
+  el.value = el.value.slice(0, s) + char + el.value.slice(e2);
+  el.selectionStart = el.selectionEnd = s + 1;
+  el.focus();
+}
+
+function norm(s) {
+  return s.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function checkAll() {
+  let cor = 0, total = 0;
+  document.querySelectorAll('.pron-table tbody tr[data-ans]').forEach(row => {
+    const ans   = row.dataset.ans;
+    const input = row.querySelector('.pron-input');
+    const val   = input.value;
+    total++;
+    if (!val.trim()) { input.classList.remove('ok','err'); return; }
+    if (norm(val) === norm(ans)) {
+      cor++; input.classList.add('ok'); input.classList.remove('err');
+      row.classList.add('correct-row'); row.classList.remove('wrong-row');
+    } else {
+      input.classList.add('err'); input.classList.remove('ok');
+      row.classList.add('wrong-row'); row.classList.remove('correct-row');
+    }
+  });
+  const filled = [...document.querySelectorAll('.pron-input')].filter(i => i.value.trim()).length;
+  const total2 = document.querySelectorAll('.pron-input').length;
+  if (filled < total2) {
+    const fb = document.getElementById('fb');
+    fb.textContent = `Noch ${total2-filled} Felder leer! Füll alle aus und prüfe nochmal.`;
+    fb.className = 'feedback show fb-wrong';
+    return;
+  }
+  document.getElementById('fb').classList.remove('show');
+  showResult('result-area', 'pronomen-level2', cor, total2);
+}
+
+function resetAll() {
+  document.querySelectorAll('.pron-input').forEach(i => {
+    i.value = ''; i.className = 'pron-input';
+  });
+  document.querySelectorAll('.pron-table tbody tr').forEach(r => {
+    r.classList.remove('correct-row','wrong-row');
+  });
+  document.getElementById('fb').classList.remove('show');
+  document.getElementById('result-area').innerHTML = '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init(); Speech.bindAll();
+  // Enter → move to next input
+  const inputs = [...document.querySelectorAll('.pron-input')];
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (i + 1 < inputs.length) inputs[i+1].focus();
+        else checkAll();
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wörter-Jagd – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  #game-wrapper { max-width: 800px; margin: 0 auto; }
+  #game-area {
+    position: relative; height: 560px;
+    background: #050505; border: 3px solid var(--border-hi);
+    border-radius: var(--radius); overflow: hidden;
+    user-select: none; cursor: default;
+  }
+  .game-lives  { position: absolute; top: 14px; right: 18px; font-size: 36px; z-index: 10; }
+  .game-score-display { position: absolute; top: 14px; left: 18px; font-size: var(--fs-lg); font-weight: 900; color: var(--accent); z-index: 10; }
+  .game-target {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: #0d0d0d; border-top: 3px solid var(--accent);
+    padding: 14px 20px; text-align: center; z-index: 10;
+  }
+  .game-target .label { font-size: var(--fs-sm); color: #888; }
+  .game-target .word  { font-size: var(--fs-xl);  font-weight: 900; color: var(--accent); }
+  .falling-word {
+    position: absolute;
+    background: var(--surface);
+    border: 3px solid var(--border-hi);
+    border-radius: 14px;
+    padding: 12px 22px;
+    font-size: var(--fs-lg);
+    font-weight: 800;
+    cursor: pointer;
+    z-index: 5;
+    transition: border-color .1s, background .1s;
+    white-space: nowrap;
+  }
+  .falling-word:hover  { border-color: var(--accent); color: var(--accent); }
+  .falling-word.hit    { border-color: var(--correct); background: #003020; color: var(--correct) !important; transform: scale(1.2); }
+  .falling-word.miss   { border-color: var(--wrong);   background: #300000; color: var(--wrong) !important; }
+  #start-screen, #end-screen { text-align: center; padding: 40px 20px; }
+  #start-screen h2, #end-screen h2 { font-size: var(--fs-xl); color: var(--accent); margin-bottom: 20px; }
+  #start-screen p, #end-screen p   { font-size: var(--fs-md); color: #ccc; margin-bottom: 28px; }
+  #game-canvas-area { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Wörter-Jagd 🎮</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title" id="main-title">🎮 Wörter-Jagd</div>
+
+  <div id="game-wrapper">
+
+    <!-- START SCREEN -->
+    <div id="start-screen">
+      <h2>🎮 Wörter-Jagd!</h2>
+      <p>Unten siehst du ein <strong style="color:var(--accent)">Deutsches Wort</strong>.<br>
+      Klick schnell auf das richtige <strong style="color:var(--accent)">Spanische Wort</strong>, bevor es fällt!<br>
+      Du hast 3 Leben ❤️ – bei jedem Fehler verlierst du eins.</p>
+
+      <div style="margin: 20px 0 28px">
+        <label style="font-size:var(--fs-md)">Schwierigkeit:</label><br>
+        <div style="display:flex;gap:14px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="startGame('easy')">🐢 Langsam</button>
+          <button class="btn btn-primary"   onclick="startGame('normal')">🚀 Normal</button>
+          <button class="btn btn-danger"    onclick="startGame('fast')">⚡ Schnell</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME AREA -->
+    <div id="game-canvas-area">
+      <div class="score-board">
+        <div class="sc-item"><div class="sc-value" id="g-score">0</div><div class="sc-label">Punkte</div></div>
+        <div class="sc-item"><div class="sc-value" id="g-combo">0</div><div class="sc-label">Combo 🔥</div></div>
+        <div class="sc-item"><div class="sc-value" id="g-q">0</div><div class="sc-label">Frage</div></div>
+      </div>
+
+      <div id="game-area">
+        <div class="game-lives" id="lives">❤️❤️❤️</div>
+        <div class="game-target">
+          <div class="label">Klick das spanische Wort für:</div>
+          <div class="word" id="target-de">...</div>
+        </div>
+      </div>
+
+      <div class="flex-center" style="margin-top:20px">
+        <button class="btn btn-secondary btn-sm" onclick="pauseGame()" id="pause-btn">⏸ Pause</button>
+        <button class="btn btn-danger btn-sm"    onclick="quitGame()">🚪 Abbrechen</button>
+      </div>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="end-screen" class="hidden">
+      <h2 id="end-title">Spiel vorbei!</h2>
+      <div style="font-size:80px;margin-bottom:12px" id="end-emoji">🎉</div>
+      <div id="end-stars" style="font-size:64px;margin-bottom:12px"></div>
+      <p id="end-msg"></p>
+      <div class="flex-center">
+        <button class="btn btn-secondary" onclick="resetGame()">🔄 Nochmal</button>
+        <a class="btn btn-primary" href="/Lernplattform/">🏠 Dashboard</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+const WORDS = [
+  {de:'die Bibliothek',   es:'la biblioteca'},
+  {de:'die Cafeteria',    es:'la cafetería'},
+  {de:'die Turnhalle',    es:'el gimnasio'},
+  {de:'der Schulhof',     es:'el patio'},
+  {de:'der Speisesaal',   es:'el comedor'},
+  {de:'das Kino',         es:'el cine'},
+  {de:'das Trampolin',    es:'el trampolín'},
+  {de:'der Musikraum',    es:'el aula de música'},
+  {de:'die Schule',       es:'la escuela'},
+  {de:'es gibt',          es:'hay'},
+  {de:'groß',             es:'grande'},
+  {de:'schön',            es:'bonito/a'},
+  {de:'modern',           es:'moderno/a'},
+  {de:'auch',             es:'también'},
+  {de:'aber',             es:'pero'},
+  {de:'sehr',             es:'muy'},
+  {de:'ich',              es:'yo'},
+  {de:'du',               es:'tú'},
+  {de:'wir',              es:'nosotros'},
+  {de:'essen',            es:'comer'},
+  {de:'sprechen',         es:'hablar'},
+  {de:'wohnen/leben',     es:'vivir'},
+  {de:'zu Abend essen',   es:'cenar'},
+  {de:'trinken',          es:'beber'},
+  {de:'schreiben',        es:'escribir'},
+  {de:'lesen',            es:'leer'},
+  {de:'sein (dauerhaft)', es:'ser'},
+  {de:'sein (Zustand)',   es:'estar'},
+  {de:'haben',            es:'tener'},
+];
+
+const DISTRACTORS_BY_ES = WORDS.map(w => w.es);
+
+let score = 0, combo = 0, lives = 3, questionN = 0;
+let fallingIntervals = [], spawnInterval = null;
+let paused = false, gameOver = false;
+let speed = 5000; // ms to fall
+let maxWords = 25;
+const FALL_TIME = { easy: 8000, normal: 5500, fast: 3200 };
+
+function startGame(diff) {
+  speed = FALL_TIME[diff];
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-canvas-area').style.display = 'block';
+  score = 0; combo = 0; lives = 3; questionN = 0; gameOver = false;
+  updateScoreUI();
+  requestAnimationFrame(nextRound);
+}
+
+let currentWord = null;
+function nextRound() {
+  if (gameOver) return;
+  if (questionN >= maxWords) { endGame(true); return; }
+  const gameArea = document.getElementById('game-area');
+  // Clear existing words
+  gameArea.querySelectorAll('.falling-word').forEach(w => w.remove());
+  clearAllIntervals();
+
+  questionN++;
+  document.getElementById('g-q').textContent = questionN + '/' + maxWords;
+
+  // Pick a word
+  currentWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+  document.getElementById('target-de').textContent = currentWord.de;
+  Speech.speakDE(currentWord.de);
+
+  // Build 3 answer options: correct + 2 distractors
+  const distractors = DISTRACTORS_BY_ES.filter(e => e !== currentWord.es)
+    .sort(() => Math.random()-0.5).slice(0,2);
+  const options = [currentWord.es, ...distractors].sort(() => Math.random()-0.5);
+
+  const positions = getPositions(options.length, gameArea.offsetWidth);
+
+  options.forEach((word, i) => {
+    const el = document.createElement('div');
+    el.className = 'falling-word';
+    el.textContent = word;
+    el.style.left = positions[i] + 'px';
+    el.style.top  = '-80px';
+    el.style.transition = `top ${speed}ms linear`;
+    el.addEventListener('click', () => handleClick(word === currentWord.es, el, word));
+    gameArea.appendChild(el);
+
+    // Start falling after a tiny delay so browser renders initial pos
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.top = (gameArea.offsetHeight - 120) + 'px';
+      });
+    });
+
+    // Check if word reached bottom without being clicked
+    const t = setTimeout(() => {
+      if (!el.classList.contains('hit') && !el.classList.contains('miss') && word === currentWord.es) {
+        if (!gameOver) { loseLife('Zeit abgelaufen!'); }
+      }
+    }, speed + 200);
+    fallingIntervals.push(t);
+  });
+
+  // Auto-next after fall+2s if no answer
+  const nt = setTimeout(() => { if (!gameOver) nextRound(); }, speed + 2500);
+  fallingIntervals.push(nt);
+}
+
+function getPositions(count, areaWidth) {
+  const width = areaWidth > 100 ? areaWidth : 700;
+  const margin = 16;
+  const slot = (width - margin * 2) / count;
+  return Array.from({length: count}, (_, i) => margin + i * slot);
+}
+
+function handleClick(isCorrect, el, word) {
+  if (el.classList.contains('hit') || el.classList.contains('miss') || gameOver) return;
+  clearAllIntervals();
+
+  if (isCorrect) {
+    el.classList.add('hit');
+    combo++;
+    const pts = 10 + (combo > 1 ? (combo-1) * 5 : 0);
+    score += pts;
+    Speech.speakES(word);
+    updateScoreUI();
+    fallingIntervals.push(setTimeout(nextRound, 900));
+  } else {
+    el.classList.add('miss');
+    // Reveal correct
+    document.getElementById('game-area').querySelectorAll('.falling-word').forEach(fw => {
+      if (fw.textContent === currentWord.es) fw.classList.add('hit');
+    });
+    loseLife('Falsch geklickt!');
+  }
+}
+
+function loseLife(reason) {
+  clearAllIntervals();
+  lives = Math.max(0, lives - 1);
+  combo = 0;
+  updateScoreUI();
+  if (lives <= 0) { endGame(false); return; }
+  fallingIntervals.push(setTimeout(nextRound, 1200));
+}
+
+function updateScoreUI() {
+  document.getElementById('g-score').textContent = score;
+  document.getElementById('g-combo').textContent = combo > 1 ? combo + '🔥' : combo;
+  const hearts = '❤️'.repeat(lives) + '🖤'.repeat(3-lives);
+  document.getElementById('lives').textContent = hearts;
+}
+
+function clearAllIntervals() {
+  fallingIntervals.forEach(clearTimeout);
+  fallingIntervals = [];
+}
+
+function pauseGame() {
+  paused = !paused;
+  document.getElementById('pause-btn').textContent = paused ? '▶ Weiter' : '⏸ Pause';
+  document.getElementById('game-area').style.opacity = paused ? '0.4' : '1';
+}
+
+function quitGame() { gameOver = true; clearAllIntervals(); resetGame(); }
+
+function endGame(won) {
+  gameOver = true;
+  clearAllIntervals();
+  document.getElementById('game-canvas-area').style.display = 'none';
+  const end = document.getElementById('end-screen');
+  end.classList.remove('hidden');
+
+  const pct = Math.round((score / (maxWords * 15)) * 100);
+  const stars = LP.setStars('fallende-woerter', LP.scoreToStars(Math.min(pct, 100)));
+
+  document.getElementById('end-title').textContent = won ? '🏆 Gewonnen!' : '💥 Spiel vorbei!';
+  document.getElementById('end-emoji').textContent = won ? '🎉' : (lives<=0?'💔':'🌟');
+  document.getElementById('end-stars').innerHTML   = LP.starsHTML(stars);
+  document.getElementById('end-msg').textContent   = `${score} Punkte • ${questionN} Runden gespielt`;
+}
+
+function resetGame() {
+  gameOver = false; clearAllIntervals();
+  document.getElementById('game-canvas-area').style.display = 'none';
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('start-screen').style.display = 'block';
+  document.getElementById('game-area').querySelectorAll('.falling-word').forEach(w=>w.remove());
+}
+</script>
+</body>
+</html>

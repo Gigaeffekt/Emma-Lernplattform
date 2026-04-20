@@ -1,0 +1,107 @@
+{
+  "gruppen": [
+    {
+      "id": "ar",
+      "typ": "Regelmäßig -AR",
+      "endungen": ["o","as","a","amos","áis","an"],
+      "verben": [
+        {
+          "infinitiv": "cenar",
+          "bedeutung": "zu Abend essen",
+          "stamm": "cen",
+          "formen": ["ceno","cenas","cena","cenamos","cenáis","cenan"]
+        },
+        {
+          "infinitiv": "hablar",
+          "bedeutung": "sprechen",
+          "stamm": "habl",
+          "formen": ["hablo","hablas","habla","hablamos","habláis","hablan"]
+        },
+        {
+          "infinitiv": "estudiar",
+          "bedeutung": "lernen",
+          "stamm": "estudi",
+          "formen": ["estudio","estudias","estudia","estudiamos","estudiáis","estudian"]
+        },
+        {
+          "infinitiv": "escuchar",
+          "bedeutung": "zuhören",
+          "stamm": "escuch",
+          "formen": ["escucho","escuchas","escucha","escuchamos","escucháis","escuchan"]
+        }
+      ]
+    },
+    {
+      "id": "er",
+      "typ": "Regelmäßig -ER",
+      "endungen": ["o","es","e","emos","éis","en"],
+      "verben": [
+        {
+          "infinitiv": "comer",
+          "bedeutung": "essen",
+          "stamm": "com",
+          "formen": ["como","comes","come","comemos","coméis","comen"]
+        },
+        {
+          "infinitiv": "beber",
+          "bedeutung": "trinken",
+          "stamm": "beb",
+          "formen": ["bebo","bebes","bebe","bebemos","bebéis","beben"]
+        },
+        {
+          "infinitiv": "leer",
+          "bedeutung": "lesen",
+          "stamm": "le",
+          "formen": ["leo","lees","lee","leemos","leéis","leen"]
+        }
+      ]
+    },
+    {
+      "id": "ir",
+      "typ": "Regelmäßig -IR",
+      "endungen": ["o","es","e","imos","ís","en"],
+      "verben": [
+        {
+          "infinitiv": "vivir",
+          "bedeutung": "wohnen / leben",
+          "stamm": "viv",
+          "formen": ["vivo","vives","vive","vivimos","vivís","viven"]
+        },
+        {
+          "infinitiv": "escribir",
+          "bedeutung": "schreiben",
+          "stamm": "escrib",
+          "formen": ["escribo","escribes","escribe","escribimos","escribís","escriben"]
+        },
+        {
+          "infinitiv": "abrir",
+          "bedeutung": "öffnen",
+          "stamm": "abr",
+          "formen": ["abro","abres","abre","abrimos","abrís","abren"]
+        }
+      ]
+    },
+    {
+      "id": "unreg",
+      "typ": "Unregelmäßig",
+      "verben": [
+        {
+          "infinitiv": "ser",
+          "bedeutung": "sein (Eigenschaften, Herkunft)",
+          "formen": ["soy","eres","es","somos","sois","son"]
+        },
+        {
+          "infinitiv": "estar",
+          "bedeutung": "sein (Zustand, Ort)",
+          "formen": ["estoy","estás","está","estamos","estáis","están"]
+        },
+        {
+          "infinitiv": "tener",
+          "bedeutung": "haben",
+          "formen": ["tengo","tienes","tiene","tenemos","tenéis","tienen"]
+        }
+      ]
+    }
+  ],
+  "pronomen": ["yo","tú","él/ella","nosotros","vosotros","ellos/ellas"]
+}

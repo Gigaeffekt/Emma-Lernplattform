@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personalpronomen – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .pronoun-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+  .pronoun-table th, .pronoun-table td {
+    border: 2px solid var(--border); padding: 16px 20px; font-size: var(--fs-md);
+  }
+  .pronoun-table th { background: var(--surface2); color: var(--accent); font-size: var(--fs-lg); font-weight: 800; }
+  .pronoun-table td.es { font-size: var(--fs-xl); font-weight: 900; color: var(--accent); }
+  .pronoun-table td.de { font-size: var(--fs-md); color: #ccc; }
+  .pronoun-table tr:hover td { background: #1e1e00; }
+  .quiz-counter { font-size: var(--fs-md); color: #aaa; margin-bottom: 8px; }
+  #quiz-section { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Personalpronomen</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">👤 Personalpronomen</div>
+
+  <!-- ERKLÄRUNG -->
+  <div id="learn-section">
+    <div class="info-box">
+      <h3>💡 Was sind Personalpronomen?</h3>
+      <p>Personalpronomen sagen uns, <strong style="color:var(--accent)">WER</strong> etwas tut.<br>
+      Im Deutschen: ich, du, er, sie, es, wir, ihr, sie.<br>
+      Im Spanischen gibt es <strong style="color:var(--accent)">10 Formen</strong> – weil Spanisch zwischen <em>maskulin</em> und <em>feminin</em> unterscheidet!</p>
+    </div>
+
+    <!-- TABELLE SINGULAR -->
+    <div class="section-heading">Singular (Einzahl)</div>
+    <table class="pronoun-table">
+      <thead>
+        <tr><th>Spanisch</th><th>Deutsch</th><th>Beispiel</th><th>🔊</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="es">yo</td>
+          <td class="de">ich</td>
+          <td><em>Yo como.</em> – Ich esse.</td>
+          <td><button class="btn-audio" data-speak="yo" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">tú</td>
+          <td class="de">du</td>
+          <td><em>Tú hablas.</em> – Du sprichst.</td>
+          <td><button class="btn-audio" data-speak="tú" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">él</td>
+          <td class="de">er</td>
+          <td><em>Él vive aquí.</em> – Er wohnt hier.</td>
+          <td><button class="btn-audio" data-speak="él" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">ella</td>
+          <td class="de">sie (Sing.)</td>
+          <td><em>Ella come.</em> – Sie isst.</td>
+          <td><button class="btn-audio" data-speak="ella" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- TABELLE PLURAL -->
+    <div class="section-heading">Plural (Mehrzahl)</div>
+    <table class="pronoun-table">
+      <thead>
+        <tr><th>Spanisch</th><th>Deutsch</th><th>Wann?</th><th>🔊</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="es">nosotros</td>
+          <td class="de">wir</td>
+          <td>Wenn Jungs dabei sind (oder gemischt)</td>
+          <td><button class="btn-audio" data-speak="nosotros" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">nosotras</td>
+          <td class="de">wir</td>
+          <td>Wenn <em>nur</em> Mädchen/Frauen dabei sind</td>
+          <td><button class="btn-audio" data-speak="nosotras" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">vosotros</td>
+          <td class="de">ihr</td>
+          <td>Wenn Jungs dabei sind (oder gemischt)</td>
+          <td><button class="btn-audio" data-speak="vosotros" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">vosotras</td>
+          <td class="de">ihr</td>
+          <td>Wenn <em>nur</em> Mädchen/Frauen dabei sind</td>
+          <td><button class="btn-audio" data-speak="vosotras" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">ellos</td>
+          <td class="de">sie (Pl.)</td>
+          <td>Gruppe mit Jungs (oder gemischt)</td>
+          <td><button class="btn-audio" data-speak="ellos" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+        <tr>
+          <td class="es">ellas</td>
+          <td class="de">sie (Pl.)</td>
+          <td>Gruppe <em>nur</em> Mädchen/Frauen</td>
+          <td><button class="btn-audio" data-speak="ellas" data-lang="es-ES">▶ Hören</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <h3>🧠 Merksatz</h3>
+      <p>
+        <strong style="color:var(--accent)">yo – tú – él/ella</strong> (Singular)<br>
+        <strong style="color:var(--accent)">nosotros – vosotros – ellos/ellas</strong> (Plural)<br><br>
+        Wenn du eine Gruppe beschreibst, wo <em>auch nur ein Junge</em> dabei ist → <strong style="color:var(--accent)">-os</strong>!<br>
+        Nur wenn <em>alle</em> Mädchen/Frauen sind → <strong style="color:var(--accent)">-as</strong>.
+      </p>
+    </div>
+
+    <div class="flex-center mb-lg">
+      <button class="btn btn-primary" onclick="startQuiz()">✏️ Quiz starten →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="page-title">✏️ Quiz: Personalpronomen</div>
+    <div class="quiz-counter" id="quiz-counter">Frage 1 von 10</div>
+
+    <div class="quiz-box" id="qbox">
+      <div class="quiz-question" id="q-text"></div>
+      <div class="quiz-subtext" id="q-sub"></div>
+      <div class="options-grid" id="opts"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- RESULT (hidden) -->
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+const questions = [
+  { q: 'Wie sagt man "ich" auf Spanisch?',    a: 'yo',       opts: ['yo','tú','él','ella'] },
+  { q: 'Wie sagt man "du" auf Spanisch?',     a: 'tú',       opts: ['yo','tú','él','nosotros'] },
+  { q: 'Wie sagt man "er" auf Spanisch?',     a: 'él',       opts: ['ella','él','ellos','vosotros'] },
+  { q: 'Wie sagt man "sie" (Singular)?',      a: 'ella',     opts: ['él','ella','ellas','nosotras'] },
+  { q: 'Wie sagt man "wir" (mit Jungs)?',     a: 'nosotros', opts: ['nosotras','vosotros','nosotros','ellos'] },
+  { q: 'Wie sagt man "wir" (nur Mädchen)?',   a: 'nosotras', opts: ['nosotros','vosotras','nosotras','ellas'] },
+  { q: 'Wie sagt man "ihr" (mit Jungs)?',     a: 'vosotros', opts: ['vosotras','nosotros','vosotros','ellos'] },
+  { q: 'Wie sagt man "sie" (Pl., gemischt)?', a: 'ellos',    opts: ['ellas','ellos','vosotros','nosotros'] },
+  { q: '"nosotras" bedeutet…',                a: 'wir (nur Frauen)', opts: ['wir (mit Jungs)','wir (nur Frauen)','ihr (nur Frauen)','sie (Plural)'] },
+  { q: 'Du redest mit 3 Freundinnen. Wie sagst du "ihr"?', a: 'vosotras', opts: ['vosotros','nosotras','ellas','vosotras'] }
+];
+
+let qIdx = 0, correct = 0, answered = false;
+
+function startQuiz() {
+  document.getElementById('learn-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display  = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  if (qIdx >= questions.length) { endQuiz(); return; }
+  answered = false;
+  const q = questions[qIdx];
+  document.getElementById('quiz-counter').textContent = `Frage ${qIdx+1} von ${questions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-sub').textContent  = '';
+  document.getElementById('feedback').classList.remove('show','fb-correct','fb-wrong');
+
+  const shuffled = [...q.opts].sort(() => Math.random() - 0.5);
+  const grid = document.getElementById('opts');
+  grid.innerHTML = '';
+  shuffled.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = o;
+    btn.onclick = () => answer(o, q.a, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function answer(chosen, correct_ans, btn) {
+  if (answered) return;
+  answered = true;
+  const fb = document.getElementById('feedback');
+  document.querySelectorAll('.opt').forEach(b => b.disabled = true);
+  if (chosen === correct_ans) {
+    correct++;
+    btn.classList.add('correct');
+    fb.textContent = '✅ Richtig! ' + correct_ans;
+    fb.className   = 'feedback show fb-correct';
+    Speech.speakES(correct_ans);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt').forEach(b => { if (b.textContent === correct_ans) b.classList.add('correct'); });
+    fb.textContent = '❌ Falsch! Richtig ist: ' + correct_ans;
+    fb.className   = 'feedback show fb-wrong';
+  }
+  qIdx++;
+  setTimeout(showQuestion, 1800);
+}
+
+function endQuiz() {
+  document.getElementById('quiz-section').classList.add('hidden');
+  showResult('result-area', 'pronomen', correct, questions.length);
+}
+</script>
+</body>
+</html>

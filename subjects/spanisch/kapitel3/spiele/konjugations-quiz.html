@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konjugations-Quiz – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .verb-display {
+    text-align: center; padding: 28px;
+    background: var(--surface);
+    border: 3px solid var(--accent);
+    border-radius: var(--radius); margin-bottom: 28px;
+  }
+  .verb-display .infinitiv { font-size: var(--fs-xxl); font-weight: 900; color: var(--accent); }
+  .verb-display .bedeutung { font-size: var(--fs-md); color: #aaa; margin-top: 8px; }
+  .verb-display .typ       { font-size: var(--fs-sm); color: #888; }
+  .pronoun-big { font-size: var(--fs-xl); font-weight: 900; color: var(--text); margin-bottom: 16px; text-align:center; }
+  .input-area  { text-align: center; margin: 16px 0 28px; }
+  .input-area input {
+    font-size: var(--fs-xl); font-weight: 900;
+    text-align: center;
+    width: min(400px, 90%);
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 3px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius);
+    font-family: inherit;
+  }
+  .input-area input:focus { border-color: var(--accent); outline: none; }
+  .mode-tabs  { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .mode-tab   { padding: 12px 24px; border-radius: 99px; font-size: var(--fs-sm); font-weight: 700; cursor: pointer; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; }
+  .mode-tab.active { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Konjugations-Quiz ✏️</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">✏️ Konjugations-Quiz</div>
+
+  <div class="info-box mb-md">
+    <h3>🎯 So funktioniert das Quiz</h3>
+    <p>Du siehst ein Verb und ein Personalpronomen. Wähle die richtige Form oder tippe sie ein!<br>
+    <strong style="color:var(--accent)">Tipp:</strong> Schau vorher in die Grammatik-Seite, wenn du noch unsicher bist.</p>
+  </div>
+
+  <!-- MODUS WÄHLEN -->
+  <div class="mode-tabs" id="mode-tabs">
+    <button class="mode-tab active" data-mode="mc">🃏 Auswählen (leicht)</button>
+    <button class="mode-tab"        data-mode="type">⌨️ Eintippen (schwerer)</button>
+  </div>
+
+  <div class="score-board">
+    <div class="sc-item"><div class="sc-value" id="sc-cor">0</div><div class="sc-label">✅ Richtig</div></div>
+    <div class="sc-item"><div class="sc-value" id="sc-wr">0</div><div class="sc-label">❌ Falsch</div></div>
+    <div class="sc-item"><div class="sc-value" id="sc-tot">0</div><div class="sc-label">Gesamt</div></div>
+    <div style="flex:1">
+      <div class="progress-wrap"><div class="progress-bar" id="sc-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- FRAGE -->
+  <div id="quiz-area" class="verb-display">
+    <div class="typ" id="q-typ">-AR Verb</div>
+    <div class="infinitiv" id="q-infinitiv">cenar</div>
+    <div class="bedeutung" id="q-bedeutung">zu Abend essen</div>
+  </div>
+
+  <div class="pronoun-big" id="q-pronomen">yo</div>
+
+  <!-- MULTIPLE CHOICE -->
+  <div id="mc-area">
+    <div class="options-grid" id="mc-opts"></div>
+  </div>
+
+  <!-- TIPP-MODUS -->
+  <div id="type-area" class="hidden">
+    <div class="input-area">
+      <input type="text" id="type-input" placeholder="Deine Antwort…" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-primary" onclick="checkType()">✅ Prüfen</button>
+    </div>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+// Alle Fragen
+const ALL_Q = [
+  // -AR: cenar
+  {v:'cenar',b:'zu Abend essen',t:'-AR',p:'yo',       a:'ceno',    opts:['ceno','cenas','cenan','cenamos']},
+  {v:'cenar',b:'zu Abend essen',t:'-AR',p:'tú',       a:'cenas',   opts:['cena','cenas','cenan','cenáis']},
+  {v:'cenar',b:'zu Abend essen',t:'-AR',p:'él/ella',  a:'cena',    opts:['cena','cenas','ceno','cenan']},
+  {v:'cenar',b:'zu Abend essen',t:'-AR',p:'nosotros', a:'cenamos', opts:['cenamos','cenáis','cenan','cenas']},
+  {v:'cenar',b:'zu Abend essen',t:'-AR',p:'vosotros', a:'cenáis',  opts:['cenamos','cenáis','cenan','cena']},
+  {v:'cenar',b:'zu Abend essen',t:'-AR',p:'ellos',    a:'cenan',   opts:['cena','cenáis','cenan','cenamos']},
+  // -ER: comer
+  {v:'comer',b:'essen',t:'-ER',p:'yo',       a:'como',    opts:['como','comes','come','comemos']},
+  {v:'comer',b:'essen',t:'-ER',p:'tú',       a:'comes',   opts:['como','comes','come','coméis']},
+  {v:'comer',b:'essen',t:'-ER',p:'él/ella',  a:'come',    opts:['como','comes','come','comen']},
+  {v:'comer',b:'essen',t:'-ER',p:'nosotros', a:'comemos', opts:['comemos','coméis','comen','come']},
+  {v:'comer',b:'essen',t:'-ER',p:'vosotros', a:'coméis',  opts:['comemos','coméis','comen','comes']},
+  {v:'comer',b:'essen',t:'-ER',p:'ellos',    a:'comen',   opts:['come','coméis','comen','comemos']},
+  // -IR: vivir
+  {v:'vivir',b:'wohnen/leben',t:'-IR',p:'yo',       a:'vivo',    opts:['vivo','vives','vive','vivimos']},
+  {v:'vivir',b:'wohnen/leben',t:'-IR',p:'tú',       a:'vives',   opts:['vivo','vives','vive','vivís']},
+  {v:'vivir',b:'wohnen/leben',t:'-IR',p:'nosotros', a:'vivimos', opts:['vivimos','vivís','viven','vive']},
+  {v:'vivir',b:'wohnen/leben',t:'-IR',p:'ellos',    a:'viven',   opts:['vive','vivís','viven','vivimos']},
+  // ser
+  {v:'ser',b:'sein (dauerhaft)',t:'unreg.',p:'yo',       a:'soy',  opts:['soy','eres','es','somos']},
+  {v:'ser',b:'sein (dauerhaft)',t:'unreg.',p:'tú',       a:'eres', opts:['soy','eres','es','sois']},
+  {v:'ser',b:'sein (dauerhaft)',t:'unreg.',p:'él/ella',  a:'es',   opts:['son','sois','es','somos']},
+  {v:'ser',b:'sein (dauerhaft)',t:'unreg.',p:'nosotros', a:'somos',opts:['somos','sois','son','eres']},
+  {v:'ser',b:'sein (dauerhaft)',t:'unreg.',p:'vosotros', a:'sois', opts:['somos','sois','son','eres']},
+  {v:'ser',b:'sein (dauerhaft)',t:'unreg.',p:'ellos',    a:'son',  opts:['somos','sois','son','es']},
+  // estar
+  {v:'estar',b:'sein (Ort/Zustand)',t:'unreg.',p:'yo',      a:'estoy',   opts:['estoy','estás','está','estamos']},
+  {v:'estar',b:'sein (Ort/Zustand)',t:'unreg.',p:'tú',      a:'estás',   opts:['estoy','estás','está','están']},
+  {v:'estar',b:'sein (Ort/Zustand)',t:'unreg.',p:'él/ella', a:'está',    opts:['estoy','estás','está','estáis']},
+  {v:'estar',b:'sein (Ort/Zustand)',t:'unreg.',p:'nosotros',a:'estamos', opts:['estamos','estáis','están','estás']},
+  {v:'estar',b:'sein (Ort/Zustand)',t:'unreg.',p:'ellos',   a:'están',   opts:['estamos','estáis','están','está']},
+  // tener
+  {v:'tener',b:'haben',t:'unreg.',p:'yo',       a:'tengo',   opts:['tengo','tienes','tiene','tenemos']},
+  {v:'tener',b:'haben',t:'unreg.',p:'tú',       a:'tienes',  opts:['tengo','tienes','tiene','tienen']},
+  {v:'tener',b:'haben',t:'unreg.',p:'él/ella',  a:'tiene',   opts:['tengo','tienes','tiene','tenemos']},
+  {v:'tener',b:'haben',t:'unreg.',p:'nosotros', a:'tenemos', opts:['tenemos','tenéis','tienen','tiene']},
+  {v:'tener',b:'haben',t:'unreg.',p:'ellos',    a:'tienen',  opts:['tiene','tenéis','tienen','tenemos']},
+];
+
+let questions, qi = 0, cor = 0, wr = 0, ans = false;
+let mode = 'mc'; // 'mc' or 'type'
+
+function initQuiz() {
+  questions = ALL_Q.sort(() => Math.random() - 0.5);
+  qi = 0; cor = 0; wr = 0; ans = false;
+  showQ();
+}
+
+function showQ() {
+  if (qi >= questions.length) { endQuiz(); return; }
+  ans = false;
+  const q = questions[qi];
+  document.getElementById('q-typ').textContent      = q.t;
+  document.getElementById('q-infinitiv').textContent= q.v;
+  document.getElementById('q-bedeutung').textContent= q.b;
+  document.getElementById('q-pronomen').textContent  = q.p;
+  document.getElementById('feedback').classList.remove('show','fb-correct','fb-wrong');
+  updateScore();
+
+  if (mode === 'mc') {
+    buildMC(q);
+  } else {
+    const inp = document.getElementById('type-input');
+    inp.value = ''; inp.className = ''; inp.focus();
+  }
+}
+
+function buildMC(q) {
+  const grid = document.getElementById('mc-opts'); grid.innerHTML = '';
+  [...q.opts].sort(() => Math.random()-0.5).forEach(o => {
+    const b = document.createElement('button'); b.className = 'opt'; b.textContent = o;
+    b.onclick = () => handleAnswer(o, q.a, b);
+    grid.appendChild(b);
+  });
+}
+
+function handleAnswer(chosen, correct_ans, btn) {
+  if (ans) return; ans = true;
+  document.querySelectorAll('.opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if (chosen === correct_ans) {
+    cor++; if(btn) btn.classList.add('correct');
+    fb.textContent = '✅ Ja! ' + correct_ans; fb.className = 'feedback show fb-correct';
+    Speech.speakES(questions[qi]?.p + ' ' + correct_ans);
+  } else {
+    wr++; if(btn) btn.classList.add('wrong');
+    document.querySelectorAll('.opt').forEach(b => { if(b.textContent===correct_ans) b.classList.add('correct'); });
+    fb.textContent = '❌ Richtig ist: ' + correct_ans; fb.className = 'feedback show fb-wrong';
+  }
+  updateScore();
+  if (mode === 'mc') { qi++; setTimeout(showQ, 1600); }
+}
+
+function checkType() {
+  if (ans) return; ans = true;
+  const q = questions[qi];
+  const val = document.getElementById('type-input').value.trim().toLowerCase();
+  const correct_ans = q.a.toLowerCase();
+  const inp = document.getElementById('type-input');
+  const fb  = document.getElementById('feedback');
+  if (val === correct_ans) {
+    cor++; inp.className = 'correct';
+    fb.textContent = '✅ Richtig! ' + q.a; fb.className = 'feedback show fb-correct';
+    Speech.speakES(q.p + ' ' + q.a);
+  } else {
+    wr++; inp.className = 'wrong';
+    fb.textContent = '❌ Richtig: ' + q.a; fb.className = 'feedback show fb-wrong';
+  }
+  updateScore();
+  qi++;
+  setTimeout(() => { ans = false; showQ(); }, 1800);
+}
+
+function updateScore() {
+  const total = cor + wr;
+  document.getElementById('sc-cor').textContent = cor;
+  document.getElementById('sc-wr').textContent  = wr;
+  document.getElementById('sc-tot').textContent = total;
+  document.getElementById('sc-bar').style.width = (questions && questions.length) ? Math.round((qi/questions.length)*100)+'%' : '0%';
+}
+
+function endQuiz() {
+  showResult('result-area', 'konjugations-quiz', cor, questions.length);
+}
+
+// Mode switching
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    mode = tab.getAttribute('data-mode');
+    document.getElementById('mc-area').classList.toggle('hidden', mode !== 'mc');
+    document.getElementById('type-area').classList.toggle('hidden', mode !== 'type');
+  });
+});
+
+// Enter key for type mode
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('type-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkType();
+  });
+  initQuiz();
+});
+</script>
+</body>
+</html>

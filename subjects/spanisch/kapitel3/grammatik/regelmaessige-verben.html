@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regelmäßige Verben – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .verb-tabs { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .verb-tab {
+    padding: 12px 28px; border-radius: 99px; font-size: var(--fs-md); font-weight: 800;
+    cursor: pointer; border: 3px solid var(--border); background: var(--surface);
+    color: var(--text); font-family: inherit;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .verb-tab.ar.active { background: #ff6600; border-color: #ff6600; color: #000; }
+  .verb-tab.er.active { background: #0099ff; border-color: #0099ff; color: #000; }
+  .verb-tab.ir.active { background: #aa44ff; border-color: #aa44ff; color: #fff; }
+  .verb-tab:hover { border-color: var(--accent); }
+
+  .ending-highlight.ar { color: #ff8800; font-weight: 900; }
+  .ending-highlight.er { color: #33aaff; font-weight: 900; }
+  .ending-highlight.ir { color: #cc66ff; font-weight: 900; }
+
+  .verb-panel { display: none; }
+  .verb-panel.active { display: block; }
+
+  .big-formula {
+    font-size: var(--fs-xl); font-weight: 900; text-align: center;
+    padding: 22px; background: var(--surface);
+    border: 3px solid var(--accent); border-radius: var(--radius);
+    margin-bottom: 28px; line-height: 1.5;
+  }
+  .arrow { color: var(--accent); }
+  .conj-ex { margin-bottom: 40px; }
+  .conj-ex h3 { font-size: var(--fs-lg); color: var(--accent); margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Regelmäßige Verben</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">📖 Regelmäßige Verben – Die Logik!</div>
+
+  <div class="info-box">
+    <h3>💡 Das Prinzip – ganz einfach!</h3>
+    <p>Spanische Verben enden im Infinitiv auf <strong style="color:#ff8800">-AR</strong>, <strong style="color:#33aaff">-ER</strong> oder <strong style="color:#cc66ff">-IR</strong>.<br>
+    Um sie zu konjugieren: <strong style="color:var(--accent)">Endung abschneiden → neue Endung dranhängen!</strong></p>
+    <ul style="margin-top:12px">
+      <li>cen<strong style="color:#ff8800">ar</strong> → cen- + o/as/a/amos/áis/an</li>
+      <li>com<strong style="color:#33aaff">er</strong> → com- + o/es/e/emos/éis/en</li>
+      <li>viv<strong style="color:#cc66ff">ir</strong>  → viv- + o/es/e/imos/ís/en</li>
+    </ul>
+  </div>
+
+  <!-- TABS -->
+  <div class="verb-tabs">
+    <button class="verb-tab ar active" onclick="showTab('ar')">🟠 -AR Verben</button>
+    <button class="verb-tab er" onclick="showTab('er')">🔵 -ER Verben</button>
+    <button class="verb-tab ir" onclick="showTab('ir')">🟣 -IR Verben</button>
+  </div>
+
+  <!-- ── AR PANEL ── -->
+  <div class="verb-panel active" id="panel-ar">
+    <div class="big-formula">
+      cen<span class="ending-highlight ar">ar</span>
+      <span class="arrow"> → </span>cen-
+      <span class="arrow"> + </span>
+      <span class="ending-highlight ar">o / as / a / amos / áis / an</span>
+    </div>
+
+    <div class="conj-ex">
+      <h3>cenar – zu Abend essen
+        <button class="btn-audio" data-speak="cenar" data-lang="es-ES" style="margin-left:14px">▶</button>
+      </h3>
+      <table class="conj-table">
+        <thead><tr><th>Pronomen</th><th>Form</th><th>🔊</th></tr></thead>
+        <tbody>
+          <tr><td class="pronoun">yo</td><td class="form">cen<span class="ending-highlight ar">o</span></td><td><button class="btn-audio btn-sm" data-speak="yo ceno" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">tú</td><td class="form">cen<span class="ending-highlight ar">as</span></td><td><button class="btn-audio btn-sm" data-speak="tú cenas" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">él/ella</td><td class="form">cen<span class="ending-highlight ar">a</span></td><td><button class="btn-audio btn-sm" data-speak="él cena" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">nosotros</td><td class="form">cen<span class="ending-highlight ar">amos</span></td><td><button class="btn-audio btn-sm" data-speak="nosotros cenamos" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">vosotros</td><td class="form">cen<span class="ending-highlight ar">áis</span></td><td><button class="btn-audio btn-sm" data-speak="vosotros cenáis" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">ellos/ellas</td><td class="form">cen<span class="ending-highlight ar">an</span></td><td><button class="btn-audio btn-sm" data-speak="ellos cenan" data-lang="es-ES">▶</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <h3>Weitere -AR Verben (funktionieren genauso!)</h3>
+      <p>
+        <strong style="color:#ff8800">hablar</strong> (sprechen) → habl- + o/as/a/amos/áis/an<br>
+        <strong style="color:#ff8800">estudiar</strong> (lernen) → estudi- + o/as/a/amos/áis/an<br>
+        <strong style="color:#ff8800">escuchar</strong> (zuhören) → escuch- + o/as/a/amos/áis/an
+      </p>
+    </div>
+  </div>
+
+  <!-- ── ER PANEL ── -->
+  <div class="verb-panel" id="panel-er">
+    <div class="big-formula">
+      com<span class="ending-highlight er">er</span>
+      <span class="arrow"> → </span>com-
+      <span class="arrow"> + </span>
+      <span class="ending-highlight er">o / es / e / emos / éis / en</span>
+    </div>
+
+    <div class="conj-ex">
+      <h3>comer – essen
+        <button class="btn-audio" data-speak="comer" data-lang="es-ES" style="margin-left:14px">▶</button>
+      </h3>
+      <table class="conj-table">
+        <thead><tr><th>Pronomen</th><th>Form</th><th>🔊</th></tr></thead>
+        <tbody>
+          <tr><td class="pronoun">yo</td><td class="form">com<span class="ending-highlight er">o</span></td><td><button class="btn-audio btn-sm" data-speak="yo como" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">tú</td><td class="form">com<span class="ending-highlight er">es</span></td><td><button class="btn-audio btn-sm" data-speak="tú comes" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">él/ella</td><td class="form">com<span class="ending-highlight er">e</span></td><td><button class="btn-audio btn-sm" data-speak="él come" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">nosotros</td><td class="form">com<span class="ending-highlight er">emos</span></td><td><button class="btn-audio btn-sm" data-speak="nosotros comemos" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">vosotros</td><td class="form">com<span class="ending-highlight er">éis</span></td><td><button class="btn-audio btn-sm" data-speak="vosotros coméis" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">ellos/ellas</td><td class="form">com<span class="ending-highlight er">en</span></td><td><button class="btn-audio btn-sm" data-speak="ellos comen" data-lang="es-ES">▶</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <h3>Weitere -ER Verben</h3>
+      <p>
+        <strong style="color:#33aaff">beber</strong> (trinken) → beb- + o/es/e/emos/éis/en<br>
+        <strong style="color:#33aaff">leer</strong> (lesen) → le- + o/es/e/emos/éis/en<br>
+        <span style="color:#aaa">Achtung bei leer: leo (nicht "leo" klingt aber wie "ley-o")</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── IR PANEL ── -->
+  <div class="verb-panel" id="panel-ir">
+    <div class="big-formula">
+      viv<span class="ending-highlight ir">ir</span>
+      <span class="arrow"> → </span>viv-
+      <span class="arrow"> + </span>
+      <span class="ending-highlight ir">o / es / e / imos / ís / en</span>
+    </div>
+
+    <div class="conj-ex">
+      <h3>vivir – wohnen / leben
+        <button class="btn-audio" data-speak="vivir" data-lang="es-ES" style="margin-left:14px">▶</button>
+      </h3>
+      <table class="conj-table">
+        <thead><tr><th>Pronomen</th><th>Form</th><th>🔊</th></tr></thead>
+        <tbody>
+          <tr><td class="pronoun">yo</td><td class="form">viv<span class="ending-highlight ir">o</span></td><td><button class="btn-audio btn-sm" data-speak="yo vivo" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">tú</td><td class="form">viv<span class="ending-highlight ir">es</span></td><td><button class="btn-audio btn-sm" data-speak="tú vives" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">él/ella</td><td class="form">viv<span class="ending-highlight ir">e</span></td><td><button class="btn-audio btn-sm" data-speak="él vive" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">nosotros</td><td class="form">viv<span class="ending-highlight ir">imos</span></td><td><button class="btn-audio btn-sm" data-speak="nosotros vivimos" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">vosotros</td><td class="form">viv<span class="ending-highlight ir">ís</span></td><td><button class="btn-audio btn-sm" data-speak="vosotros vivís" data-lang="es-ES">▶</button></td></tr>
+          <tr><td class="pronoun">ellos/ellas</td><td class="form">viv<span class="ending-highlight ir">en</span></td><td><button class="btn-audio btn-sm" data-speak="ellos viven" data-lang="es-ES">▶</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <h3>Weitere -IR Verben</h3>
+      <p>
+        <strong style="color:#cc66ff">escribir</strong> (schreiben) → escrib- + o/es/e/imos/ís/en<br>
+        <strong style="color:#cc66ff">abrir</strong> (öffnen) → abr- + o/es/e/imos/ís/en
+      </p>
+    </div>
+  </div>
+
+  <!-- VERGLEICH TABELLE -->
+  <div class="section-heading">🔍 Vergleich: Alle Endungen auf einen Blick</div>
+  <table class="conj-table mb-lg">
+    <thead>
+      <tr>
+        <th>Pronomen</th>
+        <th style="color:#ff8800">-AR (cenar)</th>
+        <th style="color:#33aaff">-ER (comer)</th>
+        <th style="color:#cc66ff">-IR (vivir)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="pronoun">yo</td><td>cen<strong style="color:#ff8800">o</strong></td><td>com<strong style="color:#33aaff">o</strong></td><td>viv<strong style="color:#cc66ff">o</strong></td></tr>
+      <tr><td class="pronoun">tú</td><td>cen<strong style="color:#ff8800">as</strong></td><td>com<strong style="color:#33aaff">es</strong></td><td>viv<strong style="color:#cc66ff">es</strong></td></tr>
+      <tr><td class="pronoun">él/ella</td><td>cen<strong style="color:#ff8800">a</strong></td><td>com<strong style="color:#33aaff">e</strong></td><td>viv<strong style="color:#cc66ff">e</strong></td></tr>
+      <tr><td class="pronoun">nosotros</td><td>cen<strong style="color:#ff8800">amos</strong></td><td>com<strong style="color:#33aaff">emos</strong></td><td>viv<strong style="color:#cc66ff">imos</strong></td></tr>
+      <tr><td class="pronoun">vosotros</td><td>cen<strong style="color:#ff8800">áis</strong></td><td>com<strong style="color:#33aaff">éis</strong></td><td>viv<strong style="color:#cc66ff">ís</strong></td></tr>
+      <tr><td class="pronoun">ellos</td><td>cen<strong style="color:#ff8800">an</strong></td><td>com<strong style="color:#33aaff">en</strong></td><td>viv<strong style="color:#cc66ff">en</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="flex-center mb-lg">
+    <button class="btn btn-primary" onclick="startQuiz()">✏️ Quiz starten →</button>
+    <a href="/Lernplattform/" class="btn btn-secondary">🏠 Dashboard</a>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section" class="hidden">
+    <div class="page-title">✏️ Quiz: Regelmäßige Verben</div>
+    <div id="quiz-counter" style="font-size:var(--fs-md);color:#aaa;margin-bottom:8px">Frage 1</div>
+    <div class="quiz-box">
+      <div class="quiz-question" id="q-text"></div>
+      <div class="quiz-subtext"  id="q-sub"></div>
+      <div class="options-grid"  id="opts"></div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+function showTab(type) {
+  document.querySelectorAll('.verb-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.verb-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.verb-tab.' + type).classList.add('active');
+  document.getElementById('panel-' + type).classList.add('active');
+}
+
+const questions = [
+  { q:'cenar – "yo"', a:'ceno',     opts:['ceno','cenas','cenan','cenamos'] },
+  { q:'cenar – "tú"', a:'cenas',    opts:['ceno','cenas','cena','cenáis'] },
+  { q:'cenar – "nosotros"', a:'cenamos', opts:['cenamos','cenáis','cenan','cena'] },
+  { q:'comer – "yo"', a:'como',     opts:['comes','como','come','comemos'] },
+  { q:'comer – "tú"', a:'comes',    opts:['como','comes','come','coméis'] },
+  { q:'comer – "ellos"', a:'comen', opts:['come','comes','comen','comemos'] },
+  { q:'vivir – "yo"', a:'vivo',     opts:['vives','vivo','vive','vivimos'] },
+  { q:'vivir – "nosotros"', a:'vivimos', opts:['vivís','viven','vivimos','vive'] },
+  { q:'escribir – "tú"', a:'escribes', opts:['escribo','escribes','escribe','escribís'] },
+  { q:'hablar – "vosotros"', a:'habláis', opts:['hablan','hablamos','habláis','hablas'] },
+  { q:'beber – "ella"', a:'bebe',   opts:['bebo','bebes','bebe','bebemos'] },
+  { q:'estudiar – "ellos"', a:'estudian', opts:['estudia','estudias','estudian','estudiáis'] }
+];
+
+let qi = 0, cor = 0, ans = false;
+
+function startQuiz() {
+  document.querySelector('main > .info-box').style.display = 'none';
+  document.querySelector('.verb-tabs').style.display = 'none';
+  ['panel-ar','panel-er','panel-ir'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
+  document.querySelector('.conj-table.mb-lg')?.parentElement;
+  document.querySelector('.section-heading')?.style && (document.querySelector('.section-heading').style.display='none');
+  document.querySelectorAll('.conj-table').forEach(t => t.closest('.conj-ex') || (t.style.display='none'));
+  document.getElementById('quiz-section').classList.remove('hidden');
+  showQ();
+}
+
+function showQ() {
+  if (qi >= questions.length) { endQ(); return; }
+  ans = false;
+  const q = questions[qi];
+  document.getElementById('quiz-counter').textContent = `Frage ${qi+1} von ${questions.length}`;
+  document.getElementById('q-text').textContent = `Wie konjugierst du: ${q.q}?`;
+  document.getElementById('q-sub').textContent  = '';
+  document.getElementById('feedback').classList.remove('show','fb-correct','fb-wrong');
+  const shuffled = [...q.opts].sort(() => Math.random() - 0.5);
+  const grid = document.getElementById('opts');
+  grid.innerHTML = '';
+  shuffled.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.textContent = o;
+    b.onclick = () => pick(o, q.a, b);
+    grid.appendChild(b);
+  });
+}
+
+function pick(chosen, correct_ans, btn) {
+  if (ans) return; ans = true;
+  document.querySelectorAll('.opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if (chosen === correct_ans) {
+    cor++; btn.classList.add('correct');
+    fb.textContent = '✅ Super! ' + correct_ans;
+    fb.className = 'feedback show fb-correct';
+    Speech.speakES(correct_ans);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt').forEach(b => { if (b.textContent === correct_ans) b.classList.add('correct'); });
+    fb.textContent = '❌ Falsch! Richtig: ' + correct_ans;
+    fb.className = 'feedback show fb-wrong';
+  }
+  qi++;
+  setTimeout(showQ, 1800);
+}
+
+function endQ() {
+  document.getElementById('quiz-section').classList.add('hidden');
+  showResult('result-area', 'reg-verben', cor, questions.length);
+}
+</script>
+</body>
+</html>

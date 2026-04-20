@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verben-Endungen – Tabelle ausfüllen</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .verb-tabs { display: flex; gap: 12px; margin-bottom: 0; flex-wrap: wrap; }
+  .vtab {
+    padding: 14px 28px; border-radius: 12px 12px 0 0; font-size: var(--fs-md);
+    font-weight: 800; cursor: pointer; border: 2px solid var(--border);
+    border-bottom: none; background: var(--surface); color: var(--text);
+    font-family: inherit; transition: background .15s, border-color .15s;
+  }
+  .vtab.ar      { border-color: #ff8800; }
+  .vtab.er      { border-color: #0099ff; }
+  .vtab.ir      { border-color: #aa44ff; }
+  .vtab.ar.active { background: #ff8800; color: #000; }
+  .vtab.er.active { background: #0099ff; color: #000; }
+  .vtab.ir.active { background: #aa44ff; color: #fff; }
+  .vpanel { display: none; border: 2px solid var(--border); border-radius: 0 var(--radius) var(--radius) var(--radius); padding: 24px; background: var(--surface); margin-bottom: 28px; }
+  .vpanel.active { display: block; }
+
+  .formula-box {
+    font-size: var(--fs-xl); font-weight: 900; text-align: center;
+    padding: 18px; background: var(--surface2); border-radius: var(--radius);
+    margin-bottom: 20px; line-height: 1.5;
+  }
+
+  .conj-fill-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .conj-fill-table th, .conj-fill-table td {
+    border: 2px solid var(--border); padding: 12px 16px; font-size: var(--fs-md);
+  }
+  .conj-fill-table th { background: var(--surface2); color: var(--accent); font-weight: 800; font-size: var(--fs-lg); }
+  .conj-fill-table td.pronomen { font-weight: 800; color: var(--accent); min-width: 140px; }
+  .conj-fill-table td.stamm    { color: #aaa; font-weight: 700; }
+
+  .fill-input {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 3px solid var(--accent);
+    color: var(--text); font-size: var(--fs-lg); font-weight: 900;
+    padding: 4px 8px; font-family: inherit; outline: none;
+    text-align: center; transition: border-color .15s;
+    min-width: 160px;
+  }
+  .fill-input:focus { border-bottom-color: var(--text); }
+  .fill-input.ok    { border-bottom-color: var(--correct); color: var(--correct); }
+  .fill-input.err   { border-bottom-color: var(--wrong);   color: var(--wrong); }
+  .fill-input:read-only { opacity: 0.7; }
+
+  .section-title { font-size: var(--fs-lg); font-weight: 800; color: var(--accent); margin: 20px 0 10px; }
+
+  .accent-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 10px 16px; margin-bottom: 20px;
+    position: sticky; top: 76px; z-index: 50;
+  }
+  .accent-bar .label { font-size: var(--fs-sm); color: #aaa; }
+  .acc-btn {
+    background: var(--surface2); border: 2px solid var(--border-hi);
+    color: var(--text); font-size: var(--fs-lg); font-weight: 900;
+    padding: 4px 16px; border-radius: 8px; cursor: pointer; font-family: inherit;
+    transition: border-color .12s;
+  }
+  .acc-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .score-panel {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 16px 22px;
+    font-size: var(--fs-md); color: #aaa; margin-bottom: 14px; text-align: center;
+  }
+  .score-panel strong { color: var(--accent); font-size: var(--fs-xl); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Verb-Endungen ✍️</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">✍️ Regelmäßige Verben – Endungen ergänzen</div>
+
+  <div class="info-box mb-md">
+    <h3>💡 So funktioniert es</h3>
+    <p>Wähle eine Verbgruppe (-AR / -ER / -IR). Sieh den Stamm und das Pronomen.<br>
+    Tippe die <strong style="color:var(--accent)">vollständige konjugierte Form</strong> in das Feld!<br>
+    Beispiel: Stamm <strong style="color:#ff8800">cen-</strong> + yo → <strong style="color:var(--correct)">ceno</strong><br>
+    <span style="color:#aaa">Akzente zählen (cenáis), werden aber auch ohne akzeptiert.</span></p>
+  </div>
+
+  <!-- ACCENT BAR -->
+  <div class="accent-bar">
+    <span class="label">Sonderzeichen:</span>
+    <button class="acc-btn" onclick="ins('á')">á</button>
+    <button class="acc-btn" onclick="ins('é')">é</button>
+    <button class="acc-btn" onclick="ins('í')">í</button>
+    <button class="acc-btn" onclick="ins('ó')">ó</button>
+    <button class="acc-btn" onclick="ins('ú')">ú</button>
+    <button class="acc-btn" onclick="ins('ñ')">ñ</button>
+  </div>
+
+  <!-- LIVE SCORE -->
+  <div class="score-panel" id="score-panel">Richtig: <strong id="score-num">0</strong> / <strong id="score-tot">18</strong></div>
+
+  <!-- TABS -->
+  <div class="verb-tabs">
+    <button class="vtab ar active" onclick="showTab('ar')">🟠 -AR Verben</button>
+    <button class="vtab er"        onclick="showTab('er')">🔵 -ER Verben</button>
+    <button class="vtab ir"        onclick="showTab('ir')">🟣 -IR Verben</button>
+  </div>
+
+  <!-- AR PANEL -->
+  <div class="vpanel active" id="panel-ar">
+    <div class="formula-box">
+      Infinitiv endet auf <span style="color:#ff8800">-AR</span> → Stamm + 
+      <span style="color:#ff8800">o / as / a / amos / áis / an</span>
+    </div>
+
+    <div class="section-title">🍽️ cenar – zu Abend essen
+      <button class="btn-audio" data-speak="cenar" data-lang="es-ES" style="margin-left:10px;font-size:var(--fs-sm)">▶</button>
+    </div>
+    <table class="conj-fill-table">
+      <thead><tr><th>Pronomen</th><th>Stamm</th><th>Deine Antwort</th><th>🔊</th></tr></thead>
+      <tbody>
+        <tr><td class="pronomen">yo</td><td class="stamm">cen-</td><td><input class="fill-input" data-ans="ceno" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="cen- + ?"></td><td><button class="btn-audio btn-sm" data-speak="yo ceno" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">tú</td><td class="stamm">cen-</td><td><input class="fill-input" data-ans="cenas" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="cen- + ?"></td><td><button class="btn-audio btn-sm" data-speak="tú cenas" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">él/ella</td><td class="stamm">cen-</td><td><input class="fill-input" data-ans="cena" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="cen- + ?"></td><td><button class="btn-audio btn-sm" data-speak="él cena" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">nosotros</td><td class="stamm">cen-</td><td><input class="fill-input" data-ans="cenamos" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="cen- + ?"></td><td><button class="btn-audio btn-sm" data-speak="nosotros cenamos" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">vosotros</td><td class="stamm">cen-</td><td><input class="fill-input" data-ans="cenáis" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="cen- + ?"></td><td><button class="btn-audio btn-sm" data-speak="vosotros cenáis" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">ellos</td><td class="stamm">cen-</td><td><input class="fill-input" data-ans="cenan" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="cen- + ?"></td><td><button class="btn-audio btn-sm" data-speak="ellos cenan" data-lang="es-ES">▶</button></td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">🗣️ hablar – sprechen (Bonus)
+      <button class="btn-audio" data-speak="hablar" data-lang="es-ES" style="margin-left:10px;font-size:var(--fs-sm)">▶</button>
+    </div>
+    <table class="conj-fill-table">
+      <thead><tr><th>Pronomen</th><th>Stamm</th><th>Deine Antwort</th><th>🔊</th></tr></thead>
+      <tbody>
+        <tr><td class="pronomen">yo</td><td class="stamm">habl-</td><td><input class="fill-input" data-ans="hablo" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="habl- + ?"></td><td><button class="btn-audio btn-sm" data-speak="yo hablo" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">tú</td><td class="stamm">habl-</td><td><input class="fill-input" data-ans="hablas" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="habl- + ?"></td><td><button class="btn-audio btn-sm" data-speak="tú hablas" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">él/ella</td><td class="stamm">habl-</td><td><input class="fill-input" data-ans="habla" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="habl- + ?"></td><td><button class="btn-audio btn-sm" data-speak="él habla" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">nosotros</td><td class="stamm">habl-</td><td><input class="fill-input" data-ans="hablamos" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="habl- + ?"></td><td><button class="btn-audio btn-sm" data-speak="nosotros hablamos" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">vosotros</td><td class="stamm">habl-</td><td><input class="fill-input" data-ans="habláis" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="habl- + ?"></td><td><button class="btn-audio btn-sm" data-speak="vosotros habláis" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">ellos</td><td class="stamm">habl-</td><td><input class="fill-input" data-ans="hablan" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="habl- + ?"></td><td><button class="btn-audio btn-sm" data-speak="ellos hablan" data-lang="es-ES">▶</button></td></tr>
+      </tbody>
+    </table>
+
+    <div class="flex-row">
+      <button class="btn btn-primary" onclick="checkPanel('panel-ar')">✅ AR-Verben prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetPanel('panel-ar')">🔄 Zurücksetzen</button>
+    </div>
+    <div class="feedback" id="fb-ar"></div>
+  </div>
+
+  <!-- ER PANEL -->
+  <div class="vpanel" id="panel-er">
+    <div class="formula-box">
+      Infinitiv endet auf <span style="color:#0099ff">-ER</span> → Stamm + 
+      <span style="color:#0099ff">o / es / e / emos / éis / en</span>
+    </div>
+
+    <div class="section-title">🍴 comer – essen
+      <button class="btn-audio" data-speak="comer" data-lang="es-ES" style="margin-left:10px;font-size:var(--fs-sm)">▶</button>
+    </div>
+    <table class="conj-fill-table">
+      <thead><tr><th>Pronomen</th><th>Stamm</th><th>Deine Antwort</th><th>🔊</th></tr></thead>
+      <tbody>
+        <tr><td class="pronomen">yo</td><td class="stamm">com-</td><td><input class="fill-input" data-ans="como" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="com- + ?"></td><td><button class="btn-audio btn-sm" data-speak="yo como" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">tú</td><td class="stamm">com-</td><td><input class="fill-input" data-ans="comes" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="com- + ?"></td><td><button class="btn-audio btn-sm" data-speak="tú comes" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">él/ella</td><td class="stamm">com-</td><td><input class="fill-input" data-ans="come" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="com- + ?"></td><td><button class="btn-audio btn-sm" data-speak="él come" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">nosotros</td><td class="stamm">com-</td><td><input class="fill-input" data-ans="comemos" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="com- + ?"></td><td><button class="btn-audio btn-sm" data-speak="nosotros comemos" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">vosotros</td><td class="stamm">com-</td><td><input class="fill-input" data-ans="coméis" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="com- + ?"></td><td><button class="btn-audio btn-sm" data-speak="vosotros coméis" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">ellos</td><td class="stamm">com-</td><td><input class="fill-input" data-ans="comen" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="com- + ?"></td><td><button class="btn-audio btn-sm" data-speak="ellos comen" data-lang="es-ES">▶</button></td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">💧 beber – trinken (Bonus)
+      <button class="btn-audio" data-speak="beber" data-lang="es-ES" style="margin-left:10px;font-size:var(--fs-sm)">▶</button>
+    </div>
+    <table class="conj-fill-table">
+      <thead><tr><th>Pronomen</th><th>Stamm</th><th>Deine Antwort</th><th>🔊</th></tr></thead>
+      <tbody>
+        <tr><td class="pronomen">yo</td><td class="stamm">beb-</td><td><input class="fill-input" data-ans="bebo" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="beb- + ?"></td><td><button class="btn-audio btn-sm" data-speak="yo bebo" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">tú</td><td class="stamm">beb-</td><td><input class="fill-input" data-ans="bebes" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="beb- + ?"></td><td><button class="btn-audio btn-sm" data-speak="tú bebes" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">él/ella</td><td class="stamm">beb-</td><td><input class="fill-input" data-ans="bebe" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="beb- + ?"></td><td><button class="btn-audio btn-sm" data-speak="él bebe" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">nosotros</td><td class="stamm">beb-</td><td><input class="fill-input" data-ans="bebemos" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="beb- + ?"></td><td><button class="btn-audio btn-sm" data-speak="nosotros bebemos" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">vosotros</td><td class="stamm">beb-</td><td><input class="fill-input" data-ans="bebéis" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="beb- + ?"></td><td><button class="btn-audio btn-sm" data-speak="vosotros bebéis" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">ellos</td><td class="stamm">beb-</td><td><input class="fill-input" data-ans="beben" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="beb- + ?"></td><td><button class="btn-audio btn-sm" data-speak="ellos beben" data-lang="es-ES">▶</button></td></tr>
+      </tbody>
+    </table>
+
+    <div class="flex-row">
+      <button class="btn btn-primary" onclick="checkPanel('panel-er')">✅ ER-Verben prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetPanel('panel-er')">🔄 Zurücksetzen</button>
+    </div>
+    <div class="feedback" id="fb-er"></div>
+  </div>
+
+  <!-- IR PANEL -->
+  <div class="vpanel" id="panel-ir">
+    <div class="formula-box">
+      Infinitiv endet auf <span style="color:#aa44ff">-IR</span> → Stamm + 
+      <span style="color:#aa44ff">o / es / e / imos / ís / en</span>
+    </div>
+
+    <div class="section-title">🏠 vivir – wohnen / leben
+      <button class="btn-audio" data-speak="vivir" data-lang="es-ES" style="margin-left:10px;font-size:var(--fs-sm)">▶</button>
+    </div>
+    <table class="conj-fill-table">
+      <thead><tr><th>Pronomen</th><th>Stamm</th><th>Deine Antwort</th><th>🔊</th></tr></thead>
+      <tbody>
+        <tr><td class="pronomen">yo</td><td class="stamm">viv-</td><td><input class="fill-input" data-ans="vivo" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="viv- + ?"></td><td><button class="btn-audio btn-sm" data-speak="yo vivo" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">tú</td><td class="stamm">viv-</td><td><input class="fill-input" data-ans="vives" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="viv- + ?"></td><td><button class="btn-audio btn-sm" data-speak="tú vives" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">él/ella</td><td class="stamm">viv-</td><td><input class="fill-input" data-ans="vive" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="viv- + ?"></td><td><button class="btn-audio btn-sm" data-speak="él vive" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">nosotros</td><td class="stamm">viv-</td><td><input class="fill-input" data-ans="vivimos" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="viv- + ?"></td><td><button class="btn-audio btn-sm" data-speak="nosotros vivimos" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">vosotros</td><td class="stamm">viv-</td><td><input class="fill-input" data-ans="vivís" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="viv- + ?"></td><td><button class="btn-audio btn-sm" data-speak="vosotros vivís" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">ellos</td><td class="stamm">viv-</td><td><input class="fill-input" data-ans="viven" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="viv- + ?"></td><td><button class="btn-audio btn-sm" data-speak="ellos viven" data-lang="es-ES">▶</button></td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">✏️ escribir – schreiben (Bonus)
+      <button class="btn-audio" data-speak="escribir" data-lang="es-ES" style="margin-left:10px;font-size:var(--fs-sm)">▶</button>
+    </div>
+    <table class="conj-fill-table">
+      <thead><tr><th>Pronomen</th><th>Stamm</th><th>Deine Antwort</th><th>🔊</th></tr></thead>
+      <tbody>
+        <tr><td class="pronomen">yo</td><td class="stamm">escrib-</td><td><input class="fill-input" data-ans="escribo" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escrib- + ?"></td><td><button class="btn-audio btn-sm" data-speak="yo escribo" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">tú</td><td class="stamm">escrib-</td><td><input class="fill-input" data-ans="escribes" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escrib- + ?"></td><td><button class="btn-audio btn-sm" data-speak="tú escribes" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">él/ella</td><td class="stamm">escrib-</td><td><input class="fill-input" data-ans="escribe" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escrib- + ?"></td><td><button class="btn-audio btn-sm" data-speak="él escribe" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">nosotros</td><td class="stamm">escrib-</td><td><input class="fill-input" data-ans="escribimos" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escrib- + ?"></td><td><button class="btn-audio btn-sm" data-speak="nosotros escribimos" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">vosotros</td><td class="stamm">escrib-</td><td><input class="fill-input" data-ans="escribís" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escrib- + ?"></td><td><button class="btn-audio btn-sm" data-speak="vosotros escribís" data-lang="es-ES">▶</button></td></tr>
+        <tr><td class="pronomen">ellos</td><td class="stamm">escrib-</td><td><input class="fill-input" data-ans="escriben" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escrib- + ?"></td><td><button class="btn-audio btn-sm" data-speak="ellos escriben" data-lang="es-ES">▶</button></td></tr>
+      </tbody>
+    </table>
+
+    <div class="flex-row">
+      <button class="btn btn-primary" onclick="checkPanel('panel-ir')">✅ IR-Verben prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetPanel('panel-ir')">🔄 Zurücksetzen</button>
+    </div>
+    <div class="feedback" id="fb-ir"></div>
+  </div>
+
+  <div class="flex-center mb-md">
+    <button class="btn btn-primary" onclick="showTotal()">📊 Gesamtergebnis aller Verben</button>
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+let focusedInput = null;
+let totalCorrect = 0, totalAnswered = 0;
+
+document.addEventListener('focusin', e => {
+  if (e.target.tagName === 'INPUT') focusedInput = e.target;
+});
+
+function ins(char) {
+  if (!focusedInput) return;
+  const el = focusedInput, s = el.selectionStart, e2 = el.selectionEnd;
+  el.value = el.value.slice(0, s) + char + el.value.slice(e2);
+  el.selectionStart = el.selectionEnd = s + 1; el.focus();
+}
+
+function norm(s) {
+  return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function showTab(t) {
+  ['ar','er','ir'].forEach(x => {
+    document.getElementById('panel-' + x).classList.toggle('active', x === t);
+    document.querySelector('.vtab.' + x).classList.toggle('active', x === t);
+  });
+}
+
+function checkPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  const inputs = panel.querySelectorAll('.fill-input');
+  let cor = 0, total = inputs.length, answered = 0;
+  inputs.forEach(inp => {
+    const ans = inp.dataset.ans;
+    const val = inp.value;
+    if (!val.trim()) return;
+    answered++;
+    if (norm(val) === norm(ans)) {
+      cor++; inp.classList.add('ok'); inp.classList.remove('err');
+    } else {
+      inp.classList.add('err'); inp.classList.remove('ok');
+    }
+  });
+  const fbId = 'fb-' + panelId.replace('panel-','');
+  const fb   = document.getElementById(fbId);
+  if (answered < total) {
+    fb.textContent = `Noch ${total - answered} Felder leer! Füll alle aus.`;
+    fb.className   = 'feedback show fb-wrong'; return;
+  }
+  fb.textContent = cor === total
+    ? `✅ Perfekt! Alle ${total} Formen richtig!`
+    : `${cor} von ${total} richtig. Rote Felder nochmal anschauen!`;
+  fb.className = cor === total ? 'feedback show fb-correct' : 'feedback show fb-wrong';
+  updateTotal();
+}
+
+function resetPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  panel.querySelectorAll('.fill-input').forEach(inp => {
+    inp.value = ''; inp.classList.remove('ok','err');
+  });
+  const fbId = 'fb-' + panelId.replace('panel-','');
+  document.getElementById(fbId).classList.remove('show');
+  updateTotal();
+}
+
+function updateTotal() {
+  let cor = 0, tot = 0;
+  document.querySelectorAll('.fill-input').forEach(inp => {
+    if (inp.value.trim()) {
+      tot++;
+      if (inp.classList.contains('ok')) cor++;
+    }
+  });
+  document.getElementById('score-num').textContent = cor;
+}
+
+function showTotal() {
+  const all   = document.querySelectorAll('.fill-input');
+  const filled= [...all].filter(i => i.value.trim());
+  const cor   = filled.filter(i => i.classList.contains('ok')).length;
+  const total = all.length;
+  if (filled.length < total) {
+    alert('Prüfe erst alle Verbtabellen (alle 3 Verbgruppen)!');
+    return;
+  }
+  showResult('result-area', 'verben-endungen', cor, total);
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Speech.init(); Speech.bindAll();
+  document.getElementById('score-tot').textContent = document.querySelectorAll('.fill-input').length;
+
+  // Enter → next input within same panel
+  document.querySelectorAll('.vpanel').forEach(panel => {
+    const inputs = [...panel.querySelectorAll('.fill-input')];
+    inputs.forEach((inp, i) => {
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (i + 1 < inputs.length) inputs[i+1].focus();
+          else panel.querySelector('.btn-primary').click();
+        }
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>

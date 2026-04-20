@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schreibhilfe Villa Wewersbusch – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .step { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 22px; }
+  .step-num { font-size: var(--fs-sm); color: var(--accent); font-weight: 800; margin-bottom: 8px; }
+  .step-q   { font-size: var(--fs-lg); font-weight: 800; margin-bottom: 16px; }
+  .step textarea { min-height: 100px; }
+  .chip-section { margin-bottom: 14px; }
+  .chip-section .label { font-size: var(--fs-sm); color: #aaa; margin-bottom: 8px; }
+  #preview-box {
+    background: #001a00; border: 3px solid var(--correct);
+    border-radius: var(--radius); padding: 28px; font-size: var(--fs-lg);
+    line-height: 1.9; display: none; margin-bottom: 28px;
+  }
+  #preview-box h3 { color: var(--correct); font-size: var(--fs-xl); margin-bottom: 14px; }
+  .place-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .place-check { display: flex; align-items: center; gap: 12px; font-size: var(--fs-md); }
+  .place-check input[type="checkbox"] { width: 28px; height: 28px; cursor: pointer; accent-color: var(--accent); }
+  .adj-select { background: var(--surface2); border: 2px solid var(--accent); color: var(--text); font-size: var(--fs-lg); padding: 8px 14px; border-radius: 8px; font-family: inherit; outline: none; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Schreibhilfe ✍️</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">✍️ Schreibaufgabe: Villa Wewersbusch</div>
+
+  <div class="info-box">
+    <h3>📝 Die Aufgabe (typische Klassenarbeit)</h3>
+    <p>Beschreibe die Villa Wewersbusch auf Spanisch!<br>
+    Benutze: <strong style="color:var(--accent)">hay un/una…</strong>, Adjektive, <strong style="color:var(--accent)">ser/estar/tener</strong>.<br>
+    Wir bauen den Text Schritt für Schritt zusammen.</p>
+  </div>
+
+  <!-- SCHRITT 1: Einleitung -->
+  <div class="step">
+    <div class="step-num">Schritt 1 von 5</div>
+    <div class="step-q">Wie ist die Villa Wewersbusch? Wähle Adjektive!</div>
+    <div class="chip-section">
+      <div class="label">Klick auf Adjektive (mehrere möglich):</div>
+      <div class="word-bank" id="adj-bank">
+        <button class="chip" data-es="especial" data-de="besonders">especial</button>
+        <button class="chip" data-es="grande" data-de="groß">grande</button>
+        <button class="chip" data-es="moderna" data-de="modern">moderna</button>
+        <button class="chip" data-es="fantástica" data-de="fantastisch">fantástica</button>
+        <button class="chip" data-es="bonita" data-de="schön">bonita</button>
+        <button class="chip" data-es="nueva" data-de="neu">nueva</button>
+      </div>
+    </div>
+    <div id="adj-preview" style="font-size:var(--fs-md);color:var(--accent);min-height:30px">
+      <em style="color:#aaa">Gewählte Adjektive erscheinen hier…</em>
+    </div>
+  </div>
+
+  <!-- SCHRITT 2: Was gibt es? -->
+  <div class="step">
+    <div class="step-num">Schritt 2 von 5</div>
+    <div class="step-q">Was gibt es in der Villa Wewersbusch? Wähle aus!</div>
+    <div class="place-list" id="place-list">
+      <label class="place-check"><input type="checkbox" value="hay un gimnasio" data-de="eine Turnhalle"> hay un gimnasio (Turnhalle)</label>
+      <label class="place-check"><input type="checkbox" value="hay un patio" data-de="einen Schulhof"> hay un patio (Schulhof)</label>
+      <label class="place-check"><input type="checkbox" value="hay una cafetería" data-de="eine Cafeteria"> hay una cafetería (Cafeteria)</label>
+      <label class="place-check"><input type="checkbox" value="hay una biblioteca" data-de="eine Bibliothek"> hay una biblioteca (Bibliothek)</label>
+      <label class="place-check"><input type="checkbox" value="hay un comedor" data-de="einen Speisesaal"> hay un comedor (Speisesaal)</label>
+      <label class="place-check"><input type="checkbox" value="hay un estudio de grabación" data-de="ein Aufnahmestudio"> hay un estudio de grabación (Aufnahmestudio)</label>
+      <label class="place-check"><input type="checkbox" value="hay un aula de música" data-de="einen Musikraum"> hay un aula de música (Musikraum)</label>
+      <label class="place-check"><input type="checkbox" value="hay un cine" data-de="ein Kino"> hay un cine (Kino)</label>
+      <label class="place-check"><input type="checkbox" value="hay dos trampolines" data-de="zwei Trampoline"> hay dos trampolines (Trampoline)</label>
+    </div>
+  </div>
+
+  <!-- SCHRITT 3: Anzahl -->
+  <div class="step">
+    <div class="step-num">Schritt 3 von 5</div>
+    <div class="step-q">Wie viele Schüler/Lehrer gibt es? (cuántos / cuántas)</div>
+    <div style="display:grid;gap:14px;">
+      <div class="flex-row">
+        <label style="font-size:var(--fs-md);min-width:240px">¿Cuántos estudiantes hay?</label>
+        <select class="adj-select" id="num-estudiantes">
+          <option value="">– Zahl wählen –</option>
+          <option value="cien">cien (100)</option>
+          <option value="doscientos">doscientos (200)</option>
+          <option value="trescientos">trescientos (300)</option>
+          <option value="quinientos">quinientos (500)</option>
+        </select>
+      </div>
+      <div class="flex-row">
+        <label style="font-size:var(--fs-md);min-width:240px">¿Cuántos profesores hay?</label>
+        <select class="adj-select" id="num-profesores">
+          <option value="">– Zahl wählen –</option>
+          <option value="diez">diez (10)</option>
+          <option value="veinte">veinte (20)</option>
+          <option value="treinta">treinta (30)</option>
+          <option value="cuarenta">cuarenta (40)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHRITT 4: Schluss -->
+  <div class="step">
+    <div class="step-num">Schritt 4 von 5</div>
+    <div class="step-q">Schreib einen Schlusssatz mit deiner Meinung!</div>
+    <div class="word-bank mb-sm">
+      <button class="chip" data-insert="Me gusta mucho la Villa Wewersbusch.">Me gusta mucho (Ich mag es sehr)</button>
+      <button class="chip" data-insert="¡Es una escuela fantástica!">¡Es fantástica! (Es ist fantastisch!)</button>
+      <button class="chip" data-insert="¡Quiero ir a la Villa Wewersbusch!">¡Quiero ir! (Ich will dort hin!)</button>
+    </div>
+    <textarea id="schluss-satz" placeholder="Oder schreib deinen eigenen Satz hier…" rows="3"></textarea>
+  </div>
+
+  <!-- SCHRITT 5: Vorschau -->
+  <div class="step">
+    <div class="step-num">Schritt 5 von 5</div>
+    <div class="step-q">Dein fertiger Text!</div>
+    <div class="flex-row mb-md">
+      <button class="btn btn-primary" onclick="generateText()">✨ Text generieren!</button>
+      <button class="btn-audio" id="speak-preview" onclick="speakPreview()" style="display:none">🔊 Vorlesen</button>
+    </div>
+
+    <div id="preview-box">
+      <h3>📝 Dein spanischer Text:</h3>
+      <div id="preview-content"></div>
+    </div>
+
+    <div id="copy-area" style="display:none">
+      <div class="section-heading">📋 Zum Abschreiben / Ausdrucken:</div>
+      <textarea id="copy-text" rows="8" readonly style="font-family:monospace"></textarea>
+      <div class="flex-row mt-sm">
+        <button class="btn btn-secondary btn-sm" onclick="copyText()">📋 Kopieren</button>
+        <button class="btn btn-success" onclick="saveStars()">⭐ Aufgabe abschließen!</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-area"></div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+// Adjektiv-Chips auswählen
+const selectedAdj = new Set();
+document.querySelectorAll('#adj-bank .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const es = chip.getAttribute('data-es');
+    if (selectedAdj.has(es)) { selectedAdj.delete(es); chip.style.borderColor = ''; chip.style.color = ''; }
+    else                     { selectedAdj.add(es);    chip.style.borderColor = 'var(--accent)'; chip.style.color = 'var(--accent)'; }
+    updateAdjPreview();
+  });
+});
+
+function updateAdjPreview() {
+  const p = document.getElementById('adj-preview');
+  if (selectedAdj.size === 0) {
+    p.innerHTML = '<em style="color:#aaa">Gewählte Adjektive erscheinen hier…</em>';
+  } else {
+    p.textContent = [...selectedAdj].join(', ');
+  }
+}
+
+// Insert chips for Schlusssatz
+document.querySelectorAll('[data-insert]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.getElementById('schluss-satz').value = chip.getAttribute('data-insert');
+  });
+});
+
+function generateText() {
+  const adjs = [...selectedAdj];
+  const places = [...document.querySelectorAll('#place-list input:checked')].map(cb => cb.value);
+  const numEst  = document.getElementById('num-estudiantes').value;
+  const numProf = document.getElementById('num-profesores').value;
+  const schluss = document.getElementById('schluss-satz').value.trim();
+
+  if (adjs.length === 0 && places.length === 0) {
+    alert('Bitte wähle mindestens einige Adjektive und Orte aus! (Schritte 1 & 2)');
+    return;
+  }
+
+  let text = '\u00a1La Villa Wewersbusch es una escuela ';
+  if (adjs.length > 0) {
+    text += adjs.join(', ') + '!';
+  } else {
+    text += 'especial!';
+  }
+  text += '\n\n';
+
+  if (places.length > 0) {
+    text += 'En la Villa Wewersbusch ' + places[0] + '.';
+    for (let i = 1; i < places.length; i++) {
+      if (i === 1) text += ' También ' + places[i] + '.';
+      else         text += ' Hay también ' + places[i].replace('hay ','') + '.';
+    }
+    text += '\n\n';
+  }
+
+  if (numEst) text += '¿Cuántos estudiantes hay? Hay ' + numEst + ' estudiantes.\n';
+  if (numProf) text += '¿Cuántos profesores hay? Hay ' + numProf + ' profesores.\n';
+  if (numEst || numProf) text += '\n';
+
+  if (schluss) text += schluss;
+  else         text += '¡Me gusta mucho la Villa Wewersbusch!';
+
+  const preview = document.getElementById('preview-box');
+  const content = document.getElementById('preview-content');
+  preview.style.display = 'block';
+  content.innerHTML = text.replace(/\n/g, '<br>');
+
+  document.getElementById('copy-area').style.display = 'block';
+  document.getElementById('copy-text').value = text;
+  document.getElementById('speak-preview').style.display = 'inline-flex';
+  document.getElementById('preview-box').scrollIntoView({behavior:'smooth'});
+}
+
+function speakPreview() {
+  const text = document.getElementById('copy-text').value;
+  if (text) Speech.speakES(text);
+}
+
+function copyText() {
+  const ta = document.getElementById('copy-text');
+  ta.select();
+  document.execCommand('copy');
+  const btn = event.target;
+  btn.textContent = '✅ Kopiert!';
+  setTimeout(() => btn.textContent = '📋 Kopieren', 2000);
+}
+
+function saveStars() {
+  const text = document.getElementById('copy-text').value;
+  const words = text.split(/\s+/).filter(w => w.length > 0).length;
+  const stars = words >= 50 ? 3 : words >= 30 ? 2 : words >= 10 ? 1 : 0;
+  showResult('result-area', 'schreibhilfe', Math.round(stars/3*10), 10);
+}
+</script>
+</body>
+</html>

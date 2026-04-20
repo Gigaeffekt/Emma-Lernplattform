@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lückentexte – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .text-tabs { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+  .text-tab  {
+    padding: 14px 28px; border-radius: 99px; font-size: var(--fs-md); font-weight: 800;
+    cursor: pointer; border: 3px solid var(--border); background: var(--surface);
+    color: var(--text); font-family: inherit; transition: border-color .15s, color .15s;
+  }
+  .text-tab.active { border-color: var(--accent); color: var(--accent); }
+  .reading-text {
+    font-size: var(--fs-lg); line-height: 2.2;
+    background: var(--surface); padding: 32px;
+    border-radius: var(--radius); border: 2px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .reading-text .blank-select {
+    background: var(--surface2); border: 2px solid var(--accent);
+    color: var(--text); font-size: var(--fs-lg); font-family: inherit;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer; margin: 0 6px;
+    outline: none;
+  }
+  .reading-text .blank-select.correct { border-color: var(--correct); color: var(--correct); background: #001a10; }
+  .reading-text .blank-select.wrong   { border-color: var(--wrong);   color: var(--wrong);   background: #1a0000; }
+  .comprehension { margin-top: 32px; }
+  .comp-q { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 18px; }
+  .comp-q .q { font-size: var(--fs-lg); font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+  .audio-row { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Lückentexte 📄</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">📄 Lückentexte – S.36 &amp; S.42</div>
+
+  <div class="info-box">
+    <h3>💡 Leseverstehen üben</h3>
+    <p>Füll die Lücken aus. Du kannst aus einem Dropdown wählen.<br>
+    Danach beantworte die Verständnisfragen.<br>
+    Der <strong style="color:var(--accent)">🔊 Button</strong> liest dir den Text vor!</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="text-tabs">
+    <button class="text-tab active" onclick="showPage('s36')">📖 Seite 36</button>
+    <button class="text-tab"        onclick="showPage('s42')">📖 Seite 42</button>
+  </div>
+
+  <!-- SEITE 36 -->
+  <div id="page-s36">
+    <div class="audio-row">
+      <strong style="font-size:var(--fs-lg);color:var(--accent)">La Villa Wewersbusch</strong>
+      <button class="btn-audio" data-speak="La Villa Wewersbusch es una escuela muy especial y moderna. Tiene todo. En la Villa Wewersbusch hay un gimnasio grande y hay un patio bonito. También hay una biblioteca y una cafetería. Los estudiantes comen en el comedor. Hay también un aula de música y un estudio de grabación. ¿Cuántos estudiantes hay? Hay doscientos estudiantes. La Villa Wewersbusch no es una escuela normal. ¡Es fantástica!" data-lang="es-ES">🔊 Vorlesen</button>
+    </div>
+
+    <div class="reading-text" id="text-s36">
+      La Villa Wewersbusch
+      <select class="blank-select" data-answer="es">
+        <option value="">___</option>
+        <option value="es">es</option>
+        <option value="está">está</option>
+        <option value="son">son</option>
+        <option value="hay">hay</option>
+      </select>
+      una escuela muy especial y moderna. ¡Tiene todo! En la Villa Wewersbusch hay un gimnasio
+      <select class="blank-select" data-answer="grande">
+        <option value="">___</option>
+        <option value="grande">grande</option>
+        <option value="pequeño">pequeño</option>
+        <option value="bonita">bonita</option>
+        <option value="moderna">moderna</option>
+      </select>
+      y hay un patio bonito.
+      <select class="blank-select" data-answer="También">
+        <option value="">___</option>
+        <option value="También">También</option>
+        <option value="Pero">Pero</option>
+        <option value="Y">Y</option>
+        <option value="No">No</option>
+      </select>
+      hay una
+      <select class="blank-select" data-answer="biblioteca">
+        <option value="">___</option>
+        <option value="biblioteca">biblioteca</option>
+        <option value="cafetería">cafetería</option>
+        <option value="gimnasio">gimnasio</option>
+        <option value="comedor">comedor</option>
+      </select>
+      y una cafetería. Los estudiantes
+      <select class="blank-select" data-answer="comen">
+        <option value="">___</option>
+        <option value="comen">comen</option>
+        <option value="comer">comer</option>
+        <option value="come">come</option>
+        <option value="comemos">comemos</option>
+      </select>
+      en el comedor. Hay también un aula de música y un estudio de grabación.
+      ¿
+      <select class="blank-select" data-answer="Cuántos">
+        <option value="">___</option>
+        <option value="Cuántos">Cuántos</option>
+        <option value="Cuántas">Cuántas</option>
+        <option value="Cuánto">Cuánto</option>
+        <option value="Qué">Qué</option>
+      </select>
+      estudiantes hay en la Villa Wewersbusch? Hay doscientos estudiantes.
+      La Villa Wewersbusch no
+      <select class="blank-select" data-answer="es">
+        <option value="">___</option>
+        <option value="es">es</option>
+        <option value="está">está</option>
+        <option value="tiene">tiene</option>
+        <option value="hay">hay</option>
+      </select>
+      una escuela normal. ¡Es
+      <select class="blank-select" data-answer="fantástica">
+        <option value="">___</option>
+        <option value="fantástica">fantástica</option>
+        <option value="pequeña">pequeña</option>
+        <option value="antigua">antigua</option>
+        <option value="aburrida">aburrida</option>
+      </select>
+      !
+    </div>
+
+    <div class="flex-row mb-md">
+      <button class="btn btn-primary" onclick="checkBlanks('text-s36')">✅ Antworten prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetBlanks('text-s36')">🔄 Zurücksetzen</button>
+    </div>
+
+    <div class="feedback" id="fb-s36"></div>
+
+    <!-- Verständnisfragen -->
+    <div class="comprehension">
+      <div class="section-heading">❓ Verständnisfragen – Seite 36</div>
+
+      <div class="comp-q">
+        <div class="q">1. ¿Cómo es la Villa Wewersbusch?</div>
+        <div class="options-grid">
+          <button class="opt" onclick="ansComp(this, true, 'comp-s36-1')">Es una escuela especial y moderna.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-1')">Es una escuela pequeña y antigua.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-1')">Es una cafetería grande.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-1')">Es un gimnasio moderno.</button>
+        </div>
+        <div class="feedback" id="comp-s36-1"></div>
+      </div>
+
+      <div class="comp-q">
+        <div class="q">2. ¿Qué hay en la Villa Wewersbusch? (Wähle alle richtigen)</div>
+        <div class="options-grid">
+          <button class="opt" onclick="ansComp(this, true, 'comp-s36-2')">hay un gimnasio</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-2')">hay una piscina (Schwimmbad)</button>
+          <button class="opt" onclick="ansComp(this, true, 'comp-s36-2')">hay una biblioteca</button>
+          <button class="opt" onclick="ansComp(this, true, 'comp-s36-2')">hay un estudio de grabación</button>
+        </div>
+        <div class="feedback" id="comp-s36-2"></div>
+      </div>
+
+      <div class="comp-q">
+        <div class="q">3. ¿Cuántos estudiantes hay?</div>
+        <div class="options-grid">
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-3')">Hay treinta.</button>
+          <button class="opt" onclick="ansComp(this, true, 'comp-s36-3')">Hay doscientos.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-3')">Hay mil.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s36-3')">No hay estudiantes.</button>
+        </div>
+        <div class="feedback" id="comp-s36-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEITE 42 -->
+  <div id="page-s42" class="hidden">
+    <div class="audio-row">
+      <strong style="font-size:var(--fs-lg);color:var(--accent)">En mi escuela</strong>
+      <button class="btn-audio" data-speak="¿Cómo es tu escuela? Mi escuela se llama Instituto Río Verde. Es grande y moderna. Hay muchas aulas y una cafetería. También hay una biblioteca con muchos libros. ¿Cuántos estudiantes hay? Hay trescientos estudiantes. ¿Cuántas cafeterías hay? Hay una cafetería. ¿Cuántos profesores hay? Hay veinte profesores. Los estudiantes estudian español, matemáticas y ciencias. ¡Me gusta mucho mi escuela!" data-lang="es-ES">🔊 Vorlesen</button>
+    </div>
+
+    <div class="reading-text" id="text-s42">
+      ¿Cómo es tu escuela? Mi escuela
+      <select class="blank-select" data-answer="se llama">
+        <option value="">___</option>
+        <option value="se llama">se llama</option>
+        <option value="es">es</option>
+        <option value="tiene">tiene</option>
+        <option value="hay">hay</option>
+      </select>
+      Instituto Río Verde. Es grande y
+      <select class="blank-select" data-answer="moderna">
+        <option value="">___</option>
+        <option value="moderna">moderna</option>
+        <option value="pequena">pequeña</option>
+        <option value="antigua">antigua</option>
+        <option value="bonito">bonito</option>
+      </select>.
+      Hay muchas aulas y una
+      <select class="blank-select" data-answer="cafetería">
+        <option value="">___</option>
+        <option value="cafetería">cafetería</option>
+        <option value="piscina">piscina</option>
+        <option value="cine">cine</option>
+        <option value="parque">parque</option>
+      </select>.
+      <select class="blank-select" data-answer="También">
+        <option value="">___</option>
+        <option value="También">También</option>
+        <option value="Pero">Pero</option>
+        <option value="Porque">Porque</option>
+        <option value="No">No</option>
+      </select>
+      hay una biblioteca con muchos libros.
+      ¿Cuántos estudiantes
+      <select class="blank-select" data-answer="hay">
+        <option value="">___</option>
+        <option value="hay">hay</option>
+        <option value="son">son</option>
+        <option value="tienen">tienen</option>
+        <option value="comen">comen</option>
+      </select>?
+      Hay
+      <select class="blank-select" data-answer="trescientos">
+        <option value="">___</option>
+        <option value="trescientos">trescientos (300)</option>
+        <option value="doscientos">doscientos (200)</option>
+        <option value="treinta">treinta (30)</option>
+        <option value="mil">mil (1000)</option>
+      </select>
+      estudiantes. Hay
+      <select class="blank-select" data-answer="veinte">
+        <option value="">___</option>
+        <option value="veinte">veinte (20)</option>
+        <option value="diez">diez (10)</option>
+        <option value="cinco">cinco (5)</option>
+        <option value="cien">cien (100)</option>
+      </select>
+      profesores. Los estudiantes
+      <select class="blank-select" data-answer="estudian">
+        <option value="">___</option>
+        <option value="estudian">estudian</option>
+        <option value="estudiar">estudiar</option>
+        <option value="estudio">estudio</option>
+        <option value="estudias">estudias</option>
+      </select>
+      español, matemáticas y ciencias. ¡Me gusta mucho mi escuela!
+    </div>
+
+    <div class="flex-row mb-md">
+      <button class="btn btn-primary" onclick="checkBlanks('text-s42')">✅ Antworten prüfen</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetBlanks('text-s42')">🔄 Zurücksetzen</button>
+    </div>
+
+    <div class="feedback" id="fb-s42"></div>
+
+    <div class="comprehension">
+      <div class="section-heading">❓ Verständnisfragen – Seite 42</div>
+
+      <div class="comp-q">
+        <div class="q">1. ¿Cómo se llama la escuela?</div>
+        <div class="options-grid">
+          <button class="opt" onclick="ansComp(this, true, 'comp-s42-1')">Se llama Instituto Río Verde.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-1')">Se llama Villa Wewersbusch.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-1')">Se llama Escuela Nacional.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-1')">No tiene nombre.</button>
+        </div>
+        <div class="feedback" id="comp-s42-1"></div>
+      </div>
+
+      <div class="comp-q">
+        <div class="q">2. ¿Cuántos estudiantes hay en la escuela?</div>
+        <div class="options-grid">
+          <button class="opt" onclick="ansComp(this, true, 'comp-s42-2')">Hay trescientos.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-2')">Hay doscientos.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-2')">Hay veinte.</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-2')">Hay diez.</button>
+        </div>
+        <div class="feedback" id="comp-s42-2"></div>
+      </div>
+
+      <div class="comp-q">
+        <div class="q">3. Was lernen die Schüler/innen? (Wähle alle richtigen)</div>
+        <div class="options-grid">
+          <button class="opt" onclick="ansComp(this, true, 'comp-s42-3')">español</button>
+          <button class="opt" onclick="ansComp(this, false,'comp-s42-3')">chino</button>
+          <button class="opt" onclick="ansComp(this, true, 'comp-s42-3')">matemáticas</button>
+          <button class="opt" onclick="ansComp(this, true, 'comp-s42-3')">ciencias</button>
+        </div>
+        <div class="feedback" id="comp-s42-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gesamtergebnis -->
+  <div style="margin-top:36px" id="total-score-area" class="hidden">
+    <div id="result-area"></div>
+  </div>
+
+  <div class="flex-center mb-lg">
+    <button class="btn btn-primary" onclick="calcTotal()">📊 Gesamtergebnis berechnen</button>
+    <a class="btn btn-secondary" href="/Lernplattform/">🏠 Dashboard</a>
+  </div>
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+function showPage(p) {
+  document.querySelectorAll('.text-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('page-s36').classList.toggle('hidden', p!=='s36');
+  document.getElementById('page-s42').classList.toggle('hidden', p!=='s42');
+}
+
+// Check dropdowns
+function checkBlanks(containerId) {
+  const container = document.getElementById(containerId);
+  const selects = container.querySelectorAll('.blank-select');
+  let cor = 0, total = selects.length;
+  selects.forEach(s => {
+    const answer = s.getAttribute('data-answer');
+    if (s.value === answer) { s.classList.add('correct'); s.classList.remove('wrong'); cor++; }
+    else if (s.value !== '') { s.classList.add('wrong'); s.classList.remove('correct'); }
+  });
+  const fbId = 'fb-' + containerId.replace('text-','');
+  const fb = document.getElementById(fbId);
+  if (fb) {
+    fb.textContent = cor === total ? `✅ Perfekt! Alle ${total} Lücken richtig!` : `${cor} von ${total} richtig. Noch mal versuchen!`;
+    fb.className   = cor === total ? 'feedback show fb-correct' : 'feedback show fb-wrong';
+  }
+}
+
+function resetBlanks(containerId) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.blank-select').forEach(s => {
+    s.value = ''; s.className = 'blank-select';
+  });
+  const fbId = 'fb-' + containerId.replace('text-','');
+  const fb = document.getElementById(fbId);
+  if (fb) fb.classList.remove('show');
+}
+
+// Comprehension
+const compAnswers = {};
+function ansComp(btn, isCorrect, fbId) {
+  if (compAnswers[fbId]) return; // already answered
+  compAnswers[fbId] = true;
+  btn.disabled = true;
+  const fb = document.getElementById(fbId);
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb.textContent = '✅ Richtig!'; fb.className = 'feedback show fb-correct';
+    Speech.speakES(btn.textContent);
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = '❌ Leider falsch. Schau nochmal in den Text!'; fb.className = 'feedback show fb-wrong';
+  }
+}
+
+function calcTotal() {
+  // Count correct blanks across both
+  let cor = 0, tot = 0;
+  document.querySelectorAll('.blank-select').forEach(s => {
+    tot++;
+    if (s.value === s.getAttribute('data-answer')) cor++;
+  });
+  document.getElementById('total-score-area').classList.remove('hidden');
+  showResult('result-area', 'lueckentext', cor, tot);
+}
+</script>
+</body>
+</html>

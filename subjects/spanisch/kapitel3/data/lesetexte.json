@@ -1,0 +1,66 @@
+{
+  "texte": [
+    {
+      "id": "s36",
+      "titel": "Seite 36 – La Villa Wewersbusch",
+      "originaltext": "La Villa Wewersbusch es una escuela muy especial y moderna. ¡Tiene todo! En la Villa Wewersbusch hay un gimnasio grande y hay un patio bonito. También hay una biblioteca y una cafetería. Los estudiantes comen en el comedor. Hay también un aula de música y un estudio de grabación. ¿Cuántos estudiantes hay en la Villa Wewersbusch? Hay doscientos estudiantes. La Villa Wewersbusch no es una escuela normal. ¡Es fantástica!",
+      "lueckentext": [
+        {"vor": "La Villa Wewersbusch ", "luecke": "es",       "nach": " una escuela muy especial y moderna."},
+        {"vor": "En la Villa Wewersbusch hay un gimnasio ", "luecke": "grande", "nach": " y hay un patio bonito."},
+        {"vor": "También hay una ", "luecke": "biblioteca",  "nach": " y una cafetería."},
+        {"vor": "Los estudiantes ", "luecke": "comen",       "nach": " en el comedor."},
+        {"vor": "Hay también un aula de música y un ", "luecke": "estudio de grabación", "nach": "."},
+        {"vor": "¿", "luecke": "Cuántos", "nach": " estudiantes hay en la Villa Wewersbusch?"},
+        {"vor": "La Villa Wewersbusch no ", "luecke": "es",  "nach": " una escuela normal."}
+      ],
+      "fragen": [
+        {
+          "q": "¿Cómo es la Villa Wewersbusch?",
+          "a": "Es una escuela muy especial y moderna.",
+          "optionen": ["Es una escuela muy especial y moderna.", "Es una escuela pequeña y antigua.", "Es un cine moderno.", "Es un restaurante."]
+        },
+        {
+          "q": "¿Qué hay en la Villa Wewersbusch? (3 Dinge nennen)",
+          "a": "Hay un gimnasio, una cafetería y una biblioteca.",
+          "optionen": ["Hay un gimnasio, una cafetería y una biblioteca.", "Hay solo un patio.", "Hay un aeropuerto.", "No hay nada especial."]
+        },
+        {
+          "q": "¿Cuántos estudiantes hay?",
+          "a": "Hay doscientos estudiantes.",
+          "optionen": ["Hay doscientos estudiantes.", "Hay treinta estudiantes.", "Hay mil estudiantes.", "No hay estudiantes."]
+        }
+      ]
+    },
+    {
+      "id": "s42",
+      "titel": "Seite 42 – En mi escuela",
+      "originaltext": "¿Cómo es tu escuela? Mi escuela se llama Instituto Río Verde. Es grande y moderna. Hay muchas aulas y una cafetería. También hay una biblioteca con muchos libros. ¿Cuántos estudiantes hay? Hay trescientos estudiantes. ¿Cuántas cafeterías hay? Hay una cafetería. ¿Cuántos profesores hay? Hay veinte profesores. Los estudiantes estudian español, matemáticas y ciencias. ¡Me gusta mucho mi escuela!",
+      "lueckentext": [
+        {"vor": "Mi escuela ", "luecke": "se llama",   "nach": " Instituto Río Verde."},
+        {"vor": "Es grande y ", "luecke": "moderna",   "nach": "."},
+        {"vor": "Hay muchas aulas y una ", "luecke": "cafetería", "nach": "."},
+        {"vor": "También hay una ", "luecke": "biblioteca", "nach": " con muchos libros."},
+        {"vor": "Hay ", "luecke": "trescientos",       "nach": " estudiantes."},
+        {"vor": "Hay ", "luecke": "veinte",            "nach": " profesores."},
+        {"vor": "Los estudiantes ", "luecke": "estudian", "nach": " español, matemáticas y ciencias."}
+      ],
+      "fragen": [
+        {
+          "q": "¿Cómo se llama la escuela?",
+          "a": "Se llama Instituto Río Verde.",
+          "optionen": ["Se llama Instituto Río Verde.", "Se llama Villa Wewersbusch.", "Se llama Escuela Nacional.", "No tiene nombre."]
+        },
+        {
+          "q": "¿Cuántos estudiantes hay?",
+          "a": "Hay trescientos estudiantes.",
+          "optionen": ["Hay trescientos estudiantes.", "Hay doscientos estudiantes.", "Hay diez estudiantes.", "Hay mil estudiantes."]
+        },
+        {
+          "q": "¿Hay una piscina en la escuela?",
+          "a": "No, no hay una piscina.",
+          "optionen": ["No, no hay una piscina.", "Sí, hay una piscina grande.", "Sí, hay dos piscinas.", "No sé."]
+        }
+      ]
+    }
+  ]
+}

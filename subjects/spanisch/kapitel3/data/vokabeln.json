@@ -1,0 +1,98 @@
+{
+  "kategorien": [
+    {
+      "id": "orte",
+      "name": "Orte – Villa Wewersbusch",
+      "vokabeln": [
+        {"es": "la biblioteca",           "de": "die Bibliothek"},
+        {"es": "la cafetería",            "de": "die Cafeteria"},
+        {"es": "el gimnasio",             "de": "die Turnhalle"},
+        {"es": "el patio",                "de": "der Schulhof"},
+        {"es": "el comedor",              "de": "der Speisesaal"},
+        {"es": "el aula",                 "de": "das Klassenzimmer"},
+        {"es": "el estudio de grabación", "de": "das Aufnahmestudio"},
+        {"es": "el aula de música",       "de": "der Musikraum"},
+        {"es": "el cine",                 "de": "das Kino"},
+        {"es": "el trampolín",            "de": "das Trampolin"},
+        {"es": "el parlamento",           "de": "das Schülerparlament"},
+        {"es": "el aula MINT",            "de": "der MINT-Raum"},
+        {"es": "la escuela",              "de": "die Schule"},
+        {"es": "la clase",                "de": "das Klassenzimmer / die Klasse"},
+        {"es": "el pasillo",              "de": "der Flur"}
+      ]
+    },
+    {
+      "id": "hay",
+      "name": "Hay – Es gibt",
+      "vokabeln": [
+        {"es": "hay",                          "de": "es gibt"},
+        {"es": "no hay",                       "de": "es gibt kein/e"},
+        {"es": "hay un gimnasio",              "de": "es gibt eine Turnhalle"},
+        {"es": "hay una cafetería",            "de": "es gibt eine Cafeteria"},
+        {"es": "hay una biblioteca",           "de": "es gibt eine Bibliothek"},
+        {"es": "hay un patio",                 "de": "es gibt einen Schulhof"},
+        {"es": "hay un comedor",               "de": "es gibt einen Speisesaal"},
+        {"es": "hay un cine",                  "de": "es gibt ein Kino"},
+        {"es": "hay dos trampolines",          "de": "es gibt zwei Trampoline"},
+        {"es": "hay un aula de música",        "de": "es gibt einen Musikraum"},
+        {"es": "hay un estudio de grabación",  "de": "es gibt ein Aufnahmestudio"}
+      ]
+    },
+    {
+      "id": "adjektive",
+      "name": "Adjektive & wichtige Wörter",
+      "vokabeln": [
+        {"es": "grande",       "de": "groß"},
+        {"es": "pequeño/a",    "de": "klein"},
+        {"es": "moderno/a",    "de": "modern"},
+        {"es": "bonito/a",     "de": "schön"},
+        {"es": "nuevo/a",      "de": "neu"},
+        {"es": "fantástico/a", "de": "fantastisch"},
+        {"es": "especial",     "de": "besonders / speziell"},
+        {"es": "muy",          "de": "sehr"},
+        {"es": "también",      "de": "auch"},
+        {"es": "pero",         "de": "aber"},
+        {"es": "y",            "de": "und"},
+        {"es": "o",            "de": "oder"},
+        {"es": "mucho/a",      "de": "viel/e"},
+        {"es": "un poco",      "de": "ein bisschen"}
+      ]
+    },
+    {
+      "id": "pronomen",
+      "name": "Personalpronomen",
+      "vokabeln": [
+        {"es": "yo",       "de": "ich"},
+        {"es": "tú",       "de": "du"},
+        {"es": "él",       "de": "er"},
+        {"es": "ella",     "de": "sie (Singular)"},
+        {"es": "nosotros", "de": "wir (maskulin/gemischt)"},
+        {"es": "nosotras", "de": "wir (nur Mädchen/Frauen)"},
+        {"es": "vosotros", "de": "ihr (maskulin/gemischt)"},
+        {"es": "vosotras", "de": "ihr (nur Mädchen/Frauen)"},
+        {"es": "ellos",    "de": "sie (maskulin/gemischt, Plural)"},
+        {"es": "ellas",    "de": "sie (nur Mädchen/Frauen, Plural)"}
+      ]
+    },
+    {
+      "id": "verben",
+      "name": "Verben – Infinitiv",
+      "vokabeln": [
+        {"es": "cenar",    "de": "zu Abend essen"},
+        {"es": "hablar",   "de": "sprechen"},
+        {"es": "estudiar", "de": "lernen / studieren"},
+        {"es": "trabajar", "de": "arbeiten"},
+        {"es": "escuchar", "de": "zuhören"},
+        {"es": "comer",    "de": "essen"},
+        {"es": "beber",    "de": "trinken"},
+        {"es": "leer",     "de": "lesen"},
+        {"es": "vivir",    "de": "wohnen / leben"},
+        {"es": "escribir", "de": "schreiben"},
+        {"es": "abrir",    "de": "öffnen"},
+        {"es": "ser",      "de": "sein (dauerhaft)"},
+        {"es": "estar",    "de": "sein (vorübergehend / Ort)"},
+        {"es": "tener",    "de": "haben"}
+      ]
+    }
+  ]
+}

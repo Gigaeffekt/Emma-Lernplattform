@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karteikarten – Spanisch Kap. 3</title>
+<link rel="stylesheet" href="../../../../assets/css/main.css">
+<style>
+  .cat-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+  .cat-btn  { padding: 12px 24px; border-radius: 99px; font-size: var(--fs-sm); font-weight: 700; cursor: pointer; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; transition: background .15s, border-color .15s; }
+  .cat-btn.active, .cat-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .card-nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 24px 0; }
+  .card-counter { font-size: var(--fs-lg); font-weight: 800; color: #aaa; }
+  .rate-btns { display: flex; gap: 16px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .progress-nums { text-align: center; font-size: var(--fs-md); color: #aaa; margin-bottom: 8px; }
+  #finish-banner { display: none; text-align: center; padding: 40px 20px; }
+  #finish-banner h2 { font-size: var(--fs-xl); color: var(--accent); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="/Lernplattform/">← Dashboard</a>
+  <span class="header-title">Karteikarten 🃏</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+  <div class="page-title">🃏 Karteikarten mit Audio</div>
+
+  <div class="info-box">
+    <h3>🎯 So funktionierts</h3>
+    <p>Klick auf die Karte → sie dreht sich → du siehst die Übersetzung.<br>
+    Drück <strong style="color:var(--correct)">▶ Aussprechen</strong> um das spanische Wort zu hören.<br>
+    Dann: Wusstest du es? → <strong style="color:var(--correct)">✅ Wusste ich!</strong> &nbsp; Noch üben? → <strong style="color:var(--wrong)">🔄 Nochmal</strong></p>
+  </div>
+
+  <!-- KATEGORIE WÄHLEN -->
+  <div class="cat-btns" id="cat-btns">
+    <button class="cat-btn active" data-cat="all">🌐 Alle</button>
+    <button class="cat-btn" data-cat="orte">🏫 Orte</button>
+    <button class="cat-btn" data-cat="hay">💬 Hay</button>
+    <button class="cat-btn" data-cat="verben">🔤 Verben</button>
+    <button class="cat-btn" data-cat="pronomen">👤 Pronomen</button>
+    <button class="cat-btn" data-cat="adjektive">🌟 Adjektive</button>
+  </div>
+
+  <!-- FORTSCHRITT -->
+  <div class="progress-nums">
+    Gewusst: <span id="known-count" style="color:var(--correct);font-weight:800">0</span> &nbsp;|&nbsp;
+    Noch üben: <span id="unknown-count" style="color:var(--wrong);font-weight:800">0</span>
+  </div>
+  <div class="progress-wrap mb-md">
+    <div class="progress-bar" id="prog-bar" style="width:0%"></div>
+  </div>
+
+  <!-- KARTEN-COUNTER -->
+  <div class="card-counter text-center mb-sm" id="card-counter">Karte 1 von 1</div>
+
+  <!-- FLASHCARD -->
+  <div class="flashcard-scene" id="fc-scene">
+    <div class="flashcard" id="card" onclick="flipCard()">
+      <div class="fc-front">
+        <div class="word" id="front-word">...</div>
+        <div class="fc-hint">↩ Klicken zum Umdrehen</div>
+      </div>
+      <div class="fc-back">
+        <div class="word" id="back-word">...</div>
+        <div class="fc-hint">↩ Klicken zum Zurückdrehen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="flex-center mb-md" id="audio-row">
+    <button class="btn btn-secondary" id="speak-btn" onclick="speakCurrent()">🔊 Aussprechen</button>
+  </div>
+
+  <div class="card-nav">
+    <button class="btn btn-secondary btn-sm" onclick="prevCard()">← Zurück</button>
+    <div class="card-counter" id="nav-counter">1 / 1</div>
+    <button class="btn btn-secondary btn-sm" onclick="nextCard()">Weiter →</button>
+  </div>
+
+  <div class="rate-btns" id="rate-btns">
+    <button class="btn btn-danger" onclick="rateCard(false)">🔄 Noch üben</button>
+    <button class="btn btn-success" onclick="rateCard(true)">✅ Wusste ich!</button>
+  </div>
+
+  <!-- FERTIG BANNER -->
+  <div id="finish-banner">
+    <h2>🎉 Runde abgeschlossen!</h2>
+    <div style="font-size:var(--fs-xxl);margin-bottom:16px" id="finish-stars"></div>
+    <p style="font-size:var(--fs-lg);margin-bottom:28px" id="finish-msg"></p>
+    <div class="flex-center">
+      <button class="btn btn-secondary" onclick="restartUnknown()">🔄 Nur unbekannte üben</button>
+      <button class="btn btn-primary"   onclick="restartAll()">🔁 Alle nochmal</button>
+      <a class="btn btn-secondary" href="/Lernplattform/">🏠 Dashboard</a>
+    </div>
+  </div>
+
+</main>
+
+<script src="../../../../assets/js/core.js"></script>
+<script src="../../../../assets/js/speech.js"></script>
+<script>
+const ALL_CARDS = {
+  orte: [
+    {es:'la biblioteca',de:'die Bibliothek'},{es:'la cafetería',de:'die Cafeteria'},
+    {es:'el gimnasio',de:'die Turnhalle'},{es:'el patio',de:'der Schulhof'},
+    {es:'el comedor',de:'der Speisesaal'},{es:'el aula',de:'das Klassenzimmer'},
+    {es:'el estudio de grabación',de:'das Aufnahmestudio'},
+    {es:'el aula de música',de:'der Musikraum'},{es:'el cine',de:'das Kino'},
+    {es:'el trampolín',de:'das Trampolin'},{es:'el parlamento',de:'das Schülerparlament'},
+    {es:'la escuela',de:'die Schule'}
+  ],
+  hay: [
+    {es:'hay',de:'es gibt'},{es:'no hay',de:'es gibt kein/e'},
+    {es:'hay un gimnasio',de:'es gibt eine Turnhalle'},
+    {es:'hay una cafetería',de:'es gibt eine Cafeteria'},
+    {es:'hay una biblioteca',de:'es gibt eine Bibliothek'},
+    {es:'hay un patio',de:'es gibt einen Schulhof'},
+    {es:'hay dos trampolines',de:'es gibt zwei Trampoline'}
+  ],
+  verben: [
+    {es:'cenar',de:'zu Abend essen'},{es:'comer',de:'essen'},{es:'vivir',de:'wohnen / leben'},
+    {es:'hablar',de:'sprechen'},{es:'beber',de:'trinken'},{es:'escribir',de:'schreiben'},
+    {es:'leer',de:'lesen'},{es:'ser',de:'sein (dauerhaft)'},{es:'estar',de:'sein (Zustand/Ort)'},
+    {es:'tener',de:'haben'},{es:'estudiar',de:'lernen'},{es:'abrir',de:'öffnen'}
+  ],
+  pronomen: [
+    {es:'yo',de:'ich'},{es:'tú',de:'du'},{es:'él',de:'er'},{es:'ella',de:'sie (Sg.)'},
+    {es:'nosotros',de:'wir (mit Jungs)'},{es:'nosotras',de:'wir (nur Mädchen)'},
+    {es:'vosotros',de:'ihr (mit Jungs)'},{es:'vosotras',de:'ihr (nur Mädchen)'},
+    {es:'ellos',de:'sie (Pl., gemischt)'},{es:'ellas',de:'sie (nur Mädchen, Pl.)'}
+  ],
+  adjektive: [
+    {es:'grande',de:'groß'},{es:'pequeño/a',de:'klein'},{es:'moderno/a',de:'modern'},
+    {es:'bonito/a',de:'schön'},{es:'nuevo/a',de:'neu'},{es:'fantástico/a',de:'fantastisch'},
+    {es:'especial',de:'besonders'},{es:'muy',de:'sehr'},{es:'también',de:'auch'},
+    {es:'pero',de:'aber'}
+  ]
+};
+
+let deck = [], idx = 0, known = new Set(), flipped = false;
+
+function buildDeck(cat) {
+  if (cat === 'all') {
+    deck = Object.values(ALL_CARDS).flat();
+  } else {
+    deck = ALL_CARDS[cat] || [];
+  }
+  deck = shuffle([...deck]);
+  known.clear();
+  idx = 0;
+  updateUI();
+}
+
+function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+
+function updateUI() {
+  if (deck.length === 0) return;
+  const card = deck[idx];
+  document.getElementById('front-word').textContent = card.es;
+  document.getElementById('back-word').textContent  = card.de;
+  document.getElementById('card-counter').textContent = `Karte ${idx+1} von ${deck.length}`;
+  document.getElementById('nav-counter').textContent  = `${idx+1} / ${deck.length}`;
+  const prog = Math.round((known.size / deck.length) * 100);
+  document.getElementById('known-count').textContent   = known.size;
+  document.getElementById('unknown-count').textContent = deck.length - known.size;
+  document.getElementById('prog-bar').style.width      = prog + '%';
+  // Reset flip
+  if (flipped) { document.getElementById('card').classList.remove('flipped'); flipped = false; }
+}
+
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById('card').classList.toggle('flipped', flipped);
+}
+
+function speakCurrent() { if (deck[idx]) Speech.speakES(deck[idx].es); }
+
+function nextCard() { if (idx < deck.length-1) { idx++; updateUI(); } }
+function prevCard() { if (idx > 0) { idx--; updateUI(); } }
+
+function rateCard(didKnow) {
+  if (didKnow) {
+    known.add(idx);
+    // brief green flash
+    const fc = document.getElementById('fc-scene');
+    fc.style.boxShadow = '0 0 0 4px var(--correct)';
+    setTimeout(() => fc.style.boxShadow = 'none', 600);
+  }
+  if (idx < deck.length - 1) { idx++; updateUI(); }
+  else { finishRound(); }
+}
+
+function finishRound() {
+  document.getElementById('fc-scene').style.display   = 'none';
+  document.getElementById('audio-row').style.display  = 'none';
+  document.getElementById('rate-btns').style.display  = 'none';
+  document.getElementById('card-counter').style.display = 'none';
+  document.querySelector('.card-nav').style.display   = 'none';
+  const banner = document.getElementById('finish-banner');
+  banner.style.display = 'block';
+  const pct   = Math.round((known.size / deck.length) * 100);
+  const stars = LP.setStars('karteikarten', LP.scoreToStars(pct));
+  document.getElementById('finish-stars').innerHTML = LP.starsHTML(stars);
+  document.getElementById('finish-msg').textContent =
+    `Du hast ${known.size} von ${deck.length} Karten gewusst (${pct}%).`;
+}
+
+function restartAll()     { showGame(); buildDeck(activeCat); }
+function restartUnknown() {
+  const unknown = deck.filter((_, i) => !known.has(i));
+  if (unknown.length === 0) { restartAll(); return; }
+  showGame();
+  deck = shuffle(unknown); known.clear(); idx = 0; updateUI();
+}
+function showGame() {
+  document.getElementById('fc-scene').style.display   = '';
+  document.getElementById('audio-row').style.display  = '';
+  document.getElementById('rate-btns').style.display  = '';
+  document.getElementById('card-counter').style.display = '';
+  document.querySelector('.card-nav').style.display   = '';
+  document.getElementById('finish-banner').style.display = 'none';
+}
+
+let activeCat = 'all';
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.getAttribute('data-cat');
+    buildDeck(activeCat);
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildDeck('all');
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextCard(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+    if (e.key === 'f' || e.key === 'F') flipCard();
+    if (e.key === 'y' || e.key === 'Y') rateCard(true);
+    if (e.key === 'n' || e.key === 'N') rateCard(false);
+  });
+});
+</script>
+</body>
+</html>

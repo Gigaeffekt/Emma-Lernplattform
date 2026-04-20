@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meine Lernplattform – Spanisch</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+  .hero { text-align: center; padding: 36px 0 20px; }
+  .hero h1 { font-size: var(--fs-xxl); color: var(--accent); font-weight: 900; }
+  .hero p   { font-size: var(--fs-md); color: #aaa; margin-top: 8px; }
+  .section-label {
+    font-size: var(--fs-lg); font-weight: 800; color: var(--text);
+    margin: 36px 0 16px; padding-left: 6px;
+    border-left: 6px solid var(--accent); padding-left: 18px;
+  }
+  .total-stars-line {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .total-stars-line span { font-size: var(--fs-md); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-logo">🎓</span>
+  <span class="header-title">Meine Lernplattform</span>
+  <span class="header-stars">★ 0</span>
+</header>
+
+<main>
+
+  <!-- COUNTDOWN BANNER -->
+  <div class="test-banner">
+    <span class="icon">📝</span>
+    <div class="tinfo">
+      <strong id="countdown-label">Klassenarbeit Spanisch</strong><br>
+      Donnerstag, 23. April 2026
+    </div>
+    <div class="days" id="countdown">–</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>¡Hola! Lernst du heute?</h1>
+    <p>Wähle ein Modul und sammle Sterne ⭐ &nbsp;|&nbsp; Du schaffst das!</p>
+  </div>
+
+  <!-- GESAMTFORTSCHRITT -->
+  <div class="mb-lg">
+    <div class="total-stars-line">
+      <span style="color:#ccc">Gesamtfortschritt Kapitel 3</span>
+      <span id="star-total" style="color:var(--accent);font-weight:800">0 / 27 Sterne</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="total-bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- ── ORIGINALTEXTE ── -->
+  <div class="section-label">📖 Originaltexte entdecken – mit Wort-Jagd &amp; Puzzle</div>
+  <div class="cards-grid">
+
+    <a href="subjects/spanisch/kapitel3/spiele/leseabenteuer-s36.html" class="card" id="c-s36">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Leseabenteuer S.36</div>
+      <div class="card-desc">Villa Wewersbusch – Räume &amp; Adjektive entdecken, Puzzle lösen!</div>
+      <div class="card-stars" id="s-s36">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/spiele/leseabenteuer-s42.html" class="card" id="c-s42">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Leseabenteuer S.42</div>
+      <div class="card-desc">Instituto Río Verde – Räume, Fächer &amp; Verständnisfragen!</div>
+      <div class="card-stars" id="s-s42">☆☆☆</div>
+    </a>
+
+  </div>
+
+  <!-- ── GRAMMATIK ── -->
+  <div class="section-label">1️⃣ Erst verstehen – Grammatik</div>
+  <div class="cards-grid">
+
+    <a href="subjects/spanisch/kapitel3/grammatik/pronomen.html" class="card" id="c-pronomen">
+      <div class="card-icon">👤</div>
+      <div class="card-title">Personalpronomen</div>
+      <div class="card-desc">yo, tú, él/ella, nosotros… – Wer macht was? Erste Lektion!</div>
+      <div class="card-stars" id="s-pronomen">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/grammatik/regelmaessige-verben.html" class="card" id="c-reg">
+      <div class="card-icon">📖</div>
+      <div class="card-title">Regelmäßige Verben</div>
+      <div class="card-desc">-AR / -ER / -IR – cenar, comer, vivir & die Logik dahinter</div>
+      <div class="card-stars" id="s-reg">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/grammatik/unregelmaessige-verben.html" class="card" id="c-unreg">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Ser, Estar, Tener</div>
+      <div class="card-desc">Die 3 wichtigsten unregelmäßigen Verben – auswendig lernen!</div>
+      <div class="card-stars" id="s-unreg">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/grammatik/pronomen-level2.html" class="card" id="c-pron2">
+      <div class="card-icon">👤</div>
+      <div class="card-title">Pronomen Level 2</div>
+      <div class="card-desc">Tabelle selbst ausfüllen – alle 10 Personalpronomen schreiben!</div>
+      <div class="card-stars" id="s-pron2">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/grammatik/pronomen-level3.html" class="card" id="c-pron3">
+      <div class="card-icon">🧩</div>
+      <div class="card-title">Pronomen Level 3</div>
+      <div class="card-desc">Sätze ergänzen – Pronomen &amp; Verbformen einsetzen</div>
+      <div class="card-stars" id="s-pron3">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/grammatik/verben-endungen.html" class="card" id="c-vend">
+      <div class="card-icon">✍️</div>
+      <div class="card-title">Verben-Endungen</div>
+      <div class="card-desc">-AR / -ER / -IR Endungen in Tabellen selbst eintragen!</div>
+      <div class="card-stars" id="s-vend">☆☆☆</div>
+    </a>
+
+  </div>
+
+  <!-- ── ÜBEN ── -->
+  <div class="section-label">2️⃣ Üben – Spielerisch</div>
+  <div class="cards-grid">
+
+    <a href="subjects/spanisch/kapitel3/spiele/karteikarten.html" class="card" id="c-karten">
+      <div class="card-icon">🃏</div>
+      <div class="card-title">Karteikarten</div>
+      <div class="card-desc">Vokabeln mit 🔊 Aussprache – Spanisch ↔ Deutsch</div>
+      <div class="card-stars" id="s-karten">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/spiele/konjugations-quiz.html" class="card" id="c-konj">
+      <div class="card-icon">✏️</div>
+      <div class="card-title">Konjugations-Quiz</div>
+      <div class="card-desc">yo como, tú comes… – Tabellen ausfüllen und Punkte sammeln</div>
+      <div class="card-stars" id="s-konj">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/spiele/fallende-woerter.html" class="card" id="c-fall">
+      <div class="card-icon">🎮</div>
+      <div class="card-title">Wörter-Jagd</div>
+      <div class="card-desc">Fallende Vokabeln – klick die richtige Übersetzung! Schnell!</div>
+      <div class="card-stars" id="s-fall">☆☆☆</div>
+    </a>
+
+  </div>
+
+  <!-- ── LESEN & SCHREIBEN ── -->
+  <div class="section-label">3️⃣ Lesen &amp; Schreiben – Klassenarbeits-Vorbereitung</div>
+  <div class="cards-grid">
+
+    <a href="subjects/spanisch/kapitel3/spiele/cuanto-quiz.html" class="card" id="c-cuanto">
+      <div class="card-icon">❓</div>
+      <div class="card-title">¿Cuánto/a/os/as?</div>
+      <div class="card-desc">Fragewort mit Geschlecht – ¿Cuántos gimnasios hay?</div>
+      <div class="card-stars" id="s-cuanto">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/spiele/lueckentext.html" class="card" id="c-lueck">
+      <div class="card-icon">📄</div>
+      <div class="card-title">Lückentexte</div>
+      <div class="card-desc">Texte aus S.36 &amp; S.42 verstehen – Lücken ergänzen</div>
+      <div class="card-stars" id="s-lueck">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/spiele/schreibhilfe.html" class="card" id="c-schreib">
+      <div class="card-icon">✍️</div>
+      <div class="card-title">Schreib-Aufgabe</div>
+      <div class="card-desc">Villa Wewersbusch beschreiben – Schritt für Schritt zum Text!</div>
+      <div class="card-stars" id="s-schreib">☆☆☆</div>
+    </a>
+
+    <a href="subjects/spanisch/kapitel3/spiele/uebersetzung.html" class="card" id="c-ueb">
+      <div class="card-icon">🔤</div>
+      <div class="card-title">Schreibhilfe Level 2</div>
+      <div class="card-desc">Sätze übersetzen – Deutsch → Spanisch mit Hilfswörtern!</div>
+      <div class="card-stars" id="s-ueb">☆☆☆</div>
+    </a>
+
+  </div>
+
+</main>
+
+<script src="assets/js/core.js"></script>
+<script>
+// Countdown berechnen
+(function() {
+  const test = new Date('2026-04-23T09:00:00');
+  const now  = new Date();
+  const ms   = test - now;
+  const el   = document.getElementById('countdown');
+  const lbl  = document.getElementById('countdown-label');
+  if (!el) return;
+  if (ms <= 0) {
+    el.textContent = 'Heute! 🎯';
+    el.style.color = 'var(--wrong)';
+    lbl.textContent = '⚠️ HEUTE ist die Klassenarbeit!';
+  } else {
+    const hours = Math.ceil(ms / 3600000);
+    const days  = Math.ceil(ms / 86400000);
+    el.textContent = days === 1 ? 'Morgen!' : days + ' Tage';
+    if (days <= 1) el.style.color = 'var(--wrong)';
+    else if (days <= 2) el.style.color = 'var(--warn)';
+  }
+})();
+
+// Sterne-Anzeige für alle Module
+const mods = [
+  { id: 'pronomen',          elId: 's-pronomen', cardId: 'c-pronomen' },
+  { id: 'reg-verben',        elId: 's-reg',      cardId: 'c-reg'      },
+  { id: 'unreg-verben',      elId: 's-unreg',    cardId: 'c-unreg'    },
+  { id: 'karteikarten',      elId: 's-karten',   cardId: 'c-karten'   },
+  { id: 'konjugations-quiz', elId: 's-konj',     cardId: 'c-konj'     },
+  { id: 'fallende-woerter',  elId: 's-fall',     cardId: 'c-fall'     },
+  { id: 'cuanto-quiz',       elId: 's-cuanto',   cardId: 'c-cuanto'   },
+  { id: 'lueckentext',       elId: 's-lueck',    cardId: 'c-lueck'    },
+  { id: 'schreibhilfe',      elId: 's-schreib',  cardId: 'c-schreib'  },
+  { id: 'leseabenteuer-s36', elId: 's-s36',      cardId: 'c-s36'      },
+  { id: 'leseabenteuer-s42', elId: 's-s42',      cardId: 'c-s42'      },
+  { id: 'pronomen-level2',   elId: 's-pron2',    cardId: 'c-pron2'    },
+  { id: 'pronomen-level3',   elId: 's-pron3',    cardId: 'c-pron3'    },
+  { id: 'uebersetzung',      elId: 's-ueb',      cardId: 'c-ueb'      },
+  { id: 'verben-endungen',   elId: 's-vend',     cardId: 'c-vend'     }
+];
+
+const MAX = mods.length * 3;
+let total = 0;
+mods.forEach(m => {
+  const stars = LP.getStars(m.id);
+  total += stars;
+  const el = document.getElementById(m.elId);
+  if (el) el.innerHTML = LP.starsHTML(stars);
+  const card = document.getElementById(m.cardId);
+  if (card && stars >= 1) card.classList.add('completed');
+});
+
+document.getElementById('star-total').textContent = total + ' / ' + MAX + ' Sterne';
+document.getElementById('total-bar').style.width = Math.round((total / MAX) * 100) + '%';
+</script>
+
+<!-- PWA Service Worker Registrierung -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    console.log('✅ Service Worker registriert', reg);
+  }).catch(err => {
+    console.error('❌ Service Worker Error:', err);
+  });
+}
+</script>
+</body>
+</html>
