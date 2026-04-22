@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.mode-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.mode-btn {
+  padding: 9px 18px; border-radius: 99px; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: 2px solid var(--border); background: var(--surface);
+  color: var(--muted); font-family: inherit; transition: all .15s;
+}
+.mode-btn.active, .mode-btn:hover { border-color: var(--accent); color: var(--accent); background: #1a1040; }
+.mode-btn.active { background: var(--accent); color: #fff; }
+
+.fc-scene { perspective: 1000px; margin: 0 auto 20px; max-width: 540px; }
+.fc-wrap {
+  width: 100%; min-height: 200px;
+  position: relative; transform-style: preserve-3d;
+  transition: transform .45s cubic-bezier(.4,0,.2,1); cursor: pointer;
+}
+.fc-wrap.flipped { transform: rotateY(180deg); }
+.fc-front, .fc-back {
+  position: absolute; inset: 0; min-height: 200px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  backface-visibility: hidden;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 24px; gap: 10px;
+  text-align: center;
+}
+.fc-back { transform: rotateY(180deg); background: var(--surface2); border-color: var(--accent); }
+.fc-de   { font-size: 28px; font-weight: 900; }
+.fc-en   { font-size: 24px; color: var(--accent2); font-weight: 700; }
+.fc-pl   { font-size: 14px; color: var(--muted); }
+.fc-tap  { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+.rate-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🃏</span>
+  <span class="header-title">Flashcards</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title" id="page-title">Flashcards</div>
+  <div class="page-subtitle" id="page-subtitle">Loading…</div>
+
+  <div class="info-box mb-md">
+    <h3>How to use</h3>
+    <p>Click the card to flip it and see the English translation. Then rate yourself: <strong style="color:var(--correct)">✅ Got it!</strong> moves it out, <strong style="color:var(--wrong)">🔄 Again</strong> puts it back. Finish all cards to earn XP!</p>
+  </div>
+
+  <!-- Direction mode -->
+  <div class="mode-btns">
+    <button class="mode-btn active" data-mode="de-en" onclick="setMode('de-en',this)">🇩🇪 German → English</button>
+    <button class="mode-btn" data-mode="en-de" onclick="setMode('en-de',this)">🇬🇧 English → German</button>
+  </div>
+
+  <!-- Progress -->
+  <div class="counter-row mb-sm">
+    <span>Card <span id="card-num">1</span> of <span id="card-total">?</span></span>
+    <span>
+      <span class="counter-correct">✅ <span id="cnt-got">0</span></span> &nbsp;|&nbsp;
+      <span class="counter-wrong">🔄 <span id="cnt-again">0</span></span>
+    </span>
+  </div>
+  <div class="progress-wrap mb-md">
+    <div class="progress-bar" id="fc-prog" style="width:0%"></div>
+  </div>
+
+  <!-- FLASHCARD -->
+  <div class="fc-scene">
+    <div class="fc-wrap" id="fc-card" onclick="flipCard()">
+      <div class="fc-front">
+        <div class="fc-de" id="front-text">…</div>
+        <div class="fc-tap">👆 tap to flip</div>
+      </div>
+      <div class="fc-back">
+        <div class="fc-en" id="back-text">…</div>
+        <div class="fc-pl" id="back-pl"></div>
+        <div class="fc-tap">👆 tap to flip back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO -->
+  <div class="flex-center mb-md">
+    <button class="btn btn-secondary btn-sm" onclick="speakCurrent()">🔊 Hear it</button>
+    <button class="btn btn-secondary btn-sm" onclick="prevCard()">← Prev</button>
+    <button class="btn btn-secondary btn-sm" onclick="shuffleCards()">🔀 Shuffle</button>
+  </div>
+
+  <!-- RATE BUTTONS -->
+  <div class="rate-row" id="rate-row" style="display:none">
+    <button class="btn btn-danger" onclick="rateAgain()">🔄 Again</button>
+    <button class="btn btn-success" onclick="rateGot()">✅ Got it!</button>
+  </div>
+
+  <!-- FINISH -->
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🏆</div>
+    <div class="finish-title">Deck Complete!</div>
+    <div class="finish-xp" id="finish-xp">+80 XP earned!</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-got">0</div><div class="lbl">Got it ✅</div></div>
+      <div class="finish-stat"><div class="val" id="fin-again">0</div><div class="lbl">Needed review 🔄</div></div>
+      <div class="finish-stat"><div class="val" id="fin-total">0</div><div class="lbl">Total cards</div></div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-primary" onclick="restartDeck()">🔁 Practice Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+// ─── State ──────────────────────────────────────────────
+let allWords = [];
+let deck    = [];
+let current = 0;
+let gotIt   = 0;
+let again   = 0;
+let mode    = 'de-en'; // de-en or en-de
+let lektion = '';
+const XP_REWARD = 80;
+
+// ─── Load vocab from JSON ────────────────────────────────
+const params = new URLSearchParams(location.search);
+lektion = params.get('lektion') || 'lektion1';
+
+fetch('../data/vokabeln.json')
+  .then(r => r.json())
+  .then(data => {
+    const ldata = data[lektion];
+    if (!ldata) { document.getElementById('page-title').textContent = 'Lektion not found'; return; }
+    document.getElementById('page-title').textContent = '🃏 Flashcards: ' + ldata.title;
+    document.getElementById('page-subtitle').textContent = ldata.words.length + ' words in this deck';
+    allWords = ldata.words;
+    resetDeck();
+  });
+
+// ─── Deck logic ──────────────────────────────────────────
+function resetDeck() {
+  deck = shuffle([...allWords]);
+  current = 0; gotIt = 0; again = 0;
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('card-total').textContent = deck.length;
+  updateCard();
+  updateProgress();
+}
+
+function updateCard() {
+  if (current >= deck.length) return showFinish();
+  const w = deck[current];
+  const front = mode === 'de-en' ? w.de : w.en;
+  const back  = mode === 'de-en' ? w.en : w.de;
+  const pl    = w.pl || (w.fem ? `♀ ${w.fem}` : '');
+  document.getElementById('front-text').textContent = front;
+  document.getElementById('back-text').textContent  = back;
+  document.getElementById('back-pl').textContent    = pl;
+  document.getElementById('card-num').textContent   = current + 1;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('rate-row').style.display = 'none';
+}
+
+function flipCard() {
+  const c = document.getElementById('fc-card');
+  c.classList.toggle('flipped');
+  if (c.classList.contains('flipped')) {
+    document.getElementById('rate-row').style.display = 'flex';
+  }
+}
+
+function rateGot() {
+  gotIt++;
+  document.getElementById('cnt-got').textContent = gotIt;
+  current++;
+  updateCard();
+  updateProgress();
+}
+
+function rateAgain() {
+  again++;
+  document.getElementById('cnt-again').textContent = again;
+  // Push card to end of remaining deck
+  deck.push(deck[current]);
+  current++;
+  updateCard();
+  updateProgress();
+}
+
+function prevCard() {
+  if (current > 0) { current--; updateCard(); updateProgress(); }
+}
+
+function updateProgress() {
+  const pct = allWords.length ? (gotIt / allWords.length * 100) : 0;
+  document.getElementById('fc-prog').style.width = pct + '%';
+}
+
+function speakCurrent() {
+  const w = deck[current];
+  if (!w) return;
+  const text = mode === 'de-en' ? w.de : w.en;
+  const lang  = mode === 'de-en' ? 'de-DE' : 'en-US';
+  if (!speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text.replace(/\[.*?\]/g,''));
+  utt.lang = lang;
+  utt.rate = 0.9;
+  speechSynthesis.speak(utt);
+}
+
+function shuffleCards() {
+  deck = shuffle([...deck.slice(current)]);
+  current = 0;
+  updateCard();
+}
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCard();
+}
+
+function showFinish() {
+  document.getElementById('finish').classList.add('visible');
+  document.getElementById('fin-got').textContent   = gotIt;
+  document.getElementById('fin-again').textContent = again;
+  document.getElementById('fin-total').textContent = allWords.length;
+  document.getElementById('finish-xp').textContent = '+' + XP_REWARD + ' XP earned!';
+  addXP(XP_REWARD);
+  markDone('mod_' + lektion + '_flash');
+  launchConfetti();
+}
+
+function restartDeck() {
+  resetDeck();
+}
+</script>
+</body>
+</html>

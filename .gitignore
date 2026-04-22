@@ -1,0 +1,36 @@
+# ============================================================
+# LERNPLATTFORM – .gitignore
+# Nur dieser Ordner (Lernplattform/) ist jemals in Git.
+# Dateien in dieser Liste werden NICHT auf GitHub / Netlify hochgeladen.
+# ============================================================
+
+# ── GROSSE REFERENZ-DATEIEN (lokal behalten, nicht online) ──
+# PDFs sind nur lokale Lernmaterialien – kein Upload nötig
+*.pdf
+# Rohtext-Extraktionen aus PDFs
+*.txt
+
+# ── SYSTEM-DATEIEN ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── ENTWICKLUNGS-DATEIEN ──
+*.log
+output.txt
+node_modules/
+
+# ── SCREENSHOTS / BILDER ──
+# Große Bilder die nicht zur Lernseite gehören
+Screenshot*.png
+Screenshot*.jpg
+71bU3CNUmAL._AC_SL1048_.jpg
+81EdxpLzdrL._AC_SL1500_.jpg
+
+# ============================================================
+# SICHERHEITS-HINWEIS:
+# Git nimmt NUR Dateien auf, die explizit per "git add" hinzugefügt
+# wurden UND in diesem Ordner liegen.
+# Andere Ordner unter c:\wamp64\www\ (z.B. Krankenakten, Business)
+# sind NIEMALS in diesem Git-Repository – es ist physisch unmöglich.
+# ============================================================

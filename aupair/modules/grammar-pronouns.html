@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pronouns – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.pronoun-table { width:100%; border-collapse:collapse; font-size:15px; margin-bottom:32px; }
+.pronoun-table th { background:var(--surface2); color:var(--accent); padding:10px 14px; text-align:center; border-bottom:2px solid var(--border); font-weight:800; }
+.pronoun-table td { padding:10px 14px; border-bottom:1px solid var(--border); text-align:center; }
+.pronoun-table tr:hover td { background:#1a1f35; }
+.pron-ich { color:var(--accent); font-weight:800; font-size:17px; }
+.pron-akk { color:var(--accent2); font-weight:700; }
+.pron-dat { color:var(--gold); font-weight:700; }
+.case-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:20px; font-size:14px; }
+.case-dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:5px; }
+
+.practice-section { max-width:600px; margin:0 auto; }
+.pron-q { font-size:18px; font-weight:600; line-height:1.8; background:var(--surface); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
+.pron-blank {
+  display:inline-block; min-width:90px; border:none;
+  border-bottom:3px solid var(--accent2);
+  background:transparent; color:var(--accent2);
+  font-size:18px; font-weight:700; font-family:inherit;
+  text-align:center; padding:2px 6px; outline:none;
+}
+.pron-blank.correct { border-color:var(--correct); color:var(--correct); }
+.pron-blank.wrong   { border-color:var(--wrong);   color:var(--wrong); }
+.check-btn { margin-top:14px; }
+.feedback  { margin-top:10px; font-size:16px; font-weight:700; padding:10px 16px; border-radius:var(--radius); display:none; }
+.feedback.correct { display:block; background:#0d2e1e; color:var(--correct); }
+.feedback.wrong   { display:block; background:#2e0d0d; color:var(--wrong); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">👤</span>
+  <span class="header-title">Pronouns</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">👤 Pronouns: All 3 Cases</div>
+  <div class="page-subtitle">Nominative · Accusative · Dative — the foundation of German grammar</div>
+
+  <div class="info-box mb-lg">
+    <h3>Why this matters for the A2 exam</h3>
+    <p>Pronouns appear in <strong>every single task</strong> — reading, listening, writing, and speaking. Without them, you cannot understand or form sentences!</p>
+  </div>
+
+  <!-- CASE LEGEND -->
+  <div class="case-legend">
+    <span><span class="case-dot" style="background:var(--accent)"></span><strong>Nominative</strong> — the subject (who is doing)</span>
+    <span><span class="case-dot" style="background:var(--accent2)"></span><strong>Accusative</strong> — the direct object (what/who directly)</span>
+    <span><span class="case-dot" style="background:var(--gold)"></span><strong>Dative</strong> — the indirect object (to whom / for whom)</span>
+  </div>
+
+  <!-- BIG TABLE -->
+  <h2 class="section-heading" style="font-size:20px;margin-bottom:12px">📊 Full Pronoun Table</h2>
+  <div style="overflow-x:auto">
+    <table class="pronoun-table">
+      <tr>
+        <th>Person</th>
+        <th style="color:var(--accent)">Nominative<br><small>Subject</small></th>
+        <th style="color:var(--accent2)">Accusative<br><small>Direct object</small></th>
+        <th style="color:var(--gold)">Dative<br><small>Indirect object</small></th>
+        <th>Example sentence</th>
+      </tr>
+      <tr><td>I</td><td class="pron-ich">ich</td><td class="pron-akk">mich</td><td class="pron-dat">mir</td><td class="text-muted">Ich sehe mich. Er hilft mir.</td></tr>
+      <tr><td>you (informal)</td><td class="pron-ich">du</td><td class="pron-akk">dich</td><td class="pron-dat">dir</td><td class="text-muted">Ich sehe dich. Sie hilft dir.</td></tr>
+      <tr><td>he</td><td class="pron-ich">er</td><td class="pron-akk">ihn</td><td class="pron-dat">ihm</td><td class="text-muted">Sie liebt ihn. Ich gebe ihm das Buch.</td></tr>
+      <tr><td>she</td><td class="pron-ich">sie</td><td class="pron-akk">sie</td><td class="pron-dat">ihr</td><td class="text-muted">Er sieht sie. Ich gebe ihr Geld.</td></tr>
+      <tr><td>it</td><td class="pron-ich">es</td><td class="pron-akk">es</td><td class="pron-dat">ihm</td><td class="text-muted">Das Kind – ich sehe es. Ich gebe ihm Milch.</td></tr>
+      <tr><td>we</td><td class="pron-ich">wir</td><td class="pron-akk">uns</td><td class="pron-dat">uns</td><td class="text-muted">Sie sieht uns. Er hilft uns.</td></tr>
+      <tr><td>you (plural)</td><td class="pron-ich">ihr</td><td class="pron-akk">euch</td><td class="pron-dat">euch</td><td class="text-muted">Ich sehe euch. Er hilft euch.</td></tr>
+      <tr><td>they / you (formal)</td><td class="pron-ich">sie / Sie</td><td class="pron-akk">sie / Sie</td><td class="pron-dat">ihnen / Ihnen</td><td class="text-muted">Ich kenne sie/Sie. Ich helfe ihnen/Ihnen.</td></tr>
+    </table>
+  </div>
+
+  <!-- MEMORY TRICKS -->
+  <div class="info-box mb-lg">
+    <h3>💡 Quick Memory Tricks</h3>
+    <p>
+      <strong>Nom → Akk changes:</strong> only <span style="color:var(--accent2)">er → ihn</span> changes completely. "I see HIM" = ihn.<br>
+      <strong>Dat:</strong> remember "dative adds n" — ihnen, uns, euch, mir, dir, ihm, ihr, ihm<br>
+      <strong>Real example from the exam:</strong> "Kanst du <span style="color:var(--accent2)">mich</span> anrufen?" (Can you call me?) — mich = accusative!
+    </p>
+  </div>
+
+  <!-- PRACTICE EXERCISES -->
+  <h2 class="section-heading" style="font-size:20px;margin-bottom:16px">✏️ Fill in the Pronoun</h2>
+  <div class="practice-section" id="practice-area"></div>
+
+  <div class="flex-center mt-md mb-lg">
+    <button class="btn btn-primary btn-lg" onclick="checkAll()">✅ Check All Answers</button>
+    <button class="btn btn-secondary" onclick="resetExercises()">🔁 Try Again</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🏆</div>
+    <div class="finish-title" id="fin-title">Well done!</div>
+    <div class="finish-xp" id="fin-xp">+50 XP</div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="resetExercises()">🔁 Practice Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const exercises = [
+  { q: 'Kannst du ___ anrufen? (call me)', answers: ['mich'], hint: 'I → me (accusative)' },
+  { q: 'Er gibt ___ das Buch. (gives her)', answers: ['ihr'], hint: 'she → her (dative)' },
+  { q: 'Ich treffe ___ morgen. (meet him)', answers: ['ihn'], hint: 'he → him (accusative)' },
+  { q: 'Sie hilft ___ sehr. (helps us)', answers: ['uns'], hint: 'we → us (dative & accusative)' },
+  { q: 'Ich kenne ___. (know you - formal)', answers: ['Sie'], hint: 'formal you → Sie (stays the same in accusative)' },
+  { q: 'Können Sie ___ helfen? (help me)', answers: ['mir'], hint: 'I → me (dative after helfen)' },
+  { q: 'Ich sehe ___ nicht. (see them)', answers: ['sie'], hint: 'they → them (accusative)' },
+  { q: 'Er zeigt ___ den Weg. (shows you guys)', answers: ['euch'], hint: 'you (plural) → euch (dative)' },
+  { q: 'Das gehört ___. (belongs to him)', answers: ['ihm'], hint: 'he → ihm (dative)' },
+  { q: 'Ich vermisse ___ so sehr. (miss you singular)', answers: ['dich'], hint: 'you → dich (accusative)' },
+];
+
+let inputs  = [];
+let score   = 0;
+
+function buildExercises() {
+  const area = document.getElementById('practice-area');
+  area.innerHTML = '';
+  exercises.forEach((ex, i) => {
+    const div = document.createElement('div');
+    div.className = 'pron-q';
+    const parts = ex.q.split('___');
+    div.innerHTML = parts[0] +
+      `<input class="pron-blank" id="ex-${i}" maxlength="8" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="____">` +
+      parts[1] + `<br><small class="text-muted">${ex.hint}</small>`;
+    area.appendChild(div);
+  });
+  inputs = exercises.map((_, i) => document.getElementById('ex-' + i));
+}
+
+function checkAll() {
+  score = 0;
+  inputs.forEach((inp, i) => {
+    const ex  = exercises[i];
+    const val = inp.value.trim().toLowerCase();
+    const ok  = ex.answers.some(a => a.toLowerCase() === val);
+    inp.classList.remove('correct', 'wrong');
+    inp.classList.add(ok ? 'correct' : 'wrong');
+    if (ok) score++;
+  });
+  const pct = Math.round(score / exercises.length * 100);
+  if (pct >= 60) {
+    const earned = Math.round(50 * pct / 100);
+    addXP(earned);
+    document.getElementById('finish').classList.add('visible');
+    document.getElementById('fin-title').textContent = pct >= 90 ? '🏆 Perfect!' : pct >= 70 ? '👍 Good job!' : '💪 Keep going!';
+    document.getElementById('fin-xp').textContent = `${score}/${exercises.length} correct · +${earned} XP`;
+    markDone('mod_grammar_pronouns');
+    if (pct >= 80) launchConfetti();
+  } else {
+    showToast(`${score}/${exercises.length} correct — check the red ones`, 'wrong');
+  }
+}
+
+function resetExercises() {
+  document.getElementById('finish').classList.remove('visible');
+  buildExercises();
+}
+
+document.addEventListener('DOMContentLoaded', buildExercises);
+</script>
+</body>
+</html>

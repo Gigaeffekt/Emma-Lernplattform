@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar: Sentence Structure – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.rule-card { background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;max-width:680px; }
+.rule-title { font-size:16px;font-weight:800;color:var(--accent2);margin-bottom:10px; }
+.rule-box { background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:15px;font-style:italic;line-height:1.9;margin-top:6px; }
+.rule-box .pos1 { color:var(--accent); font-weight:700; }
+.rule-box .v2   { color:#10b981; font-weight:700; }
+.rule-box .conj { color:var(--gold); font-weight:700; }
+.rule-box .end  { color:var(--accent2); font-weight:700; }
+.fill-block { background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;border:1px solid var(--border);max-width:640px; }
+.fill-input { background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:6px 12px;
+  font-size:15px;color:var(--text);font-family:inherit;width:160px;outline:none;transition:border-color .15s; }
+.fill-input:focus { border-color:var(--accent); }
+.fill-input.correct { border-color:var(--correct);background:#0d2e1e; }
+.fill-input.wrong   { border-color:var(--wrong);background:#2e0d0d; }
+.sent { font-size:16px;line-height:1.9; }
+.hint-tag { display:inline-block;background:var(--border);border-radius:4px;padding:2px 7px;font-size:12px;color:var(--muted);margin-left:6px; }
+.explain { font-size:13px;color:var(--muted);margin-top:6px;display:none; }
+.explain.show { display:block; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📐</span>
+  <span class="header-title">Grammar: Sentence Structure</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📐 Sentence Structure & Conjunctions</div>
+  <div class="page-subtitle">Learn word order rules for weil, wenn, dass, als and more.</div>
+
+  <!-- RULE 1: V2 -->
+  <h2 class="section-heading">Rule 1: Normal German Sentence — Verb in Position 2</h2>
+  <div class="rule-card">
+    <div class="rule-title">The verb ALWAYS comes second (V2)</div>
+    <div class="rule-box">
+      <span class="pos1">Ich</span> <span class="v2">gehe</span> heute ins Kino.<br>
+      (I <strong>go</strong> to the cinema today.)<br><br>
+      <span class="pos1">Heute</span> <span class="v2">gehe</span> ich ins Kino. ← Position 1 changed, but verb stays 2nd!<br>
+      (Today <strong>I go</strong> to the cinema.)
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-top:10px;">👉 You can start with any element (time, place, subject) but the verb must always be in position 2.</p>
+  </div>
+
+  <!-- RULE 2: weil/wenn/dass/als -->
+  <h2 class="section-heading">Rule 2: Subordinating Conjunctions → Verb goes to the END</h2>
+  <p style="color:var(--muted);font-size:14px;max-width:680px;margin-bottom:16px;">
+    When you add <strong>weil</strong> (because), <strong>wenn</strong> (when/if), <strong>dass</strong> (that), or <strong>als</strong> (when — past), 
+    the second verb jumps to the very end of that clause.
+  </p>
+
+  <div class="rule-card">
+    <div class="rule-title">weil — because</div>
+    <div class="rule-box">
+      Ich lerne Deutsch, <span class="conj">weil</span> ich in Deutschland <span class="end">wohnen möchte</span>.<br>
+      (I learn German <span class="conj">because</span> I <span class="end">want to live</span> in Germany.)
+    </div>
+  </div>
+
+  <div class="rule-card">
+    <div class="rule-title">wenn — when / if</div>
+    <div class="rule-box">
+      <span class="conj">Wenn</span> ich Zeit <span class="end">habe</span>, gehe ich spazieren.<br>
+      (<span class="conj">When</span> I <span class="end">have</span> time, I go for a walk.)<br><br>
+      Ich rufe dich an, <span class="conj">wenn</span> ich nach Hause <span class="end">komme</span>.<br>
+      (I'll call you <span class="conj">when</span> I <span class="end">get</span> home.)
+    </div>
+  </div>
+
+  <div class="rule-card">
+    <div class="rule-title">dass — that</div>
+    <div class="rule-box">
+      Ich weiß, <span class="conj">dass</span> das schwierig <span class="end">ist</span>.<br>
+      (I know <span class="conj">that</span> it <span class="end">is</span> difficult.)<br><br>
+      Er sagt, <span class="conj">dass</span> er heute nicht <span class="end">kommen kann</span>.<br>
+      (He says <span class="conj">that</span> he <span class="end">cannot come</span> today.)
+    </div>
+  </div>
+
+  <div class="rule-card">
+    <div class="rule-title">als — when (one specific moment in the past)</div>
+    <div class="rule-box">
+      <span class="conj">Als</span> ich Kind <span class="end">war</span>, lebte ich in Polen.<br>
+      (<span class="conj">When</span> I <span class="end">was</span> a child, I lived in Poland.)<br><br>
+      <em style="color:var(--muted);font-size:13px;">Note: "als" is for one specific past event. "wenn" is for recurring/conditional situations.</em>
+    </div>
+  </div>
+
+  <div class="info-box mb-lg">
+    <h3>🔑 Memory Trick: Verb KICK</h3>
+    <p>After <strong>weil / wenn / dass / als</strong> — imagine the verb gets kicked to the end of the queue. If there are two verbs (e.g. modal + infinitive), 
+    the infinitive comes last and the modal comes just before it: …<strong>kommen kann</strong>.</p>
+  </div>
+
+  <!-- EXERCISES -->
+  <h2 class="section-heading">Practice — Choose the correct word order</h2>
+  <div id="ex-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="checkAll()">✅ Check Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">📐</div>
+    <div class="finish-title" id="fin-title">Sentences done!</div>
+    <div class="finish-xp" id="fin-xp">+60 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">10</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const exs = [
+  { before:'Ich lerne Deutsch,', blank:'weil', after:'ich in Hamburg wohne. (…because I live in Hamburg.)', hint:'because', explain:'"weil" = because → verb goes to end, which it does here.' },
+  { before:'Ich gehe früh ins Bett,', blank:'wenn', after:'ich müde bin. (…when I am tired.)', hint:'when (recurring)', explain:'"wenn" = when/if for recurring situations. "Als" would be wrong here.' },
+  { before:'Sie sagt,', blank:'dass', after:'sie morgen arbeiten muss. (She says that she has to work tomorrow.)', hint:'that', explain:'"dass" = that. Notice "muss" goes to the end after this conjunction.' },
+  { before:'', blank:'Als', after:'ich 10 Jahre alt war, zogen wir nach Berlin. (When I was 10, we moved to Berlin.)', hint:'when (one past moment)', explain:'"als" = when, for one specific point in the past.' },
+  { before:'Ich rufe dich an,', blank:'wenn', after:'ich zuhause ankomme. (I\'ll call you when I get home.)', hint:'when (future/conditional)', explain:'"wenn" for future/conditional situations, not "als".' },
+  { before:'Er weiß,', blank:'dass', after:'das Examen schwer ist. (He knows that the exam is hard.)', hint:'that', explain:'"dass" introduces a subordinate clause. Verb goes to the end.' },
+  { before:'Wir machen einen Ausflug,', blank:'wenn', after:'das Wetter schön ist. (We\'ll go on a trip if the weather is nice.)', hint:'if', explain:'"wenn" also means "if" for conditional.' },
+  { before:'Ich bin müde,', blank:'weil', after:'ich heute früh aufstehen musste. (…because I had to get up early today.)', hint:'because', explain:'"weil" = because. "musste" goes to end.' },
+  { before:'', blank:'Als', after:'sie jung war, wohnte sie in Frankfurt. (When she was young, she lived in Frankfurt.)', hint:'when (past, single period)', explain:'"als" = when (past). One specific time period in the past.' },
+  { before:'Ich hoffe,', blank:'dass', after:'du bald kommst. (I hope that you come soon.)', hint:'that', explain:'"dass" = that. "kommst" goes to the end.' }
+];
+
+function build(){
+  const c=document.getElementById('ex-container'); c.innerHTML='';
+  exs.forEach((e,i)=>{
+    c.innerHTML+=`<div class="fill-block">
+      <div style="font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px">Exercise ${i+1}</div>
+      <div class="sent">${e.before} <input class="fill-input" id="inp-${i}" placeholder="?" autocomplete="off"> ${e.after}
+      <span class="hint-tag">💡 ${e.hint}</span></div>
+      <div class="explain" id="exp-${i}">${e.explain}</div>
+    </div>`;
+  });
+}
+
+function checkAll(){
+  let score=0;
+  exs.forEach((e,i)=>{
+    const inp=document.getElementById(`inp-${i}`);
+    const exp=document.getElementById(`exp-${i}`);
+    const val=inp.value.trim().toLowerCase();
+    const correct=e.blank.toLowerCase();
+    inp.disabled=true;
+    if(val===correct){ inp.classList.add('correct'); score++; }
+    else { inp.classList.add('wrong'); inp.value=e.blank; }
+    exp.classList.add('show');
+  });
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  const pct=Math.round(score/exs.length*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  const earned=Math.round(60*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_grammar_sentences');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex'; build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

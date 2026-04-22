@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Challenge – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.q-block { background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;border:1px solid var(--border);max-width:640px; }
+.q-sent { font-size:16px;line-height:1.9;margin-bottom:10px; }
+.q-opts { display:flex;flex-wrap:wrap;gap:8px; }
+.q-opt { background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;color:var(--text);font-family:inherit;transition:border-color .15s; }
+.q-opt:hover { border-color:var(--accent); }
+.q-opt.chosen  { border-color:var(--accent); background:#1a1040; }
+.q-opt.correct { border-color:var(--correct); background:#0d2e1e; color:var(--correct); }
+.q-opt.wrong   { border-color:var(--wrong);   background:#2e0d0d; color:var(--wrong); }
+.q-opt.reveal  { border-color:var(--correct); background:#0d2e1e; color:var(--correct); }
+.progress-banner { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px;max-width:640px;margin-bottom:16px;display:flex;align-items:center;gap:16px; }
+.prog-num { font-size:22px;font-weight:900;color:var(--gold); }
+.prog-label { font-size:13px;color:var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🏆</span>
+  <span class="header-title">Grammar Challenge</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">🏆 Grammar Challenge — 38 Questions</div>
+  <div class="page-subtitle">Based on the real Netzwerk A2 placement test. Test your A2 grammar knowledge!</div>
+
+  <div class="progress-banner">
+    <div><div class="prog-num" id="prog-correct">0</div><div class="prog-label">Correct</div></div>
+    <div><div class="prog-num" id="prog-total">38</div><div class="prog-label">Total</div></div>
+    <div><div class="prog-num" id="prog-pct">0%</div><div class="prog-label">Score</div></div>
+  </div>
+
+  <div id="q-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Submit All Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🏆</div>
+    <div class="finish-title" id="fin-title">Challenge complete!</div>
+    <div class="finish-xp" id="fin-xp">+120 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">38</div><div class="lbl">Total</div></div>
+      <div class="finish-stat"><div class="val" id="fin-pct">0%</div><div class="lbl">Score</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const qs = [
+  // Articles & Nominative
+  {t:'1. ___ Bus kommt gleich.',opts:['Der','Die','Das','Ein'],c:'Der'},
+  {t:'2. ___ Frau kauft ein Buch.',opts:['Der','Die','Das','Eine'],c:'Die'},
+  {t:'3. ___ Kind spielt im Park.',opts:['Der','Die','Das','Ein'],c:'Das'},
+  // Accusative
+  {t:'4. Ich sehe ___ Mann.',opts:['der','die','den','das'],c:'den'},
+  {t:'5. Sie kauft ___ Bluse.',opts:['den','die','das','eine'],c:'die'},
+  {t:'6. Er trinkt ___ Kaffee.',opts:['den','die','das','einen'],c:'den'},
+  // Dative
+  {t:'7. Er hilft ___ Frau.',opts:['den','die','der','das'],c:'der'},
+  {t:'8. Ich gebe ___ Kind ein Buch.',opts:['dem','den','die','der'],c:'dem'},
+  // Pronouns
+  {t:'9. ___ bin Lehrerin.',opts:['Ich','Du','Er','Wir'],c:'Ich'},
+  {t:'10. Wo bist ___?',opts:['ich','du','er','sie'],c:'du'},
+  {t:'11. ___ wohnt in Berlin.',opts:['Ich','Du','Er','Wir'],c:'Er'},
+  {t:'12. ___ kommen aus Polen.',opts:['Ich','Er','Sie','Wir'],c:'Wir'},
+  // Modal verbs
+  {t:'13. Ich ___ nicht kommen.',opts:['kann','kannst','könnt','können'],c:'kann'},
+  {t:'14. Du ___ hier nicht rauchen.',opts:['darf','darfst','dürfen','dürft'],c:'darfst'},
+  {t:'15. Er ___ um 8 Uhr aufstehen.',opts:['muss','musst','müssen','müsst'],c:'muss'},
+  {t:'16. Wir ___ ins Kino gehen.',opts:['will','wollt','wollen','willst'],c:'wollen'},
+  {t:'17. Ich ___ einen Kaffee.',opts:['möchte','möchtest','möchtet','möchten'],c:'möchte'},
+  // Present tense verb conjugation
+  {t:'18. Du ___ sehr schön.',opts:['singt','singen','singst','singet'],c:'singst'},
+  {t:'19. Er ___ jeden Tag Sport.',opts:['machen','machst','macht','mache'],c:'macht'},
+  {t:'20. Ihr ___ die Hausaufgaben.',opts:['macht','machen','machst','mache'],c:'macht'},
+  // Perfekt
+  {t:'21. Ich ___ gestern ins Kino ___.',opts:['bin…gegangen','habe…gegangen','bin…gefahren','habe…gegangen'],c:'bin…gegangen'},
+  {t:'22. Er hat das Buch ___.',opts:['gelesen','lesen','gelest','geliest'],c:'gelesen'},
+  {t:'23. Wir ___ nach Hamburg ___.',opts:['haben…gefahren','sind…gefahren','sein…gefahren','haben…fahren'],c:'sind…gefahren'},
+  {t:'24. Sie hat die E-Mail ___.',opts:['schreiben','geschreiben','geschrieben','geschreibt'],c:'geschrieben'},
+  // Conjunctions / Word order
+  {t:'25. Ich lerne Deutsch, ___ ich in Deutschland wohne.',opts:['weil','dass','wenn','als'],c:'weil'},
+  {t:'26. Ich weiß, ___ er krank ist.',opts:['weil','dass','wenn','als'],c:'dass'},
+  {t:'27. ___ ich jung war, wohnte ich in Wien.',opts:['Wenn','Weil','Als','Dass'],c:'Als'},
+  {t:'28. Ich rufe an, ___ ich Zeit habe.',opts:['weil','als','wenn','dass'],c:'wenn'},
+  // Prepositions
+  {t:'29. Das Buch liegt ___ dem Tisch.',opts:['an','in','auf','über'],c:'auf'},
+  {t:'30. Ich bin ___ der Schule.',opts:['in','an','auf','bei'],c:'in'},
+  {t:'31. Er wohnt ___ Hamburg.',opts:['nach','in','an','bei'],c:'in'},
+  {t:'32. Ich fahre ___ Berlin.',opts:['in','an','nach','zu'],c:'nach'},
+  // Separable verbs
+  {t:'33. Ich ___ um 7 Uhr ___.',opts:['stehe…auf','aufstehe…','stehe…an','gehe…auf'],c:'stehe…auf'},
+  {t:'34. Sie ___ das Licht ___.',opts:['macht…an','mache…an','anmacht…','machen…an'],c:'macht…an'},
+  // Adjective endings (basic)
+  {t:'35. Ich sehe ein ___ Auto.',opts:['roten','roter','rotes','rote'],c:'rotes'},
+  {t:'36. Er kauft einen ___ Mantel.',opts:['grüne','grünes','grünen','grüner'],c:'grünen'},
+  // Negation
+  {t:'37. Ich habe ___ Hunger.',opts:['nicht','kein','keine','keinen'],c:'keinen'},
+  {t:'38. Das ist ___ mein Buch.',opts:['nicht','kein','keine','keinen'],c:'nicht'},
+];
+
+let chosen={};
+
+function build(){
+  const c=document.getElementById('q-container'); c.innerHTML='';
+  qs.forEach((q,qi)=>{
+    c.innerHTML+=`<div class="q-block">
+      <div class="q-sent">${q.t}</div>
+      <div class="q-opts">
+        ${q.opts.map(o=>`<button class="q-opt" id="opt-${qi}-${o.replace(/\W/g,'_')}" onclick="pick(${qi},'${o.replace(/'/g,'\\'')}',this)">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  });
+}
+
+function pick(qi,val,btn){
+  qs[qi].opts.forEach(o=>{
+    const el=document.getElementById(`opt-${qi}-${o.replace(/\W/g,'_')}`);
+    if(el&&!el.classList.contains('correct')&&!el.classList.contains('wrong')&&!el.classList.contains('reveal'))
+      el.classList.remove('chosen');
+  });
+  chosen[qi]=val; btn.classList.add('chosen');
+}
+
+function submitAll(){
+  let score=0;
+  qs.forEach((q,qi)=>{
+    q.opts.forEach(o=>{
+      const el=document.getElementById(`opt-${qi}-${o.replace(/\W/g,'_')}`);
+      if(!el)return; el.disabled=true; el.classList.remove('chosen');
+      if(o===q.c) el.classList.add('reveal');
+    });
+    const sel=chosen[qi];
+    if(sel){
+      const sEl=document.getElementById(`opt-${qi}-${sel.replace(/\W/g,'_')}`);
+      if(sEl){ if(sel===q.c){ sEl.classList.replace('reveal','correct'); score++; } else sEl.classList.add('wrong'); }
+    }
+  });
+  document.getElementById('prog-correct').textContent=score;
+  const pct=Math.round(score/qs.length*100);
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  document.getElementById('fin-pct').textContent=pct+'%';
+  const earned=Math.round(120*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_grammar_quiz_final');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  chosen={};
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex';
+  document.getElementById('prog-correct').textContent='0';
+  document.getElementById('prog-pct').textContent='0%';
+  build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

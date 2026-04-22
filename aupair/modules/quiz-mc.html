@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiple Choice Quiz – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; font-size: 15px;
+}
+.q-direction-toggle { display: flex; gap: 8px; }
+.feedback-row {
+  min-height: 44px; text-align: center;
+  font-size: 18px; font-weight: 700; padding: 10px;
+  border-radius: var(--radius); margin-top: 16px;
+  display: none;
+}
+.feedback-row.correct { display: block; background: #0d2e1e; color: var(--correct); border: 2px solid var(--correct); }
+.feedback-row.wrong   { display: block; background: #2e0d0d; color: var(--wrong);   border: 2px solid var(--wrong); }
+.next-btn { margin-top: 14px; display: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🎯</span>
+  <span class="header-title">Multiple Choice Quiz</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title" id="page-title">Quiz</div>
+  <div class="page-subtitle" id="page-subtitle">Loading…</div>
+
+  <div class="info-box mb-md">
+    <h3>How to play</h3>
+    <p>Read the word or phrase and choose the correct translation from 4 options. You get <strong style="color:var(--gold)">+1</strong> for each correct answer. 20 questions per round.</p>
+  </div>
+
+  <!-- Mode toggle -->
+  <div class="mode-btns mb-md">
+    <button class="mode-btn active" data-mode="de-en" onclick="setMode('de-en',this)">🇩🇪 German → English</button>
+    <button class="mode-btn" data-mode="en-de" onclick="setMode('en-de',this)">🇬🇧 English → German</button>
+  </div>
+
+  <!-- Progress -->
+  <div class="counter-row mb-sm">
+    <span>Question <span id="q-num">1</span> / <span id="q-total">20</span></span>
+    <span>
+      <span class="counter-correct">✅ <span id="score">0</span></span>
+      &nbsp;|&nbsp;
+      <span class="counter-wrong">❌ <span id="wrong-cnt">0</span></span>
+    </span>
+  </div>
+  <div class="progress-wrap mb-lg">
+    <div class="progress-bar" id="quiz-prog" style="width:0%"></div>
+  </div>
+
+  <!-- QUIZ CARD -->
+  <div id="quiz-area">
+    <div class="quiz-card">
+      <div class="quiz-question" id="q-text">…</div>
+      <div class="quiz-options" id="q-options"></div>
+      <div class="feedback-row" id="feedback"></div>
+      <div class="flex-center next-btn" id="next-btn-row">
+        <button class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINNISH SCREEN -->
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🏆</div>
+    <div class="finish-title" id="fin-title">Quiz Complete!</div>
+    <div class="finish-xp" id="finish-xp">+60 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct ✅</div></div>
+      <div class="finish-stat"><div class="val" id="fin-wrong">0</div><div class="lbl">Wrong ❌</div></div>
+      <div class="finish-stat"><div class="val" id="fin-pct">0%</div><div class="lbl">Score</div></div>
+    </div>
+    <div class="flex-center">
+      <button class="btn btn-primary" onclick="startQuiz()">🔁 Play Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const QUIZ_SIZE  = 20;
+const XP_REWARD  = 60;
+const LETTERS    = ['A','B','C','D'];
+
+let allWords  = [];
+let questions = [];
+let qIndex    = 0;
+let score     = 0;
+let wrongCnt  = 0;
+let mode      = 'de-en';
+let lektion   = '';
+let answered  = false;
+
+// ─── Load ────────────────────────────────────────────────
+const params = new URLSearchParams(location.search);
+lektion = params.get('lektion') || 'lektion1';
+
+fetch('../data/vokabeln.json')
+  .then(r => r.json())
+  .then(data => {
+    const ldata = data[lektion];
+    if (!ldata) return;
+    document.getElementById('page-title').textContent = '🎯 Quiz: ' + ldata.title;
+    document.getElementById('page-subtitle').textContent = `${ldata.words.length} words — ${QUIZ_SIZE} random questions`;
+    allWords = ldata.words;
+    startQuiz();
+  });
+
+function startQuiz() {
+  score = 0; wrongCnt = 0; qIndex = 0;
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('score').textContent    = 0;
+  document.getElementById('wrong-cnt').textContent = 0;
+  buildQuestions();
+  showQuestion();
+}
+
+function buildQuestions() {
+  const pool = shuffle([...allWords]).slice(0, Math.min(QUIZ_SIZE, allWords.length));
+  questions = pool.map(w => {
+    const correct = mode === 'de-en' ? w.en : w.de;
+    // 3 wrong options from rest of words
+    const others = shuffle(allWords.filter(o => o !== w)).slice(0,3);
+    const wrong3  = others.map(o => mode === 'de-en' ? o.en : o.de);
+    const opts    = shuffle([correct, ...wrong3]);
+    return {
+      question: mode === 'de-en' ? w.de : w.en,
+      correct,
+      options: opts
+    };
+  });
+  document.getElementById('q-total').textContent = questions.length;
+}
+
+function showQuestion() {
+  if (qIndex >= questions.length) return showFinish();
+  const q = questions[qIndex];
+  answered = false;
+  document.getElementById('q-num').textContent = qIndex + 1;
+  document.getElementById('q-text').textContent = q.question;
+  document.getElementById('feedback').className = 'feedback-row';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('next-btn-row').style.display = 'none';
+  updateProgress();
+
+  const container = document.getElementById('q-options');
+  container.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.innerHTML = `<span class="option-letter">${LETTERS[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(btn, opt, q.correct);
+    container.appendChild(btn);
+  });
+}
+
+function selectAnswer(btn, chosen, correct) {
+  if (answered) return;
+  answered = true;
+  const allBtns = document.querySelectorAll('.quiz-option');
+  allBtns.forEach(b => {
+    b.classList.add('disabled');
+    if (b.textContent.includes(correct)) b.classList.add('correct');
+  });
+  const fb = document.getElementById('feedback');
+  if (chosen === correct) {
+    score++;
+    document.getElementById('score').textContent = score;
+    btn.classList.add('correct');
+    fb.textContent = '✅ Correct!';
+    fb.className = 'feedback-row correct';
+    showToast('✅ Correct! +1', 'correct');
+  } else {
+    wrongCnt++;
+    document.getElementById('wrong-cnt').textContent = wrongCnt;
+    btn.classList.add('wrong');
+    fb.textContent = `❌ The answer is: ${correct}`;
+    fb.className = 'feedback-row wrong';
+    showToast('❌ Not quite', 'wrong');
+  }
+  document.getElementById('next-btn-row').style.display = 'flex';
+}
+
+function nextQuestion() {
+  qIndex++;
+  showQuestion();
+}
+
+function updateProgress() {
+  const pct = questions.length ? (qIndex / questions.length * 100) : 0;
+  document.getElementById('quiz-prog').style.width = pct + '%';
+}
+
+function showFinish() {
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('finish').classList.add('visible');
+  const pct = Math.round(score / questions.length * 100);
+  const trophy = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '💪';
+  document.getElementById('fin-title').textContent = trophy + (pct >= 80 ? ' Excellent!' : pct >= 60 ? ' Good job!' : ' Keep practising!');
+  document.getElementById('fin-score').textContent = score;
+  document.getElementById('fin-wrong').textContent = wrongCnt;
+  document.getElementById('fin-pct').textContent   = pct + '%';
+  const earned = Math.round(XP_REWARD * pct / 100);
+  document.getElementById('finish-xp').textContent = `+${earned} XP earned!`;
+  addXP(earned);
+  if (pct >= 60) markDone('mod_' + lektion + '_quiz');
+  if (pct >= 80) launchConfetti();
+}
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startQuiz();
+}
+</script>
+</body>
+</html>

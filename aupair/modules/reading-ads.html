@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading: Ads – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.ads-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; max-width:780px; margin:0 auto 32px; }
+@media(max-width:640px){ .ads-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:400px){ .ads-grid{grid-template-columns:1fr;} }
+.ad-card { background:var(--surface); border:2px solid var(--border); border-radius:var(--radius); padding:14px 16px; }
+.ad-label { font-size:11px;font-weight:900;color:var(--accent2);letter-spacing:1px;margin-bottom:4px; }
+.ad-name { font-size:16px;font-weight:800;margin-bottom:6px; }
+.ad-desc { font-size:12px;color:var(--muted);line-height:1.6; }
+.ad-tag { display:inline-block;background:var(--border);border-radius:4px;font-size:11px;padding:2px 6px;margin:3px 2px 0; }
+.people-list { max-width:600px; margin:0 auto 24px; }
+.person-row { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; margin-bottom:10px; }
+.person-name { font-size:15px;font-weight:800;color:var(--accent2); }
+.person-need { font-size:14px;margin-top:4px;line-height:1.5; }
+.person-select { margin-top:10px; display:flex; align-items:center; gap:10px; }
+.person-select label { font-size:13px;color:var(--muted); font-weight:600; }
+.person-select select { background:var(--surface2);color:var(--text);border:2px solid var(--border);border-radius:8px;padding:6px 10px;font-size:14px;font-family:inherit;cursor:pointer; }
+.person-select select:focus { border-color:var(--accent); outline:none; }
+.result-badge { display:none; margin-left:8px; font-size:13px; font-weight:700; }
+.result-badge.correct { color:var(--correct); }
+.result-badge.wrong   { color:var(--wrong); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📰</span>
+  <span class="header-title">Reading: Ads</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📰 Reading Type 4: Matching Ads</div>
+  <div class="page-subtitle">Match 6 people to the right venue. Not all adverts will be used!</div>
+
+  <div class="info-box mb-lg">
+    <h3>💡 Exam tip</h3>
+    <p>There are 6 people but <strong>more than 6 adverts</strong> — some are distractors.
+       Read each person carefully (what do they want?), then find the <em>best</em> match. 
+       Write the letter of the matching advert.</p>
+  </div>
+
+  <!-- ADS -->
+  <div style="max-width:780px;margin:0 auto 8px;font-size:13px;color:var(--muted);font-weight:700;">THE ADVERTS (a–h)</div>
+  <div class="ads-grid">
+    <div class="ad-card">
+      <div class="ad-label">a</div>
+      <div class="ad-name">Café Sonnenschein</div>
+      <div class="ad-desc">Homemade cakes, light lunches &amp; wifi. Open Mon–Sat 9:00–18:00.</div>
+      <div><span class="ad-tag">🎂 Cakes</span><span class="ad-tag">☕ Coffee</span><span class="ad-tag">📶 Wifi</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">b</div>
+      <div class="ad-name">Pizzeria Roma</div>
+      <div class="ad-desc">Authentic Italian pizza &amp; pasta. Family-friendly. Children's menu available. Open daily 11:00–23:00.</div>
+      <div><span class="ad-tag">🍕 Pizza</span><span class="ad-tag">👨‍👩‍👧 Family</span><span class="ad-tag">🍝 Pasta</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">c</div>
+      <div class="ad-name">Sushi Star</div>
+      <div class="ad-desc">Fresh sushi &amp; Japanese specialities. Lunch deal 12:00–14:00 from €7.90. Open Tue–Sun.</div>
+      <div><span class="ad-tag">🍣 Sushi</span><span class="ad-tag">💴 Lunch deal</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">d</div>
+      <div class="ad-name">Veggie Garden</div>
+      <div class="ad-desc">100% vegetarian &amp; vegan restaurant. Fresh seasonal ingredients, no meat or fish. Buffet 11:30–14:30.</div>
+      <div><span class="ad-tag">🥗 Vegan</span><span class="ad-tag">🌿 No meat</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">e</div>
+      <div class="ad-name">Steakhaus Grillmeister</div>
+      <div class="ad-desc">Premium steaks, BBQ ribs &amp; grilled specialities. Bar open until midnight. Reservations recommended.</div>
+      <div><span class="ad-tag">🥩 Steak</span><span class="ad-tag">🍺 Bar</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">f</div>
+      <div class="ad-name">Bistro International</div>
+      <div class="ad-desc">World cuisines: Turkish, Greek, Mexican &amp; Indian dishes. Daily changing menu. Cheap lunchtime specials.</div>
+      <div><span class="ad-tag">🌍 World food</span><span class="ad-tag">💶 Cheap lunch</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">g</div>
+      <div class="ad-name">Bäckerei Müller</div>
+      <div class="ad-desc">Fresh bread, rolls, pretzels &amp; pastries. Breakfast to go from €2.50. Open 6:00–18:00 Mon–Sat.</div>
+      <div><span class="ad-tag">🥐 Bakery</span><span class="ad-tag">🥖 Bread</span></div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-label">h</div>
+      <div class="ad-name">Eiscafé Venezia</div>
+      <div class="ad-desc">Italian gelato (20 flavours!), waffles &amp; milkshakes. Perfect for families. Open daily 10:00–21:00.</div>
+      <div><span class="ad-tag">🍦 Ice cream</span><span class="ad-tag">🧇 Waffles</span></div>
+    </div>
+  </div>
+
+  <!-- PEOPLE -->
+  <div style="max-width:600px;margin:0 auto 8px;font-size:13px;color:var(--muted);font-weight:700;">THE PEOPLE</div>
+  <div class="people-list" id="people-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Check My Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">📰</div>
+    <div class="finish-title" id="fin-title">Matching done!</div>
+    <div class="finish-xp" id="fin-xp">+70 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">6</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const people = [
+  { id:'p1', name:'1 – Lucas', desc:'Lucas doesn\'t eat meat. He often goes to a restaurant for lunch and likes vegetarian food.', correct:'d' },
+  { id:'p2', name:'2 – Mia', desc:'Mia wants to have coffee and cake with her friend on Saturday afternoon. She also wants to check her emails.', correct:'a' },
+  { id:'p3', name:'3 – Stefan', desc:'Stefan is going out for dinner with his family tonight. His children love pizza.', correct:'b' },
+  { id:'p4', name:'4 – Anna', desc:'Anna is on a tight budget. She wants a cheap lunch with food from different countries.', correct:'f' },
+  { id:'p5', name:'5 – Tom', desc:'Tom loves fish and wants to eat something Asian for lunch. He has a break from 12 to 14:00.', correct:'c' },
+  { id:'p6', name:'6 – Clara', desc:'Clara wants to treat her boyfriend to a dinner. He loves grilled meat and a drink at the bar afterwards.', correct:'e' }
+];
+
+const opts = ['–','a','b','c','d','e','f','g','h'];
+
+function build(){
+  const c = document.getElementById('people-container'); c.innerHTML='';
+  people.forEach(p=>{
+    c.innerHTML+=`<div class="person-row" id="row-${p.id}">
+      <div class="person-name">${p.name}</div>
+      <div class="person-need">${p.desc}</div>
+      <div class="person-select">
+        <label>Your answer:</label>
+        <select id="sel-${p.id}">
+          ${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}
+        </select>
+        <span class="result-badge" id="badge-${p.id}"></span>
+      </div>
+    </div>`;
+  });
+}
+
+function submitAll(){
+  let score=0;
+  people.forEach(p=>{
+    const sel=document.getElementById(`sel-${p.id}`);
+    const badge=document.getElementById(`badge-${p.id}`);
+    sel.disabled=true;
+    const val=sel.value;
+    if(val===p.correct){ badge.textContent=`✅ Correct! (${p.correct})`; badge.className='result-badge correct'; score++; }
+    else { badge.textContent=`❌ Wrong — answer: ${p.correct}`; badge.className='result-badge wrong'; }
+    badge.style.display='inline';
+  });
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  const pct=Math.round(score/people.length*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  const earned=Math.round(70*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_reading_ads');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex'; build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

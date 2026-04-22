@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading: Email – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.email-wrapper {
+  background: var(--surface2); border-radius: 16px; overflow: hidden;
+  max-width: 680px; margin: 0 auto 32px; border: 1px solid var(--border);
+}
+.email-header { background: var(--surface); padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.email-from { font-size: 13px; color: var(--muted); }
+.email-from strong { color: var(--accent2); }
+.email-subject { font-size: 16px; font-weight: 700; margin-top: 4px; }
+.email-body { padding: 20px; font-size: 15px; line-height: 1.9; }
+.email-body p { margin-bottom: 12px; }
+.email-sign { margin-top: 16px; color: var(--accent2); font-weight: 700; }
+.q-opt { display:flex; align-items:center; gap:12px; background:var(--surface2); border:2px solid var(--border); border-radius:var(--radius); padding:12px 16px; cursor:pointer; font-size:15px; color:var(--text); font-family:inherit; transition:border-color .15s; }
+.q-opt:hover { border-color:var(--accent); }
+.q-opt.chosen  { border-color:var(--accent); background:#1a1040; }
+.q-opt.correct { border-color:var(--correct); background:#0d2e1e; color:var(--correct); }
+.q-opt.wrong   { border-color:var(--wrong);   background:#2e0d0d; color:var(--wrong); }
+.q-opt.reveal  { border-color:var(--correct); background:#0d2e1e; color:var(--correct); }
+.opt-l { font-weight:900; font-size:13px; background:var(--border); border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.q-block { background:var(--surface); border-radius:var(--radius); padding:18px 20px; margin-bottom:14px; border:1px solid var(--border); max-width:640px; }
+.q-tip { font-size:13px;color:var(--muted);margin-top:8px;display:none; }
+.q-tip.show { display:block; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📧</span>
+  <span class="header-title">Reading: Email</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📧 Reading Type 3: Personal Email</div>
+  <div class="page-subtitle">Read Gülcan's email about life in Hamburg, then answer 5 questions.</div>
+
+  <div class="info-box mb-lg">
+    <h3>💡 Strategy for reading emails</h3>
+    <p>Skim the email once. Then read each question and scan for the relevant paragraph. 
+       The answers are <em>always</em> in the text — find the exact sentence!</p>
+  </div>
+
+  <!-- EMAIL -->
+  <div class="email-wrapper">
+    <div class="email-header">
+      <div class="email-from">From: <strong>Gülcan</strong> &lt;guelcan@mail.de&gt; · To: Sonja</div>
+      <div class="email-subject">📬 Hi from Hamburg!</div>
+    </div>
+    <div class="email-body">
+      <p>Liebe Sonja,</p>
+      <p>ich bin jetzt schon vier Wochen in Hamburg und bin noch dabei, mich hier einzuleben. An der Universität ist vieles ganz anders organisiert als zu Hause. Und auch im täglichen Leben musste ich erst einmal lernen, wie einige Dinge hier gemacht werden. Zum Beispiel, wie ich ein Zimmer finde und wo ich was einkaufen kann.</p>
+      <p>In der ersten Woche haben ein paar Studenten eine Willkommensführung für uns ausländische Studierende gemacht. Sie haben uns die Uni gezeigt: die Bibliothek, die Cafeteria und die Multimedia-Räume. Hamburg habe ich dann alleine mit dem Stadtplan kennengelernt.</p>
+      <p>Ich wohne mit drei anderen Studenten aus Italien, Japan und Mexiko zusammen. Immer freitags kocht einer von uns etwas aus seinem Land und wir essen zusammen, obwohl wir nur eine winzig kleine Küche haben! Ich finde das super, du weißt ja, wie gerne ich koche!</p>
+      <p>Wir sprechen in der Wohnung nicht nur Deutsch, sondern oft auch Englisch miteinander. Manchmal ist das einfacher, aber mich stört das ein bisschen. Ich möchte dieses Jahr möglichst viel Deutsch lernen. Und weißt du, was mir am meisten Spaß macht? Der Literaturkurs. Der Dozent, Herr Hahn, ist ein total witziger Typ.</p>
+      <p>Ich freue mich auf deinen Besuch im März. Dann zeige ich dir die Stadt und an einem Nachmittag fahren wir an die Ostsee. Da ist es total schön. Du kannst dann bei Mario schlafen. Das ist der Italiener, der neben mir wohnt. Er ist einverstanden, denn er fährt in den Ferien nach Hause, nach Genua.</p>
+      <p>Schreib mir bald!<br>Bis dann</p>
+      <div class="email-sign">Gülcan 💙</div>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="q-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Check My Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">📧</div>
+    <div class="finish-title" id="fin-title">Reading done!</div>
+    <div class="finish-xp" id="fin-xp">+70 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">5</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const qs = [
+  {
+    text: '11. Gülcan says about her life in Hamburg that …',
+    opts: [
+      {l:'a', t:'university is organised the same as at home'},
+      {l:'b', t:'some things in daily life are like at home'},
+      {l:'c', t:'at the moment many things are new for her'}
+    ], correct:'c',
+    tip:'Key phrase: "bin noch dabei, mich hier einzuleben" + "vieles ganz anders" = many things are new and she\'s still settling in.'
+  },
+  {
+    text: '12. The group of students …',
+    opts: [
+      {l:'a', t:'showed the new students around the university'},
+      {l:'b', t:'gave a city tour for new students'},
+      {l:'c', t:'introduced Gülcan to other foreign students'}
+    ], correct:'a',
+    tip:'"Sie haben uns die Uni gezeigt: die Bibliothek, die Cafeteria und die Multimedia-Räume" = showed them the university buildings.'
+  },
+  {
+    text: '13. In the flat …',
+    opts: [
+      {l:'a', t:'everyone cooks together'},
+      {l:'b', t:'Gülcan always cooks for everyone'},
+      {l:'c', t:'each person cooks once for the others'}
+    ], correct:'c',
+    tip:'"freitags kocht einer von uns" = on Fridays one of them cooks = each person cooks once in turn.'
+  },
+  {
+    text: '14. It is important to Gülcan …',
+    opts: [
+      {l:'a', t:'to practise English too'},
+      {l:'b', t:'to speak German'},
+      {l:'c', t:'to get to know Professor Hahn'}
+    ], correct:'b',
+    tip:'"Ich möchte dieses Jahr möglichst viel Deutsch lernen" = she wants to learn as much German as possible.'
+  },
+  {
+    text: '15. In March …',
+    opts: [
+      {l:'a', t:'they visit Mario at his home'},
+      {l:'b', t:'Sonja and Gülcan go on a sea holiday'},
+      {l:'c', t:'Sonja stays in Mario\'s room'}
+    ], correct:'c',
+    tip:'"Du kannst dann bei Mario schlafen. Er fährt in den Ferien nach Hause" = Mario goes away, so Sonja can sleep in his room.'
+  }
+];
+
+let chosen = {};
+
+function build() {
+  const c = document.getElementById('q-container');
+  c.innerHTML = '';
+  qs.forEach((q,qi) => {
+    c.innerHTML += `<div class="q-block">
+      <div style="font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px">Question ${qi+1}</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:14px">${q.text}</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${q.opts.map(o => `<button class="q-opt" id="opt-${qi}-${o.l}" onclick="pick(${qi},'${o.l}',this)">
+          <span class="opt-l">${o.l.toUpperCase()}</span>${o.t}</button>`).join('')}
+      </div>
+      <div class="q-tip" id="tip-${qi}">💡 ${q.tip}</div>
+    </div>`;
+  });
+}
+
+function pick(qi, l, btn) {
+  qs[qi].opts.forEach(o => {
+    const el = document.getElementById(`opt-${qi}-${o.l}`);
+    if (el && !el.classList.contains('correct') && !el.classList.contains('wrong') && !el.classList.contains('reveal'))
+      el.classList.remove('chosen');
+  });
+  chosen[qi] = l;
+  btn.classList.add('chosen');
+}
+
+function submitAll() {
+  let score = 0;
+  qs.forEach((q,qi) => {
+    q.opts.forEach(o => {
+      const el = document.getElementById(`opt-${qi}-${o.l}`);
+      if (!el) return;
+      el.disabled = true; el.classList.remove('chosen');
+      if (o.l === q.correct) el.classList.add('reveal');
+    });
+    const sel = chosen[qi];
+    if (sel) {
+      const selEl = document.getElementById(`opt-${qi}-${sel}`);
+      if (sel === q.correct) { selEl.classList.replace('reveal','correct'); score++; }
+      else selEl.classList.add('wrong');
+    }
+    document.getElementById(`tip-${qi}`).classList.add('show');
+  });
+  document.getElementById('action-row').style.display = 'none';
+  document.getElementById('finish').classList.add('visible');
+  const pct = Math.round(score / qs.length * 100);
+  document.getElementById('fin-title').textContent = pct >= 80 ? '🏆 Excellent!' : pct >= 60 ? '👍 Good job!' : '💪 Keep practising!';
+  document.getElementById('fin-score').textContent = score;
+  const earned = Math.round(70 * pct / 100);
+  document.getElementById('fin-xp').textContent = `+${earned} XP`;
+  addXP(earned);
+  if (pct >= 60) markDone('mod_reading_email');
+  if (pct >= 80) launchConfetti();
+}
+
+function restart() {
+  chosen = {}; document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display = 'flex'; build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

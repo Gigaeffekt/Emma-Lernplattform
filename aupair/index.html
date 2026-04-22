@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angel lernt Deutsch A2 – Learning Platform</title>
+<link rel="stylesheet" href="assets/css/aupair.css">
+<style>
+.welcome-tag {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 12px; font-weight: 800;
+  padding: 3px 12px; border-radius: 99px; letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.exam-info {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  font-size: 14px; color: var(--muted);
+  margin-bottom: 32px;
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+}
+.exam-info strong { color: var(--text); }
+.exam-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 5px 14px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="header-logo">🇩🇪</span>
+  <span class="header-title" style="cursor:default">Angel lernt Deutsch A2</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+
+  <!-- COUNTDOWN BANNER -->
+  <div class="countdown-banner">
+    <span class="countdown-icon">📝</span>
+    <div class="countdown-info">
+      <strong>telc Deutsch A2 Exam</strong>
+      <span>End of May 2026 — you can do this, Angel! 💪</span>
+    </div>
+    <div class="countdown-days" id="countdown-days">–</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="welcome-tag">🎯 GOAL: PASS THE TELC A2</div>
+    <h1>Welcome back, <span>Angel</span>! 👋</h1>
+    <p>4 weeks · 6 milestones · 781 vocabulary words · You've got this!</p>
+  </div>
+
+  <!-- XP PROGRESS -->
+  <div class="xp-section mb-lg">
+    <div class="xp-label">
+      <span>Level <strong id="level-name">Beginner</strong></span>
+      <span id="xp-text">0 / 500 XP</span>
+    </div>
+    <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="level-row mb-lg">
+    <div class="level-badge">
+      <span class="lb-icon">⭐</span>
+      <div><div class="lb-val" id="stat-xp">0</div><div class="lb-lbl">Total XP</div></div>
+    </div>
+    <div class="level-badge">
+      <span class="lb-icon">🔥</span>
+      <div><div class="lb-val" id="stat-streak">0</div><div class="lb-lbl">Day Streak</div></div>
+    </div>
+    <div class="level-badge">
+      <span class="lb-icon">✅</span>
+      <div><div class="lb-val" id="stat-done">0</div><div class="lb-lbl">Modules Done</div></div>
+    </div>
+    <div class="level-badge">
+      <span class="lb-icon">📚</span>
+      <div><div class="lb-val">781</div><div class="lb-lbl">Vocabulary Words</div></div>
+    </div>
+  </div>
+
+  <!-- EXAM INFO -->
+  <div class="exam-info">
+    <span>📋 <strong>telc Deutsch A2</strong> (Start Deutsch 2)</span>
+    <span class="exam-pill">🎧 Listening ~20 min · 15 pts</span>
+    <span class="exam-pill">📖 Reading 50 min · 15 pts</span>
+    <span class="exam-pill">✍️ Writing 50 min · 15 pts</span>
+    <span class="exam-pill">🗣️ Speaking ~15 min · 15 pts</span>
+    <span>Minimum to pass: <strong>36 / 60 points</strong></span>
+  </div>
+
+  <!-- ── MILESTONE 1: GRAMMAR ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num">1</div>
+      <div>
+        <div class="milestone-title">Grammar Foundation 🔑</div>
+        <div class="milestone-subtitle">Week 1 · Days 1–2 · Pronouns, modal verbs, sentence structure</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="modules/grammar-pronouns.html" class="card-link">
+        <div class="card-icon">👤</div>
+        <div class="card-title">Pronouns: Nominative, Accusative & Dative</div>
+        <div class="card-desc">ich/mich/mir · du/dich/dir · er/ihn/ihm — learn all the forms with examples</div>
+        <div class="card-meta">
+          <span>15 min</span>
+          <span class="card-xp">+50 XP</span>
+        </div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-grammar-pronouns" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/grammar-modal.html" class="card-link">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">Modal Verbs: können, müssen, wollen…</div>
+        <div class="card-desc">Learn all 6 modal verbs with conjugations and fill-in practice</div>
+        <div class="card-meta">
+          <span>15 min</span>
+          <span class="card-xp">+50 XP</span>
+        </div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-grammar-modal" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/grammar-sentences.html" class="card-link">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Sentence Structure & Conjunctions</div>
+        <div class="card-desc">weil, wenn, dass, als — word order rules with real A2 exam sentences</div>
+        <div class="card-meta">
+          <span>20 min</span>
+          <span class="card-xp">+60 XP</span>
+        </div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-grammar-sentences" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/grammar-perfectum.html" class="card-link">
+        <div class="card-icon">⏪</div>
+        <div class="card-title">Perfekt (Past Tense)</div>
+        <div class="card-desc">haben vs. sein — regular & irregular verbs — "Ich habe …" / "Ich bin …"</div>
+        <div class="card-meta">
+          <span>20 min</span>
+          <span class="card-xp">+60 XP</span>
+        </div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-grammar-perfectum" style="width:0%"></div></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── MILESTONE 2: VOCAB BLOCK 1 ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num">2</div>
+      <div>
+        <div class="milestone-title">Vocabulary Block 1: Daily Life 📦</div>
+        <div class="milestone-subtitle">Week 1 · Days 3–7 · Digital, Weather, Transport, Home</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="modules/flashcards.html?lektion=lektion1" class="card-link">
+        <div class="card-icon">📱</div>
+        <div class="card-title">Flashcards: Digital Life & Weather</div>
+        <div class="card-desc">76 words — apps, weather, digital actions, pronouns in context</div>
+        <div class="card-badge">76 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+80 XP</span></div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-l1-flash" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/quiz-mc.html?lektion=lektion1" class="card-link">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Quiz: Digital & Weather</div>
+        <div class="card-desc">4-option multiple choice — German → English and English → German</div>
+        <div class="card-meta"><span>20 questions</span><span class="card-xp">+60 XP</span></div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-l1-quiz" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/flashcards.html?lektion=lektion2" class="card-link">
+        <div class="card-icon">🚆</div>
+        <div class="card-title">Flashcards: Transport & Directions</div>
+        <div class="card-desc">62 words — trains, buses, airports, tickets, directions</div>
+        <div class="card-badge">62 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+80 XP</span></div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-l2-flash" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/quiz-mc.html?lektion=lektion2" class="card-link">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Quiz: Transport & Directions</div>
+        <div class="card-desc">4-option multiple choice — test your transport vocabulary</div>
+        <div class="card-meta"><span>20 questions</span><span class="card-xp">+60 XP</span></div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-l2-quiz" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/flashcards.html?lektion=lektion3" class="card-link">
+        <div class="card-icon">🏠</div>
+        <div class="card-title">Flashcards: Flat & Home</div>
+        <div class="card-desc">73 words — renting, furniture, neighbours, household rules</div>
+        <div class="card-badge">73 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+80 XP</span></div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-l3-flash" style="width:0%"></div></div>
+      </a>
+
+      <a href="modules/match-game.html?lektion=lektion3" class="card-link">
+        <div class="card-icon">🧩</div>
+        <div class="card-title">Match Game: Flat & Home</div>
+        <div class="card-desc">Match German words to English meanings — tap to pair!</div>
+        <div class="card-meta"><span>Tap to pair</span><span class="card-xp">+50 XP</span></div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="prog-l3-match" style="width:0%"></div></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── MILESTONE 3: VOCAB BLOCK 2 ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num">3</div>
+      <div>
+        <div class="milestone-title">Vocabulary Block 2: Official Life 🏪</div>
+        <div class="milestone-subtitle">Week 2 · Authorities, Shopping, Health, Banking</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="modules/flashcards.html?lektion=lektion4" class="card-link">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Flashcards: Authorities & Documents</div>
+        <div class="card-desc">55 words — passport, visa, forms, registry office, applications</div>
+        <div class="card-badge">55 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+80 XP</span></div>
+      </a>
+
+      <a href="modules/flashcards.html?lektion=lektion7" class="card-link">
+        <div class="card-icon">🛍️</div>
+        <div class="card-title">Flashcards: Shopping & Restaurant</div>
+        <div class="card-desc">65 words — fashion, food, ordering, describing people</div>
+        <div class="card-badge">65 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+80 XP</span></div>
+      </a>
+
+      <a href="modules/quiz-mc.html?lektion=lektion7" class="card-link">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Quiz: Shopping & Restaurant</div>
+        <div class="card-desc">Multiple choice — menus, fashion words, descriptions</div>
+        <div class="card-meta"><span>20 questions</span><span class="card-xp">+60 XP</span></div>
+      </a>
+
+      <a href="modules/flashcards.html?lektion=lektion10" class="card-link">
+        <div class="card-icon">🏥</div>
+        <div class="card-title">Flashcards: Health & Medicine</div>
+        <div class="card-desc">63 words — doctor visits, symptoms, pharmacy, healthy lifestyle</div>
+        <div class="card-badge">63 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+80 XP</span></div>
+      </a>
+
+      <a href="modules/flashcards.html?lektion=lektion11" class="card-link">
+        <div class="card-icon">💶</div>
+        <div class="card-title">Flashcards: Banking & Money</div>
+        <div class="card-desc">38 words — accounts, transfers, ATMs, cards, online banking</div>
+        <div class="card-badge">38 words</div>
+        <div class="card-meta"><span>Spaced Repetition</span><span class="card-xp">+60 XP</span></div>
+      </a>
+
+      <a href="modules/match-game.html?lektion=lektion10" class="card-link">
+        <div class="card-icon">🧩</div>
+        <div class="card-title">Match Game: Health</div>
+        <div class="card-desc">Match symptoms and remedies to their English meanings</div>
+        <div class="card-meta"><span>Tap to pair</span><span class="card-xp">+50 XP</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── MILESTONE 4: READING ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num">4</div>
+      <div>
+        <div class="milestone-title">Reading Comprehension 📖</div>
+        <div class="milestone-subtitle">Week 2–3 · All 4 reading types from the real A2 exam</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="modules/reading-article.html" class="card-link">
+        <div class="card-icon">📰</div>
+        <div class="card-title">Reading Type 1: Newspaper Article</div>
+        <div class="card-desc">Read about TV chef Stefan Berger — answer 5 multiple choice questions</div>
+        <div class="card-meta"><span>Real exam text</span><span class="card-xp">+70 XP</span></div>
+      </a>
+
+      <a href="modules/reading-signs.html" class="card-link">
+        <div class="card-icon">🏬</div>
+        <div class="card-title">Reading Type 2: Store / Info Signs</div>
+        <div class="card-desc">Department store floors — match the question to the right floor</div>
+        <div class="card-meta"><span>Real exam task</span><span class="card-xp">+70 XP</span></div>
+      </a>
+
+      <a href="modules/reading-email.html" class="card-link">
+        <div class="card-icon">📧</div>
+        <div class="card-title">Reading Type 3: Personal Email</div>
+        <div class="card-desc">Gülcan writes from Hamburg — understand and answer questions</div>
+        <div class="card-meta"><span>Real exam text</span><span class="card-xp">+70 XP</span></div>
+      </a>
+
+      <a href="modules/reading-ads.html" class="card-link">
+        <div class="card-icon">📌</div>
+        <div class="card-title">Reading Type 4: Match Ads to People</div>
+        <div class="card-desc">6 people looking for something — match them to the right advert</div>
+        <div class="card-meta"><span>Real exam task</span><span class="card-xp">+70 XP</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── MILESTONE 5: LISTENING + WRITING ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num">5</div>
+      <div>
+        <div class="milestone-title">Listening & Writing Practice 🎧✍️</div>
+        <div class="milestone-subtitle">Week 3 · Audio dialogues + email writing with phrase bank</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="modules/listening-sim.html" class="card-link">
+        <div class="card-icon">🎧</div>
+        <div class="card-title">Listening Simulation (TTS)</div>
+        <div class="card-desc">Listen to dialogues via browser speech — fill in the phone notes — like the real exam</div>
+        <div class="card-meta"><span>Simulated audio</span><span class="card-xp">+80 XP</span></div>
+      </a>
+
+      <a href="modules/writing-email.html" class="card-link">
+        <div class="card-icon">✍️</div>
+        <div class="card-title">Writing Task 1: Personal Email</div>
+        <div class="card-desc">Write a short email using the phrase bank — thank someone, arrange a meeting…</div>
+        <div class="card-meta"><span>Phrase bank included</span><span class="card-xp">+80 XP</span></div>
+      </a>
+
+      <a href="modules/writing-official.html" class="card-link">
+        <div class="card-icon">📨</div>
+        <div class="card-title">Writing Task 2: Semi-official Message</div>
+        <div class="card-desc">Cancel an appointment, make a complaint, write a request — with tips</div>
+        <div class="card-meta"><span>Guided writing</span><span class="card-xp">+80 XP</span></div>
+      </a>
+
+      <a href="modules/speaking-prep.html" class="card-link">
+        <div class="card-icon">🗣️</div>
+        <div class="card-title">Speaking Preparation</div>
+        <div class="card-desc">Teil 1: Introduce yourself · Teil 2: Tell about your life · Teil 3: Make a plan with a partner</div>
+        <div class="card-meta"><span>Practice cards</span><span class="card-xp">+60 XP</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── MILESTONE 6: MOCK TESTS ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num">6</div>
+      <div>
+        <div class="milestone-title">Mock Exams & Final Review 🏆</div>
+        <div class="milestone-subtitle">Week 4 · Full practice tests under real time conditions</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="modules/mock-test-1.html" class="card-link">
+        <div class="card-icon">🏆</div>
+        <div class="card-title">Full Mock Test 1</div>
+        <div class="card-desc">Complete A2 reading + listening simulation — 70 minutes — from the official telc sample</div>
+        <div class="card-badge">EXAM</div>
+        <div class="card-meta"><span>70 min</span><span class="card-xp">+200 XP</span></div>
+      </a>
+
+      <a href="modules/mock-test-2.html" class="card-link">
+        <div class="card-icon">🥈</div>
+        <div class="card-title">Full Mock Test 2</div>
+        <div class="card-desc">Second full practice test from the Goethe-Zertifikat A2 model set</div>
+        <div class="card-badge">EXAM</div>
+        <div class="card-meta"><span>70 min</span><span class="card-xp">+200 XP</span></div>
+      </a>
+
+      <a href="modules/vocab-review.html" class="card-link">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Speed Review: All 781 Words</div>
+        <div class="card-desc">Fast-paced flashcard race through all vocabulary — 3 seconds per card</div>
+        <div class="card-meta"><span>Speed mode</span><span class="card-xp">+100 XP</span></div>
+      </a>
+
+      <a href="modules/grammar-quiz-final.html" class="card-link">
+        <div class="card-icon">🎓</div>
+        <div class="card-title">Final Grammar Challenge</div>
+        <div class="card-desc">38 grammar questions from the official Netzwerk A2 placement test</div>
+        <div class="card-meta"><span>38 questions</span><span class="card-xp">+120 XP</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── DW EXTERNAL RESOURCES ── -->
+  <div class="milestone-section">
+    <div class="milestone-header">
+      <div class="milestone-num" style="background:var(--accent2)">+</div>
+      <div>
+        <div class="milestone-title" style="color:var(--accent2)">Extra Resources: DW & Online Practice 🌐</div>
+        <div class="milestone-subtitle">Free external tools from Deutsche Welle — open in new tab</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+
+      <a href="https://learngerman.dw.com/de/anf%C3%A4nger/s-62079021" target="_blank" class="dw-card">
+        <span class="dw-icon">📻</span>
+        <div>
+          <div class="dw-title">DW Learn German — A1/A2 Course</div>
+          <div class="dw-desc">Free interactive German lessons from Deutsche Welle — videos, dialogues, exercises</div>
+        </div>
+      </a>
+
+      <a href="https://learn.dw.com/de/abschlusstest-abc/I-43909577" target="_blank" class="dw-card">
+        <span class="dw-icon">✅</span>
+        <div>
+          <div class="dw-title">DW A1/A2 Final Quiz</div>
+          <div class="dw-desc">Test your German with the official DW level quiz — great for self-assessment</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</main>
+
+<script src="assets/js/app.js"></script>
+<script>
+// Countdown to end of May 2026
+startCountdown('2026-05-31');
+
+// Update stats on page load
+document.addEventListener('DOMContentLoaded', () => {
+  // XP bar
+  const xp = getXP();
+  const LEVELS = [
+    { name: 'Beginner',     max: 500 },
+    { name: 'Elementary',   max: 1200 },
+    { name: 'Pre-Intermediate', max: 2500 },
+    { name: 'Intermediate', max: 4000 },
+    { name: 'Upper-Int', max: 6000 },
+    { name: 'A2 Champion!', max: Infinity }
+  ];
+  let level = 0, prev = 0;
+  for (let i = 0; i < LEVELS.length; i++) {
+    if (xp < LEVELS[i].max) { level = i; break; }
+    prev = LEVELS[i].max;
+  }
+  const curMax = LEVELS[level].max === Infinity ? 10000 : LEVELS[level].max;
+  const pct = Math.min(((xp - prev) / (curMax - prev)) * 100, 100);
+  document.getElementById('xp-fill').style.width = pct + '%';
+  document.getElementById('level-name').textContent = LEVELS[level].name;
+  document.getElementById('xp-text').textContent = xp + ' / ' + curMax + ' XP';
+  document.getElementById('stat-xp').textContent = xp;
+  document.getElementById('stat-streak').textContent = getStreak();
+
+  // Done modules count
+  const done = getDone();
+  document.getElementById('stat-done').textContent = Object.keys(done).length;
+
+  // Module progress bars
+  const progMap = {
+    'prog-grammar-pronouns': 'mod_grammar_pronouns',
+    'prog-grammar-modal':    'mod_grammar_modal',
+    'prog-grammar-sentences':'mod_grammar_sentences',
+    'prog-grammar-perfectum':'mod_grammar_perfectum',
+    'prog-l1-flash': 'mod_l1_flash',
+    'prog-l1-quiz':  'mod_l1_quiz',
+    'prog-l2-flash': 'mod_l2_flash',
+    'prog-l2-quiz':  'mod_l2_quiz',
+    'prog-l3-flash': 'mod_l3_flash',
+    'prog-l3-match': 'mod_l3_match',
+  };
+  for (const [barId, modKey] of Object.entries(progMap)) {
+    const el = document.getElementById(barId);
+    if (el && isDone(modKey)) el.style.width = '100%';
+  }
+});
+</script>
+</body>
+</html>

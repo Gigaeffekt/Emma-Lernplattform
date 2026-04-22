@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Test 1 – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.mock-section { background:var(--surface);border-radius:var(--radius);overflow:hidden;max-width:680px;margin-bottom:28px;border:2px solid var(--border); }
+.mock-section-header { background:var(--accent);color:#fff;padding:14px 20px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px; }
+.mock-section-body { padding:18px 20px; }
+.q-block { margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border); }
+.q-block:last-child { border-bottom:none;margin-bottom:0;padding-bottom:0; }
+.q-text { font-size:15px;font-weight:600;margin-bottom:8px;line-height:1.5; }
+.q-opts { display:flex;flex-wrap:wrap;gap:6px; }
+.q-opt { background:var(--surface2);border:2px solid var(--border);border-radius:6px;padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text);font-family:inherit;transition:border-color .15s; }
+.q-opt:hover { border-color:var(--accent); }
+.q-opt.chosen  { border-color:var(--accent);background:#1a1040; }
+.q-opt.correct { border-color:var(--correct);background:#0d2e1e;color:var(--correct); }
+.q-opt.wrong   { border-color:var(--wrong);background:#2e0d0d;color:var(--wrong); }
+.q-opt.reveal  { border-color:var(--correct);background:#0d2e1e;color:var(--correct); }
+.timer-banner { background:var(--surface);border:2px solid var(--gold);border-radius:var(--radius);padding:14px 20px;max-width:680px;margin-bottom:20px;display:flex;align-items:center;gap:16px; }
+.timer-big { font-size:32px;font-weight:900;color:var(--gold); }
+.score-banner { display:flex;gap:14px;flex-wrap:wrap;max-width:680px;margin-bottom:20px; }
+.score-box { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;text-align:center;flex:1; }
+.score-box .val { font-size:22px;font-weight:900; }
+.score-box .lbl { font-size:11px;color:var(--muted);font-weight:700; }
+.reading-text { background:var(--surface2);border-radius:var(--radius);padding:14px 18px;font-size:14px;line-height:1.9;margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📝</span>
+  <span class="header-title">Mock Test 1</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📝 Mock Test 1 — telc A2 Format</div>
+  <div class="page-subtitle">Reading + Grammar sections. Work through all questions, then submit.</div>
+
+  <div class="timer-banner">
+    <div class="timer-big" id="test-timer">60:00</div>
+    <div>
+      <div style="font-size:14px;font-weight:700;">Test Timer</div>
+      <div style="font-size:12px;color:var(--muted);">The real reading+grammar section is ~60 minutes</div>
+    </div>
+    <button class="btn btn-secondary" onclick="toggleTimer()" id="timer-btn" style="margin-left:auto;">▶ Start Timer</button>
+  </div>
+
+  <div class="score-banner">
+    <div class="score-box"><div class="val" id="sc-read">—</div><div class="lbl">Reading</div></div>
+    <div class="score-box"><div class="val" id="sc-gram">—</div><div class="lbl">Grammar</div></div>
+    <div class="score-box"><div class="val" id="sc-total">—</div><div class="lbl">Total</div></div>
+    <div class="score-box"><div class="val" id="sc-pct">—</div><div class="lbl">Score %</div></div>
+  </div>
+
+  <!-- READING — Part 1: Article -->
+  <div class="mock-section">
+    <div class="mock-section-header">📖 Reading Part 1 — Newspaper Article (5 pts)</div>
+    <div class="mock-section-body">
+      <div class="reading-text">
+        <strong>Mehr Menschen fahren mit dem Fahrrad</strong><br><br>
+        Immer mehr Menschen in Deutschland fahren mit dem Fahrrad zur Arbeit. Eine neue Studie zeigt, dass 14 Prozent 
+        der Deutschen täglich das Fahrrad benutzen. Das sind drei Prozent mehr als vor zehn Jahren. 
+        Besonders in Städten wie Münster, Bremen und Freiburg ist das Fahrrad sehr beliebt. 
+        Dort haben die Städte viele neue Fahrradwege gebaut. 
+        Die Menschen sagen: Das Fahrrad ist schnell, günstig und gut für die Umwelt. 
+        Außerdem kann man auf dem Weg zur Arbeit Sport machen. 
+        Viele Arbeitgeber unterstützen das – sie bezahlen ihren Mitarbeitern ein Fahrrad oder geben Geld für Reparaturen.
+      </div>
+      <div id="read1-container"></div>
+    </div>
+  </div>
+
+  <!-- READING — Part 2: Signs -->
+  <div class="mock-section">
+    <div class="mock-section-header">🏬 Reading Part 2 — Information Notices (3 pts)</div>
+    <div class="mock-section-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Read the notices and choose the correct interpretation.</p>
+      <div id="read2-container"></div>
+    </div>
+  </div>
+
+  <!-- GRAMMAR — Part 1 -->
+  <div class="mock-section">
+    <div class="mock-section-header">🔧 Grammar Part 1 — Choose the correct word (7 pts)</div>
+    <div class="mock-section-body">
+      <div id="gram1-container"></div>
+    </div>
+  </div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Submit Test</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">📝</div>
+    <div class="finish-title" id="fin-title">Test done!</div>
+    <div class="finish-xp" id="fin-xp">+150 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">15</div><div class="lbl">Total</div></div>
+      <div class="finish-stat"><div class="val" id="fin-pct">0%</div><div class="lbl">Score</div></div>
+    </div>
+    <div style="max-width:400px;margin:16px auto 0;font-size:13px;color:var(--muted);text-align:center;">
+      In the real exam you need at least 60% to pass. Keep practising!
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Retry</button>
+      <a class="btn btn-secondary" href="mock-test-2.html">→ Mock Test 2</a>
+      <a class="btn" style="background:var(--border);" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+// READING PART 1 questions (about the bike article)
+const read1 = [
+  {t:'1. The article says that in Germany …',opts:['fewer people cycle now','14% cycle every day','only cities have bike lanes','bikes are free from employers'],c:'14% cycle every day'},
+  {t:'2. Which cities are mentioned as especially popular for cycling?',opts:['Berlin, Hamburg, München','Münster, Bremen, Freiburg','Köln, Frankfurt, Dresden','Stuttgart, Hannover, Leipzig'],c:'Münster, Bremen, Freiburg'},
+  {t:'3. According to the article, one advantage of cycling to work is …',opts:['it is always faster than the train','you can do sport on the way','it is free for everyone','cities pay all repair costs'],c:'you can do sport on the way'},
+  {t:'4. The number of daily cyclists has …',opts:['doubled in 10 years','increased by 3% in 10 years','decreased in big cities','stayed the same for years'],c:'increased by 3% in 10 years'},
+  {t:'5. Some employers …',opts:['ban cycling to work','pay for employees\' bikes or repairs','provide only parking for bikes','require cycling to work'],c:'pay for employees\' bikes or repairs'},
+];
+
+// READING PART 2 — signs
+const read2 = [
+  {notice:'Heute geschlossen. Wegen Umbauarbeiten. Wir öffnen morgen wieder um 9 Uhr.',
+   t:'6. This sign means:',
+   opts:['The shop is open today until 9','The shop is closed today and opens tomorrow at 9','The shop closes at 9 tomorrow','Renovations finished, opening at 9'],
+   c:'The shop is closed today and opens tomorrow at 9'},
+  {notice:'Achtung! Hunde müssen an der Leine geführt werden.',
+   t:'7. This sign means:',
+   opts:['Dogs are not allowed here','Dogs must be on a lead','Dogs may run freely here','Leashes can be bought here'],
+   c:'Dogs must be on a lead'},
+  {notice:'Bitte klingeln. Öffnungszeiten: Mo–Fr 9–17 Uhr.',
+   t:'8. This sign means:',
+   opts:['Ring the bell; open Mon–Fri 9–17','Only open Saturdays','Do not ring before 9','Hours are Mon–Fri 5–9 pm'],
+   c:'Ring the bell; open Mon–Fri 9–17'},
+];
+
+// GRAMMAR
+const gram1 = [
+  {t:'9. ___ gehört das Buch?',opts:['Wem','Wen','Wer','Was'],c:'Wem'},
+  {t:'10. Ich habe ___ Hunger.',opts:['kein','keine','keinen','nicht'],c:'keinen'},
+  {t:'11. Der Film ___ sehr interessant.',opts:['war','waren','bin','sind'],c:'war'},
+  {t:'12. Hast du ___ Brief geschrieben?',opts:['den','der','dem','die'],c:'den'},
+  {t:'13. Wir ___ gestern ins Theater gegangen.',opts:['haben','sind','sein','habe'],c:'sind'},
+  {t:'14. Ich freue mich ___ dich.',opts:['auf','an','bei','in'],c:'auf'},
+  {t:'15. Das Essen schmeckt mir ___ gut.',opts:['sehr','viel','ganz','groß'],c:'sehr'},
+];
+
+let chosen={};
+const allQ=[...read1,...read2,...gram1];
+let timerOn=false, timerInterval=null, timerSeconds=3600;
+
+function renderQ(container, qList, offset){
+  const c=document.getElementById(container); c.innerHTML='';
+  qList.forEach((q,i)=>{
+    const qi=offset+i;
+    const notice=q.notice?`<div style="background:var(--surface2);border-left:4px solid var(--accent2);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px;font-style:italic;margin-bottom:10px;">${q.notice}</div>`:'';
+    c.innerHTML+=`<div class="q-block">
+      ${notice}
+      <div class="q-text">${q.t}</div>
+      <div class="q-opts">
+        ${q.opts.map(o=>`<button class="q-opt" id="opt-${qi}-${o.replace(/\W/g,'_').substring(0,20)}" onclick="pick(${qi},'${o.replace(/'/g,'\\'')}',this)">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  });
+}
+
+function pick(qi,val,btn){
+  allQ[qi].opts.forEach(o=>{
+    const el=document.getElementById(`opt-${qi}-${o.replace(/\W/g,'_').substring(0,20)}`);
+    if(el&&!el.classList.contains('correct')&&!el.classList.contains('wrong')&&!el.classList.contains('reveal'))
+      el.classList.remove('chosen');
+  });
+  chosen[qi]=val; btn.classList.add('chosen');
+}
+
+function submitAll(){
+  stopTimer();
+  let score=0;
+  let readScore=0, gramScore=0;
+  allQ.forEach((q,qi)=>{
+    q.opts.forEach(o=>{
+      const el=document.getElementById(`opt-${qi}-${o.replace(/\W/g,'_').substring(0,20)}`);
+      if(!el)return; el.disabled=true; el.classList.remove('chosen');
+      if(o===q.c) el.classList.add('reveal');
+    });
+    const sel=chosen[qi];
+    let correct=false;
+    if(sel){
+      const sEl=document.getElementById(`opt-${qi}-${sel.replace(/\W/g,'_').substring(0,20)}`);
+      if(sEl){ if(sel===q.c){ sEl.classList.replace('reveal','correct'); score++; correct=true; } else sEl.classList.add('wrong'); }
+    }
+    if(qi<5&&correct) readScore++;
+    else if(qi<8&&correct) readScore++;
+    else if(correct) gramScore++;
+  });
+  document.getElementById('sc-read').textContent=readScore+'/8';
+  document.getElementById('sc-gram').textContent=gramScore+'/7';
+  document.getElementById('sc-total').textContent=score+'/15';
+  const pct=Math.round(score/15*100);
+  document.getElementById('sc-pct').textContent=pct+'%';
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Passing score!':'💪 Keep studying!';
+  document.getElementById('fin-score').textContent=score;
+  document.getElementById('fin-pct').textContent=pct+'%';
+  const earned=Math.round(150*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_mock1');
+  if(pct>=80) launchConfetti();
+}
+
+function toggleTimer(){
+  if(timerOn){ stopTimer(); }
+  else { startTestTimer(); }
+}
+function startTestTimer(){
+  timerOn=true; document.getElementById('timer-btn').textContent='⏸ Pause';
+  timerInterval=setInterval(()=>{
+    timerSeconds--;
+    if(timerSeconds<0){ stopTimer(); return; }
+    const m=Math.floor(timerSeconds/60), s=timerSeconds%60;
+    document.getElementById('test-timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+}
+function stopTimer(){ timerOn=false; if(timerInterval) clearInterval(timerInterval); document.getElementById('timer-btn').textContent='▶ Resume'; }
+
+function restart(){
+  chosen={}; timerSeconds=3600;
+  document.getElementById('test-timer').textContent='60:00';
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex';
+  ['sc-read','sc-gram','sc-total','sc-pct'].forEach(id=>document.getElementById(id).textContent='—');
+  renderQ('read1-container',read1,0);
+  renderQ('read2-container',read2,5);
+  renderQ('gram1-container',gram1,8);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  renderQ('read1-container',read1,0);
+  renderQ('read2-container',read2,5);
+  renderQ('gram1-container',gram1,8);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speed Vocab Review – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.speed-card { background:var(--surface);border:2px solid var(--border);border-radius:24px;padding:32px 24px;max-width:520px;margin:0 auto 24px;text-align:center;position:relative;min-height:200px; }
+.speed-de { font-size:36px;font-weight:900;margin-bottom:4px; }
+.speed-article { font-size:16px;color:var(--muted); }
+.speed-reveal { font-size:22px;font-weight:700;color:var(--accent2);margin-top:16px;min-height:32px; }
+.speed-pl { font-size:14px;color:var(--muted);margin-top:4px; }
+.speed-timer { position:absolute;top:14px;right:18px;font-size:22px;font-weight:900;color:var(--gold); }
+.speed-progress { font-size:13px;color:var(--muted);text-align:center;margin-bottom:8px; }
+.speed-bar { background:var(--border);border-radius:99px;height:6px;max-width:520px;margin:0 auto 20px; }
+.speed-fill { background:var(--accent);height:100%;border-radius:99px;transition:width .3s; }
+.speed-controls { display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px; }
+.lektion-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:520px;margin:0 auto 20px; }
+@media(max-width:400px){ .lektion-grid{grid-template-columns:repeat(2,1fr); }}
+.lek-btn { background:var(--surface);border:2px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);text-align:center;transition:all .15s; }
+.lek-btn:hover { border-color:var(--accent); color:var(--text); }
+.lek-btn.active { border-color:var(--accent);color:var(--text);background:#1a1040; }
+.stat-row { display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;max-width:520px;margin-left:auto;margin-right:auto; }
+.stat-box { background:var(--surface);border-radius:var(--radius);padding:10px 18px;text-align:center;border:1px solid var(--border);min-width:80px; }
+.stat-box .val { font-size:22px;font-weight:900; }
+.stat-box .lbl { font-size:11px;color:var(--muted);font-weight:700; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">⚡</span>
+  <span class="header-title">Speed Review</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">⚡ Speed Vocab Review</div>
+  <div class="page-subtitle">Flash through words fast. Tap "Got it" or "Again" to sort your deck.</div>
+
+  <!-- LEKTION SELECTOR -->
+  <div style="max-width:520px;margin:0 auto 8px;font-size:13px;color:var(--muted);font-weight:700;">CHOOSE DECK:</div>
+  <div class="lektion-grid" id="lek-picker">
+    <div class="lek-btn active" onclick="selectLek('all',this)">🌍 All 781</div>
+    <div class="lek-btn" onclick="selectLek('lektion1',this)">L1 Digital</div>
+    <div class="lek-btn" onclick="selectLek('lektion2',this)">L2 Transport</div>
+    <div class="lek-btn" onclick="selectLek('lektion3',this)">L3 Home</div>
+    <div class="lek-btn" onclick="selectLek('lektion4',this)">L4 Docs</div>
+    <div class="lek-btn" onclick="selectLek('lektion7',this)">L7 Shopping</div>
+    <div class="lek-btn" onclick="selectLek('lektion10',this)">L10 Health</div>
+    <div class="lek-btn" onclick="selectLek('lektion11',this)">L11 Banking</div>
+    <div class="lek-btn" onclick="selectLek('lektion12',this)">L12 Leisure</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stat-row">
+    <div class="stat-box"><div class="val" id="total-stat">0</div><div class="lbl">Total</div></div>
+    <div class="stat-box"><div class="val" id="known-stat" style="color:var(--correct)">0</div><div class="lbl">Known ✅</div></div>
+    <div class="stat-box"><div class="val" id="again-stat" style="color:var(--wrong)">0</div><div class="lbl">Again 🔄</div></div>
+    <div class="stat-box"><div class="val" id="remain-stat">0</div><div class="lbl">Remaining</div></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="speed-progress" id="prog-text">Card 0 / 0</div>
+  <div class="speed-bar"><div class="speed-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <!-- CARD -->
+  <div class="speed-card" id="speed-card">
+    <div class="speed-timer" id="timer-disp">3</div>
+    <div class="speed-article" id="card-article"></div>
+    <div class="speed-de" id="card-de">Press Start!</div>
+    <div class="speed-reveal" id="card-en"></div>
+    <div class="speed-pl" id="card-pl"></div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="speed-controls">
+    <button class="btn btn-primary" id="btn-start" onclick="startSession()">▶ Start</button>
+    <button class="btn" style="background:var(--correct);color:#fff;" id="btn-know" onclick="gotIt()" disabled>✅ Got it</button>
+    <button class="btn" style="background:var(--wrong);color:#fff;" id="btn-again" onclick="again()" disabled>🔄 Again</button>
+    <button class="btn btn-secondary" onclick="revealNow()">👁 Reveal</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">⚡</div>
+    <div class="finish-title" id="fin-title">Speed review done!</div>
+    <div class="finish-xp" id="fin-xp">+100 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-known">0</div><div class="lbl">Known</div></div>
+      <div class="finish-stat"><div class="val" id="fin-again">0</div><div class="lbl">To review</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restartAgain()">🔁 Review 'Again' pile</button>
+      <button class="btn btn-secondary" onclick="fullRestart()">🔀 New session</button>
+      <a class="btn" style="background:var(--border);" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+let allWords=[], deck=[], againPile=[], currentIdx=0, known=0, againCount=0;
+let timerInterval=null, currentLek='all', revealed=false;
+const SPEED=3; // seconds per card
+
+function selectLek(lek, btn){
+  document.querySelectorAll('.lek-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentLek=lek;
+  loadDeck();
+}
+
+async function loadDeck(){
+  if(allWords.length===0){
+    const data=await fetch('../data/vokabeln.json').then(r=>r.json());
+    const leks=['lektion1','lektion2','lektion3','lektion4','lektion7','lektion10','lektion11','lektion12'];
+    leks.forEach(l=>{ if(data[l]&&data[l].words) allWords.push(...data[l].words.map(w=>({...w,lektion:l}))); });
+  }
+  if(currentLek==='all') deck=shuffle([...allWords]);
+  else deck=shuffle(allWords.filter(w=>w.lektion===currentLek));
+  currentIdx=0; known=0; againCount=0; againPile=[];
+  updateStats();
+  document.getElementById('prog-text').textContent=`Card 0 / ${deck.length}`;
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('card-de').textContent='Press Start!';
+  document.getElementById('card-en').textContent='';
+  document.getElementById('card-article').textContent='';
+  document.getElementById('card-pl').textContent='';
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-know').disabled=true;
+  document.getElementById('btn-again').disabled=true;
+  document.getElementById('timer-disp').textContent='';
+}
+
+function updateStats(){
+  document.getElementById('total-stat').textContent=deck.length;
+  document.getElementById('known-stat').textContent=known;
+  document.getElementById('again-stat').textContent=againCount;
+  document.getElementById('remain-stat').textContent=deck.length-currentIdx;
+}
+
+function startSession(){
+  if(deck.length===0){ showToast('Loading words…','info'); loadDeck(); return; }
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('btn-know').disabled=false;
+  document.getElementById('btn-again').disabled=false;
+  showCard();
+}
+
+function showCard(){
+  if(currentIdx>=deck.length){ endSession(); return; }
+  revealed=false;
+  const w=deck[currentIdx];
+  const parts=w.de.split(' ');
+  const article=parts[0].match(/^(der|die|das)$/i)?parts[0]:'';
+  const base=article?parts.slice(1).join(' '):w.de;
+  document.getElementById('card-article').textContent=article;
+  document.getElementById('card-de').textContent=base;
+  document.getElementById('card-en').textContent='';
+  document.getElementById('card-pl').textContent='';
+  const total=deck.length;
+  document.getElementById('prog-text').textContent=`Card ${currentIdx+1} / ${total}`;
+  document.getElementById('prog-fill').style.width=Math.round((currentIdx/total)*100)+'%';
+  updateStats();
+  startCountdown();
+}
+
+function startCountdown(){
+  if(timerInterval) clearInterval(timerInterval);
+  let t=SPEED;
+  document.getElementById('timer-disp').textContent=t;
+  timerInterval=setInterval(()=>{
+    t--;
+    document.getElementById('timer-disp').textContent=t;
+    if(t<=0){ clearInterval(timerInterval); revealNow(); }
+  },1000);
+}
+
+function revealNow(){
+  if(timerInterval) clearInterval(timerInterval);
+  if(currentIdx>=deck.length) return;
+  revealed=true;
+  const w=deck[currentIdx];
+  document.getElementById('card-en').textContent=w.en||'';
+  document.getElementById('card-pl').textContent=w.pl?`Plural: ${w.pl}`:'';
+  document.getElementById('timer-disp').textContent='';
+}
+
+function gotIt(){
+  if(timerInterval) clearInterval(timerInterval);
+  known++; currentIdx++;
+  showCard();
+}
+
+function again(){
+  if(timerInterval) clearInterval(timerInterval);
+  againCount++;
+  againPile.push(deck[currentIdx]);
+  currentIdx++;
+  showCard();
+}
+
+function endSession(){
+  if(timerInterval) clearInterval(timerInterval);
+  document.getElementById('btn-know').disabled=true;
+  document.getElementById('btn-again').disabled=true;
+  document.getElementById('finish').classList.add('visible');
+  const pct=Math.round(known/deck.length*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Amazing!':pct>=60?'👍 Good work!':'💪 Keep going!';
+  document.getElementById('fin-known').textContent=known;
+  document.getElementById('fin-again').textContent=againCount;
+  const earned=Math.round(100*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=70) markDone('mod_vocab_review');
+  if(pct>=80) launchConfetti();
+}
+
+function restartAgain(){
+  if(againPile.length===0){ showToast('No cards to review!','info'); return; }
+  deck=shuffle([...againPile]); againPile=[]; known=0; againCount=0; currentIdx=0;
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('btn-know').disabled=false;
+  document.getElementById('btn-again').disabled=false;
+  updateStats(); showCard();
+}
+
+function fullRestart(){ loadDeck(); }
+
+document.addEventListener('DOMContentLoaded', loadDeck);
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading: Article – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.reading-text {
+  background: var(--surface2); border-left: 4px solid var(--accent2);
+  border-radius: var(--radius); padding: 24px; font-size: 16px; line-height: 1.9;
+  margin-bottom: 28px;
+}
+.reading-text h3 { color: var(--accent2); font-size: 18px; margin-bottom: 14px; }
+.questions-section { max-width: 640px; }
+.question-block { background: var(--surface); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+.q-num { font-size: 12px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.q-text { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+.q-opts { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface2); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 12px 16px; cursor: pointer;
+  font-size: 15px; color: var(--text); font-family: inherit;
+  transition: border-color .15s, background .15s;
+}
+.q-opt:hover { border-color: var(--accent); background: #1a1040; }
+.q-opt.chosen  { border-color: var(--accent); background: #1a1040; }
+.q-opt.correct { border-color: var(--correct); background: #0d2e1e; color: var(--correct); }
+.q-opt.wrong   { border-color: var(--wrong);   background: #2e0d0d; color: var(--wrong); }
+.q-opt.reveal  { border-color: var(--correct); background: #0d2e1e; color: var(--correct); }
+.opt-letter { font-weight: 900; font-size: 13px; background: var(--border); border-radius: 50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.tip-row { font-size: 13px; color: var(--muted); margin-top: 8px; display: none; }
+.tip-row.show { display: block; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📰</span>
+  <span class="header-title">Reading: Article</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📰 Reading Type 1: Newspaper Article</div>
+  <div class="page-subtitle">Read the text carefully, then answer 5 questions. This is <strong>exactly</strong> like a real A2 exam task.</div>
+
+  <div class="info-box mb-lg">
+    <h3>💡 Reading Strategy</h3>
+    <p>1. Read the questions <strong>first</strong> to know what to look for.<br>
+       2. Read the text and underline key words.<br>
+       3. Eliminate wrong answers — don't guess! Find evidence in the text.</p>
+  </div>
+
+  <!-- TEXT -->
+  <div class="reading-text">
+    <h3>🍴 Der TV-Koch Stefan Berger — "I always try something new."</h3>
+    <p>
+      Bei Stefan Berger gibt es Gerichte, von denen man vorher noch nie gehört hat. Er hat dauernd neue Ideen.
+      Den Gästen gefällt das. Man muss unbedingt vorher anrufen und einen der wenigen Tische bestellen,
+      wenn man in seinem Restaurant „Bremer Lokal" essen möchte. Er hat viele Gäste, will aber kein zweites Lokal aufmachen.
+      „Klar, ich könnte vielleicht reich damit werden, aber ich habe mich bewusst dagegen entschieden.
+      Ich mag es einfach, wie wir hier arbeiten."
+    </p>
+    <p>
+      Stefan Berger wurde 1968 im Rheinland geboren, war auf der Realschule und lernte dann in einem großen Hotel kochen.
+      Nach der Berufsausbildung brauchte er erstmal eine zweijährige Pause. Er fuhr durch die Welt,
+      hatte verschiedene Jobs und lernte viel Neues kennen. Wegen einer Frau kam er dann nach Bremen.
+      Das „Bremer Lokal" in seiner Nachbarschaft suchte einen Koch, Berger nahm die Stelle an,
+      und drei Jahre später kaufte er das Restaurant.
+    </p>
+    <p>
+      Die meisten kennen ihn aber erst durch seine Fernsehshow „Berger kocht". In der beliebten Sendung
+      besuchen ihn Sänger und Schauspieler und kochen mit ihm ihre Lieblingsrezepte.
+    </p>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="questions-section" id="questions"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Check My Answers</button>
+  </div>
+
+  <!-- Result -->
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🏆</div>
+    <div class="finish-title" id="fin-title">Good job!</div>
+    <div class="finish-xp" id="fin-xp">+70 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val" id="fin-max">5</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const questions = [
+  {
+    q: '0. At Stefan Berger\'s restaurant, guests can …',
+    opts: [
+      { l:'a', t:'eat familiar / classic dishes' },
+      { l:'b', t:'order interesting drinks' },
+      { l:'c', t:'try new, unusual food' }
+    ],
+    correct: 'c',
+    tip: 'The text says "Gerichte, von denen man vorher noch nie gehört hat" = dishes nobody has heard of before → new food!'
+  },
+  {
+    q: '1. Guests at the "Bremer Lokal" …',
+    opts: [
+      { l:'a', t:'can always find a table' },
+      { l:'b', t:'must call and reserve a table in advance' },
+      { l:'c', t:'must book their food in advance' }
+    ],
+    correct: 'b',
+    tip: '"Man muss unbedingt vorher anrufen und einen der wenigen Tische bestellen" = must call beforehand to reserve a table.'
+  },
+  {
+    q: '2. Stefan Berger wants to …',
+    opts: [
+      { l:'a', t:'open a second restaurant' },
+      { l:'b', t:'earn more money with his restaurant' },
+      { l:'c', t:'keep only one restaurant' }
+    ],
+    correct: 'c',
+    tip: '"will aber kein zweites Lokal aufmachen" = does not want to open a second restaurant → keeps one!'
+  },
+  {
+    q: '3. Right after his training …',
+    opts: [
+      { l:'a', t:'he worked in a big hotel' },
+      { l:'b', t:'he bought a restaurant' },
+      { l:'c', t:'he took a long trip' }
+    ],
+    correct: 'c',
+    tip: '"Nach der Berufsausbildung … zweijährige Pause. Er fuhr durch die Welt" = after training, he travelled the world for 2 years.'
+  },
+  {
+    q: '4. Stefan Berger became famous through …',
+    opts: [
+      { l:'a', t:'a TV show' },
+      { l:'b', t:'songs and films' },
+      { l:'c', t:'his restaurant' }
+    ],
+    correct: 'a',
+    tip: '"Die meisten kennen ihn aber erst durch seine Fernsehshow" = most people know him from his TV show.'
+  },
+  {
+    q: '5. This text is about …',
+    opts: [
+      { l:'a', t:'the career of a chef' },
+      { l:'b', t:'a chef in a hotel' },
+      { l:'c', t:'a new chef training programme' }
+    ],
+    correct: 'a',
+    tip: 'The whole text follows Stefan\'s journey from school → training → travel → restaurant → TV = career path!'
+  }
+];
+
+let chosen = {};
+
+function buildQuestions() {
+  const container = document.getElementById('questions');
+  container.innerHTML = '';
+  questions.forEach((q, qi) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.innerHTML = `<div class="q-num">Question ${qi === 0 ? 'Example' : qi}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">${q.opts.map(o =>
+        `<button class="q-opt" onclick="choose(${qi},'${o.l}',this)" id="opt-${qi}-${o.l}">
+          <span class="opt-letter">${o.l.toUpperCase()}</span>${o.t}
+        </button>`
+      ).join('')}</div>
+      <div class="tip-row" id="tip-${qi}">💡 ${q.tip}</div>`;
+    container.appendChild(block);
+  });
+}
+
+function choose(qi, letter, btn) {
+  // Remove previous selection for this question
+  questions[qi].opts.forEach(o => {
+    const el = document.getElementById(`opt-${qi}-${o.l}`);
+    if (el && !el.classList.contains('correct') && !el.classList.contains('wrong') && !el.classList.contains('reveal')) {
+      el.classList.remove('chosen');
+    }
+  });
+  chosen[qi] = letter;
+  btn.classList.add('chosen');
+}
+
+function submitAll() {
+  let score = 0;
+  questions.forEach((q, qi) => {
+    const sel = chosen[qi];
+    q.opts.forEach(o => {
+      const el = document.getElementById(`opt-${qi}-${o.l}`);
+      if (!el) return;
+      el.disabled = true;
+      el.classList.remove('chosen');
+      if (o.l === q.correct) el.classList.add('reveal');
+    });
+    if (sel) {
+      const selEl = document.getElementById(`opt-${qi}-${sel}`);
+      if (sel === q.correct) { selEl.classList.replace('reveal','correct'); score++; }
+      else selEl.classList.add('wrong');
+    }
+    document.getElementById(`tip-${qi}`).classList.add('show');
+  });
+
+  document.getElementById('action-row').style.display = 'none';
+  document.getElementById('finish').classList.add('visible');
+  const pct = Math.round(score / questions.length * 100);
+  document.getElementById('fin-title').textContent = pct >= 80 ? '🏆 Excellent!' : pct >= 60 ? '👍 Good job!' : '💪 Keep practising!';
+  document.getElementById('fin-score').textContent = score;
+  const earned = Math.round(70 * pct / 100);
+  document.getElementById('fin-xp').textContent = `+${earned} XP earned`;
+  addXP(earned);
+  if (pct >= 60) markDone('mod_reading_article');
+  if (pct >= 80) launchConfetti();
+}
+
+function restart() {
+  chosen = {};
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display = 'flex';
+  buildQuestions();
+}
+
+document.addEventListener('DOMContentLoaded', buildQuestions);
+</script>
+</body>
+</html>

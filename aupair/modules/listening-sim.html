@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Simulation – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.listen-card { background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:20px 24px;max-width:640px;margin-bottom:20px; }
+.listen-header { display:flex;align-items:center;gap:14px;margin-bottom:16px; }
+.listen-icon { font-size:36px; }
+.listen-meta { flex:1; }
+.listen-type { font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px; }
+.listen-title { font-size:17px;font-weight:800; }
+.listen-btn { background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s; }
+.listen-btn:hover { background:#6d28d9; }
+.listen-btn:disabled { background:var(--muted);cursor:not-allowed; }
+.notepad { background:#1a2030;border:2px dashed var(--border);border-radius:var(--radius);padding:16px 20px;margin-top:12px; }
+.notepad-title { font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;letter-spacing:1px; }
+.note-row { display:flex;align-items:center;gap:10px;margin-bottom:10px; }
+.note-label { font-size:14px;color:var(--muted);width:120px;flex-shrink:0; }
+.note-input { background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:6px 12px;
+  font-size:14px;color:var(--text);font-family:inherit;flex:1;outline:none;transition:border-color .15s; }
+.note-input:focus { border-color:var(--accent); }
+.note-input.correct { border-color:var(--correct);background:#0d2e1e; }
+.note-input.wrong   { border-color:var(--wrong);background:#2e0d0d; }
+.explain { font-size:12px;color:var(--muted);margin-top:4px;display:none; }
+.explain.show { display:block; }
+.progress-bar { background:var(--border);border-radius:99px;height:6px;margin-bottom:24px;max-width:640px; }
+.progress-fill { background:var(--accent);height:100%;border-radius:99px;transition:width .4s; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🎧</span>
+  <span class="header-title">Listening Simulation</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">🎧 Listening Practice</div>
+  <div class="page-subtitle">Press "Play" to hear the German text, then fill in the missing information.</div>
+
+  <div class="info-box mb-lg">
+    <h3>💡 Exam strategy for Hören</h3>
+    <p>Before playing: read the notepad / questions to know what to listen for. 
+       You can play each audio up to <strong>twice</strong> in the real exam. 
+       Listen for <em>numbers, names, times, and places</em> — these are usually the answers.</p>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+  <!-- TASK 1 -->
+  <div class="listen-card" id="task1">
+    <div class="listen-header">
+      <span class="listen-icon">📞</span>
+      <div class="listen-meta">
+        <div class="listen-type">TASK 1 — PHONE MESSAGE</div>
+        <div class="listen-title">Listen and fill in the notepad</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">
+      You return home and find a voicemail. Listen and note the key information.
+    </p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="listen-btn" onclick="speak(1,1)" id="play1_1">▶ Play (1st time)</button>
+      <button class="listen-btn" onclick="speak(1,2)" id="play1_2" disabled>▶ Play (2nd time)</button>
+    </div>
+    <div class="notepad">
+      <div class="notepad-title">📋 NOTEPAD — fill in what you hear</div>
+      <div class="note-row"><span class="note-label">Caller's name:</span><input class="note-input" id="n1_1" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Meeting time:</span><input class="note-input" id="n1_2" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Location:</span><input class="note-input" id="n1_3" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Bring:</span><input class="note-input" id="n1_4" placeholder="…" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <!-- TASK 2 -->
+  <div class="listen-card" id="task2">
+    <div class="listen-header">
+      <span class="listen-icon">📻</span>
+      <div class="listen-meta">
+        <div class="listen-type">TASK 2 — RADIO ANNOUNCEMENT</div>
+        <div class="listen-title">Listen and answer the questions</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">
+      You hear a short announcement on the radio. Fill in the missing details.
+    </p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="listen-btn" onclick="speak(2,1)" id="play2_1">▶ Play (1st time)</button>
+      <button class="listen-btn" onclick="speak(2,2)" id="play2_2" disabled>▶ Play (2nd time)</button>
+    </div>
+    <div class="notepad">
+      <div class="notepad-title">📋 ANSWER FORM</div>
+      <div class="note-row"><span class="note-label">Event:</span><input class="note-input" id="n2_1" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Date:</span><input class="note-input" id="n2_2" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Start time:</span><input class="note-input" id="n2_3" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Ticket price:</span><input class="note-input" id="n2_4" placeholder="…" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <!-- TASK 3 -->
+  <div class="listen-card" id="task3">
+    <div class="listen-header">
+      <span class="listen-icon">🗣️</span>
+      <div class="listen-meta">
+        <div class="listen-type">TASK 3 — SHORT CONVERSATION</div>
+        <div class="listen-title">Listen and choose the correct answer</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">
+      Two people are talking. Choose the correct information.
+    </p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="listen-btn" onclick="speak(3,1)" id="play3_1">▶ Play (1st time)</button>
+      <button class="listen-btn" onclick="speak(3,2)" id="play3_2" disabled>▶ Play (2nd time)</button>
+    </div>
+    <div class="notepad">
+      <div class="notepad-title">📋 QUESTIONS</div>
+      <div class="note-row"><span class="note-label">Where to?</span><input class="note-input" id="n3_1" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">How to get there?</span><input class="note-input" id="n3_2" placeholder="…" autocomplete="off"></div>
+      <div class="note-row"><span class="note-label">Travel time:</span><input class="note-input" id="n3_3" placeholder="…" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="checkAll()">✅ Check My Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🎧</div>
+    <div class="finish-title" id="fin-title">Listening done!</div>
+    <div class="finish-xp" id="fin-xp">+80 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">11</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+// TTS texts
+const texts = {
+  1: `Hallo, hier ist Thomas Becker. Ich rufe wegen unseres Treffens an. Wir treffen uns am Mittwoch um halb vier, also um fünfzehn Uhr dreißig, im Café Central in der Hauptstraße. Bitte bring deinen Ausweis mit. Bis dann, tschüss!`,
+  2: `Guten Tag, liebe Hörerinnen und Hörer. Hier eine Ankündigung: Das Stadtfest findet am Samstag, dem fünfzehnten Juni statt. Beginn ist um achtzehn Uhr. Der Eintritt kostet fünf Euro. Wir freuen uns auf Sie!`,
+  3: `A: Entschuldigung, wie komme ich zum Bahnhof? B: Am besten nehmen Sie die U-Bahn, Linie drei. Die fährt direkt zum Hauptbahnhof. A: Und wie lange dauert das? B: Ungefähr zwanzig Minuten. A: Vielen Dank! B: Bitte sehr!`
+};
+
+const answers = {
+  n1_1: ['thomas becker','becker','thomas'],
+  n1_2: ['15:30','15.30','halb vier','3:30','15 uhr 30','15:30 uhr'],
+  n1_3: ['café central','cafe central','hauptstraße','hauptstrasse'],
+  n1_4: ['ausweis','den ausweis'],
+  n2_1: ['stadtfest','das stadtfest'],
+  n2_2: ['15. juni','15 juni','samstag','samstag 15 juni','15. juni samstag'],
+  n2_3: ['18:00','18 uhr','18.00','sechs uhr'],
+  n2_4: ['5 euro','fünf euro','5€','€5'],
+  n3_1: ['bahnhof','hauptbahnhof','zum bahnhof','zum hauptbahnhof'],
+  n3_2: ['u-bahn','ubahn','linie 3','linie drei','u-bahn linie 3'],
+  n3_3: ['20 minuten','zwanzig minuten','ca. 20 minuten']
+};
+
+let played={};
+
+function speak(task, attempt){
+  if(!window.speechSynthesis) return alert('Your browser does not support speech synthesis.');
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(texts[task]);
+  utterance.lang='de-DE'; utterance.rate=0.9;
+  window.speechSynthesis.speak(utterance);
+  if(attempt===1){
+    document.getElementById(`play1_${1}`);
+    document.getElementById(`play${task}_2`).disabled=false;
+    played[task]=(played[task]||0)+1;
+    if(played[task]>=2){
+      document.getElementById(`play${task}_1`).disabled=true;
+      document.getElementById(`play${task}_2`).disabled=true;
+    }
+  } else {
+    document.getElementById(`play${task}_1`).disabled=true;
+    document.getElementById(`play${task}_2`).disabled=true;
+  }
+  // update progress
+  const total=Object.keys(texts).length*2;
+  const done=Object.values(played).reduce((a,b)=>a+b,0);
+  document.getElementById('prog').style.width=Math.min(100,Math.round(done/total*100))+'%';
+}
+
+function checkAll(){
+  let score=0, total=Object.keys(answers).length;
+  Object.entries(answers).forEach(([id, accept])=>{
+    const inp=document.getElementById(id);
+    if(!inp) return;
+    const val=inp.value.trim().toLowerCase();
+    inp.disabled=true;
+    const ok=accept.some(a=>val.includes(a)||a.includes(val)&&val.length>=3);
+    inp.classList.add(ok?'correct':'wrong');
+    if(ok) score++;
+  });
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  document.getElementById('finish').querySelector('.val').textContent='11';
+  const pct=Math.round(score/total*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  const earned=Math.round(80*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_listening_sim');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  played={};
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex';
+  document.getElementById('prog').style.width='0%';
+  [1,2,3].forEach(t=>{
+    document.getElementById(`play${t}_1`).disabled=false;
+    document.getElementById(`play${t}_2`).disabled=true;
+  });
+  document.querySelectorAll('.note-input').forEach(el=>{
+    el.value=''; el.disabled=false; el.className='note-input';
+  });
+}
+</script>
+</body>
+</html>

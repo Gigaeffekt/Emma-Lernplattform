@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing: Official Message – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.task-card { background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);padding:20px 22px;max-width:640px;margin-bottom:24px; }
+.situation { background:var(--surface2);border-left:4px solid var(--accent2);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:15px;line-height:1.8;margin-bottom:20px;max-width:640px; }
+.phrase-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:640px;margin-bottom:24px; }
+@media(max-width:500px){ .phrase-grid{grid-template-columns:1fr;} }
+.phrase-cat { background:var(--surface);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--border); }
+.phrase-cat-title { font-size:12px;color:var(--accent2);font-weight:800;margin-bottom:8px;letter-spacing:1px; }
+.phrase-item { font-size:13px;color:var(--muted);margin-bottom:5px;cursor:pointer;padding:3px 0; }
+.phrase-item:hover { color:var(--text); }
+.phrase-item strong { color:var(--text); }
+.phrase-click { font-size:11px;color:var(--accent);margin-left:4px; }
+textarea.email-area { width:100%;background:var(--surface2);border:2px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;font-size:15px;color:var(--text);font-family:inherit;resize:vertical;min-height:200px;outline:none;box-sizing:border-box;line-height:1.7;transition:border-color .15s; }
+textarea.email-area:focus { border-color:var(--accent); }
+.word-count { font-size:13px;color:var(--muted);margin-top:6px; }
+.word-count .ok { color:var(--correct); }
+.word-count .low { color:var(--wrong); }
+.check-item { display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer; }
+.check-item input[type=checkbox] { width:18px;height:18px;accent-color:var(--accent);cursor:pointer; }
+.check-item label { font-size:14px;cursor:pointer; }
+.model-answer { background:var(--surface2);border:2px solid var(--correct);border-radius:var(--radius);padding:18px 20px;max-width:640px;margin-bottom:20px;display:none; }
+.model-answer.show { display:block; }
+.model-body { font-size:15px;line-height:1.9;font-style:italic; }
+.task-tabs { display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap; }
+.task-tab { background:var(--surface);border:2px solid var(--border);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;font-weight:700;color:var(--muted);transition:all .15s; }
+.task-tab.active { border-color:var(--accent);color:var(--text);background:#1a1040; }
+.task-pane { display:none; }
+.task-pane.active { display:block; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📋</span>
+  <span class="header-title">Writing: Official Message</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📋 Writing Practice: Semi-Official Message</div>
+  <div class="page-subtitle">Learn to write formal messages: cancellations, requests, and notifications. Choose a task below.</div>
+
+  <div class="info-box mb-lg">
+    <h3>💡 Exam tip: Schreiben Teil 2</h3>
+    <p>In the real exam you must write a short semi-official message (~40 words). You need to cover 3 specific points. 
+       Use formal language: <strong>Sie</strong> (not du), <strong>Mit freundlichen Grüßen</strong> (not Liebe Grüße).</p>
+  </div>
+
+  <!-- TASK TABS -->
+  <div class="task-tabs">
+    <div class="task-tab active" onclick="switchTask('a', this)">📅 Cancel appointment</div>
+    <div class="task-tab" onclick="switchTask('b', this)">🙏 Make a request</div>
+    <div class="task-tab" onclick="switchTask('c', this)">📦 Report a problem</div>
+  </div>
+
+  <!-- TASK A -->
+  <div class="task-pane active" id="pane-a">
+    <div class="situation">
+      <strong>Task A:</strong> You have a German class on Thursday at 17:00. 
+      You cannot come. Write a message to your teacher Frau Schmidt. 
+      Include: ① why you cannot come ② that you will do the homework anyway ③ ask when the next lesson is.
+    </div>
+    <div class="phrase-grid">
+      <div class="phrase-cat">
+        <div class="phrase-cat-title">✉️ OPENING / APOLOGY</div>
+        <div class="phrase-item" onclick="insertA('Sehr geehrte Frau Schmidt,\n\n')"><strong>Sehr geehrte Frau Schmidt,</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('ich schreibe Ihnen, weil ')"><strong>ich schreibe Ihnen, weil…</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('leider kann ich nicht zum Unterricht kommen, ')"><strong>leider kann ich nicht kommen</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('weil ich krank bin. ')"><strong>weil ich krank bin</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('weil ich einen Arzttermin habe. ')"><strong>weil ich einen Arzttermin habe</strong> <span class="phrase-click">↗</span></div>
+      </div>
+      <div class="phrase-cat">
+        <div class="phrase-cat-title">📚 HOMEWORK / QUESTION</div>
+        <div class="phrase-item" onclick="insertA('Die Hausaufgaben mache ich trotzdem. ')"><strong>Hausaufgaben trotzdem</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('Wann ist der nächste Kurs? ')"><strong>Wann ist der nächste Kurs?</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('Können Sie mir bitte die Aufgaben schicken? ')"><strong>Aufgaben schicken?</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertA('\nMit freundlichen Grüßen,\nAngel')"><strong>Mit freundlichen Grüßen</strong> <span class="phrase-click">↗</span></div>
+      </div>
+    </div>
+    <h2 class="section-heading">✏️ Your Message (Task A)</h2>
+    <textarea class="email-area" id="area-a" placeholder="Write your message here…" oninput="countA()"></textarea>
+    <div class="word-count">Words: <span class="num" id="wca">0</span> / aim for ~40 words <span id="wsa"></span></div>
+  </div>
+
+  <!-- TASK B -->
+  <div class="task-pane" id="pane-b">
+    <div class="situation">
+      <strong>Task B:</strong> You ordered a book from an online shop 2 weeks ago but it hasn't arrived. 
+      Write a message to the shop. Include: ① when you ordered ② that it hasn't arrived ③ ask them to send it again or refund you.
+    </div>
+    <div class="phrase-grid">
+      <div class="phrase-cat">
+        <div class="phrase-cat-title">✉️ OPENING / PROBLEM</div>
+        <div class="phrase-item" onclick="insertB('Sehr geehrte Damen und Herren,\n\n')"><strong>Sehr geehrte D&amp;H,</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertB('ich habe vor zwei Wochen ein Buch bestellt. ')"><strong>vor zwei Wochen bestellt</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertB('Leider ist das Paket noch nicht angekommen. ')"><strong>noch nicht angekommen</strong> <span class="phrase-click">↗</span></div>
+      </div>
+      <div class="phrase-cat">
+        <div class="phrase-cat-title">🙏 REQUEST</div>
+        <div class="phrase-item" onclick="insertB('Ich bitte Sie, das Buch neu zu schicken. ')"><strong>bitte neu schicken</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertB('Oder bitte erstatten Sie mir das Geld zurück. ')"><strong>Geld zurück</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertB('\nMit freundlichen Grüßen,\nAngel')"><strong>Mit freundlichen Grüßen</strong> <span class="phrase-click">↗</span></div>
+      </div>
+    </div>
+    <h2 class="section-heading">✏️ Your Message (Task B)</h2>
+    <textarea class="email-area" id="area-b" placeholder="Write your message here…" oninput="countB()"></textarea>
+    <div class="word-count">Words: <span class="num" id="wcb">0</span> / aim for ~40 words <span id="wsb"></span></div>
+  </div>
+
+  <!-- TASK C -->
+  <div class="task-pane" id="pane-c">
+    <div class="situation">
+      <strong>Task C:</strong> You live in an apartment. There is a noise problem — a neighbour plays music very loud at night. 
+      Write a message to your landlord (Vermieter). Include: ① describe the problem ② when it happens ③ ask the landlord to help.
+    </div>
+    <div class="phrase-grid">
+      <div class="phrase-cat">
+        <div class="phrase-cat-title">🔊 PROBLEM</div>
+        <div class="phrase-item" onclick="insertC('Sehr geehrter Herr/Frau [Name],\n\n')"><strong>Sehr geehrter Herr…</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertC('ich schreibe Ihnen wegen eines Problems in der Wohnung. ')"><strong>wegen eines Problems</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertC('Mein Nachbar macht jeden Abend sehr laute Musik. ')"><strong>laute Musik</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertC('Das passiert meistens nach 22 Uhr. ')"><strong>nach 22 Uhr</strong> <span class="phrase-click">↗</span></div>
+      </div>
+      <div class="phrase-cat">
+        <div class="phrase-cat-title">🙏 REQUEST</div>
+        <div class="phrase-item" onclick="insertC('Ich kann nicht schlafen, weil es so laut ist. ')"><strong>kann nicht schlafen</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertC('Können Sie bitte mit dem Nachbarn sprechen? ')"><strong>bitte sprechen</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertC('Ich bitte Sie um Ihre Hilfe. ')"><strong>um Ihre Hilfe</strong> <span class="phrase-click">↗</span></div>
+        <div class="phrase-item" onclick="insertC('\nMit freundlichen Grüßen,\nAngel')"><strong>Mit freundlichen Grüßen</strong> <span class="phrase-click">↗</span></div>
+      </div>
+    </div>
+    <h2 class="section-heading">✏️ Your Message (Task C)</h2>
+    <textarea class="email-area" id="area-c" placeholder="Write your message here…" oninput="countC()"></textarea>
+    <div class="word-count">Words: <span class="num" id="wcc">0</span> / aim for ~40 words <span id="wsc"></span></div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <h2 class="section-heading mt-lg">✅ Self-Check</h2>
+  <div>
+    <div class="check-item"><input type="checkbox" id="c1"><label for="c1">I used "Sehr geehrte/r" (not "Liebe/r")</label></div>
+    <div class="check-item"><input type="checkbox" id="c2"><label for="c2">I used "Sie" (formal) throughout — not "du"</label></div>
+    <div class="check-item"><input type="checkbox" id="c3"><label for="c3">I covered all 3 required points</label></div>
+    <div class="check-item"><input type="checkbox" id="c4"><label for="c4">I closed with "Mit freundlichen Grüßen"</label></div>
+    <div class="check-item"><input type="checkbox" id="c5"><label for="c5">My text is about 40 words</label></div>
+  </div>
+
+  <div class="flex-center mt-md mb-lg">
+    <button class="btn btn-primary btn-lg" onclick="complete()">✅ I'm Done — Award XP</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">📋</div>
+    <div class="finish-title">Official message done!</div>
+    <div class="finish-xp" id="fin-xp">+80 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-checks">0</div><div class="lbl">Checks done</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Start Over</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+let currentTask='a';
+function switchTask(t, btn){
+  currentTask=t;
+  document.querySelectorAll('.task-tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.task-pane').forEach(el=>el.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pane-'+t).classList.add('active');
+}
+function wc(id, statusId){
+  const t=document.getElementById(id).value.trim();
+  const n=t?t.split(/\s+/).length:0;
+  document.getElementById(id.replace('area','wc')).textContent=n;
+  const st=document.getElementById(statusId);
+  if(n<20){ st.textContent='← keep going!'; st.className='low'; }
+  else { st.textContent='✅'; st.className='ok'; }
+}
+function countA(){ wc('area-a','wsa'); }
+function countB(){ wc('area-b','wsb'); }
+function countC(){ wc('area-c','wsc'); }
+function insertA(t){ insertInto('area-a',t); countA(); }
+function insertB(t){ insertInto('area-b',t); countB(); }
+function insertC(t){ insertInto('area-c',t); countC(); }
+function insertInto(id,text){
+  const area=document.getElementById(id);
+  const pos=area.selectionStart;
+  area.value=area.value.substring(0,pos)+text+area.value.substring(pos);
+  area.selectionStart=area.selectionEnd=pos+text.length;
+  area.focus();
+}
+function complete(){
+  const checks=[...document.querySelectorAll('input[type=checkbox]')].filter(c=>c.checked).length;
+  const pct=Math.round(checks/5*100);
+  document.getElementById('fin-checks').textContent=checks+'/5';
+  const earned=Math.round(80*pct/100)+20;
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned); markDone('mod_writing_official');
+  document.getElementById('finish').classList.add('visible');
+  if(pct>=80) launchConfetti();
+}
+function restart(){
+  document.getElementById('finish').classList.remove('visible');
+  ['a','b','c'].forEach(t=>{ const el=document.getElementById('area-'+t); if(el) el.value=''; });
+  document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+}
+</script>
+</body>
+</html>

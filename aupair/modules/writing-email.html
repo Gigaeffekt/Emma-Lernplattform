@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing: Personal Email – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.task-card { background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);padding:20px 22px;max-width:640px;margin-bottom:24px; }
+.task-icon { font-size:28px;margin-bottom:8px; }
+.task-label { font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px; }
+.task-body { font-size:15px;line-height:1.8;margin-top:8px; }
+.situation { background:var(--surface2);border-left:4px solid var(--accent2);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:15px;line-height:1.8;margin-bottom:20px;max-width:640px; }
+.phrase-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:640px;margin-bottom:24px; }
+@media(max-width:500px){ .phrase-grid{grid-template-columns:1fr;} }
+.phrase-cat { background:var(--surface);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--border); }
+.phrase-cat-title { font-size:12px;color:var(--accent2);font-weight:800;margin-bottom:8px;letter-spacing:1px; }
+.phrase-item { font-size:13px;color:var(--muted);margin-bottom:5px;cursor:pointer;padding:3px 0;border-bottom:1px dashed transparent;transition:color .15s; }
+.phrase-item:hover { color:var(--text);border-bottom-color:var(--border); }
+.phrase-item strong { color:var(--text); }
+.phrase-click { font-size:11px;color:var(--accent);margin-left:4px; }
+textarea.email-area { width:100%;background:var(--surface2);border:2px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;font-size:15px;color:var(--text);font-family:inherit;resize:vertical;min-height:220px;outline:none;box-sizing:border-box;line-height:1.7;transition:border-color .15s; }
+textarea.email-area:focus { border-color:var(--accent); }
+.word-count { font-size:13px;color:var(--muted);margin-top:6px; }
+.word-count .num { font-weight:800; }
+.word-count .ok { color:var(--correct); }
+.word-count .low { color:var(--wrong); }
+.checklist { max-width:640px;margin-bottom:24px; }
+.check-item { display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer; }
+.check-item input[type=checkbox] { width:18px;height:18px;accent-color:var(--accent);cursor:pointer; }
+.check-item label { font-size:14px;cursor:pointer; }
+.model-answer { background:var(--surface2);border:2px solid var(--correct);border-radius:var(--radius);padding:18px 20px;max-width:640px;margin-bottom:20px;display:none; }
+.model-answer.show { display:block; }
+.model-body { font-size:15px;line-height:1.9;font-style:italic; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">✉️</span>
+  <span class="header-title">Writing: Personal Email</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">✉️ Writing Practice: Personal Email</div>
+  <div class="page-subtitle">Write an 80-word personal email based on the task below. Use the phrase bank!</div>
+
+  <!-- SITUATION -->
+  <h2 class="section-heading">The Task</h2>
+  <div class="situation">
+    <strong>Situation:</strong> Your German friend Julia sent you an email asking about your weekend. 
+    Write a reply of about <strong>80 words</strong>. Include:<br>
+    ① What you did on Saturday<br>
+    ② What the weather was like<br>
+    ③ A plan for your next meeting
+  </div>
+
+  <!-- PHRASE BANK -->
+  <h2 class="section-heading">📚 Phrase Bank — click to insert</h2>
+  <div class="phrase-grid" id="phrase-grid">
+    <div class="phrase-cat">
+      <div class="phrase-cat-title">✉️ OPENING</div>
+      <div class="phrase-item" onclick="insert('Liebe Julia,\n\n')"><strong>Liebe Julia,</strong> <span class="phrase-click">↗ insert</span></div>
+      <div class="phrase-item" onclick="insert('vielen Dank für deine E-Mail! ')"><strong>vielen Dank für deine E-Mail!</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('ich hoffe, es geht dir gut. ')"><strong>ich hoffe, es geht dir gut.</strong> <span class="phrase-click">↗</span></div>
+    </div>
+    <div class="phrase-cat">
+      <div class="phrase-cat-title">📅 PAST WEEKEND</div>
+      <div class="phrase-item" onclick="insert('Am Samstag habe ich ')"><strong>Am Samstag habe ich…</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Ich bin mit Freunden ins Kino gegangen. ')"><strong>ins Kino gegangen</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Wir haben zusammen gegessen und viel gelacht. ')"><strong>gegessen und gelacht</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Es war wirklich toll! ')"><strong>Es war wirklich toll!</strong> <span class="phrase-click">↗</span></div>
+    </div>
+    <div class="phrase-cat">
+      <div class="phrase-cat-title">☀️ WEATHER</div>
+      <div class="phrase-item" onclick="insert('Das Wetter war sehr schön. ')"><strong>Das Wetter war sehr schön.</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Es hat den ganzen Tag geregnet. ')"><strong>Es hat geregnet.</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Die Sonne hat geschienen und es war warm. ')"><strong>Sonne geschienen</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Es war leider sehr kalt und windig. ')"><strong>kalt und windig</strong> <span class="phrase-click">↗</span></div>
+    </div>
+    <div class="phrase-cat">
+      <div class="phrase-cat-title">📅 FUTURE PLANS</div>
+      <div class="phrase-item" onclick="insert('Wollen wir uns nächste Woche treffen? ')"><strong>nächste Woche treffen?</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Am Samstag habe ich Zeit, wenn du möchtest. ')"><strong>Am Samstag habe ich Zeit</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Vielleicht können wir zusammen etwas unternehmen. ')"><strong>etwas unternehmen</strong> <span class="phrase-click">↗</span></div>
+    </div>
+    <div class="phrase-cat">
+      <div class="phrase-cat-title">✒️ CLOSING</div>
+      <div class="phrase-item" onclick="insert('\nLiebe Grüße,\nAngel')"><strong>Liebe Grüße, Angel</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Ich freue mich auf deine Antwort! ')"><strong>Ich freue mich auf…</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('Bis bald! ')"><strong>Bis bald!</strong> <span class="phrase-click">↗</span></div>
+    </div>
+    <div class="phrase-cat">
+      <div class="phrase-cat-title">🔧 USEFUL CONNECTORS</div>
+      <div class="phrase-item" onclick="insert('Zuerst … Dann … Danach … ')"><strong>Zuerst / Dann / Danach</strong> <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('weil ')"><strong>weil</strong> (because) <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('aber ')"><strong>aber</strong> (but) <span class="phrase-click">↗</span></div>
+      <div class="phrase-item" onclick="insert('und dann ')"><strong>und dann</strong> (and then) <span class="phrase-click">↗</span></div>
+    </div>
+  </div>
+
+  <!-- WRITING AREA -->
+  <h2 class="section-heading">✏️ Your Email</h2>
+  <textarea class="email-area" id="email-area" placeholder="Start writing your email here… (click phrases above to insert them)" oninput="countWords()"></textarea>
+  <div class="word-count">Word count: <span class="num" id="wcount">0</span> / aim for ~80 words <span id="wstatus"></span></div>
+
+  <!-- CHECKLIST -->
+  <h2 class="section-heading mt-lg">✅ Self-Check before submitting</h2>
+  <div class="checklist">
+    <div class="check-item"><input type="checkbox" id="c1"><label for="c1">I used a greeting (Liebe / Hallo) and a sign-off (Liebe Grüße)</label></div>
+    <div class="check-item"><input type="checkbox" id="c2"><label for="c2">I mentioned what I did on Saturday (past tense: habe…gemacht / bin…gegangen)</label></div>
+    <div class="check-item"><input type="checkbox" id="c3"><label for="c3">I mentioned the weather</label></div>
+    <div class="check-item"><input type="checkbox" id="c4"><label for="c4">I suggested a plan for our next meeting</label></div>
+    <div class="check-item"><input type="checkbox" id="c5"><label for="c5">My text is about 80 words</label></div>
+    <div class="check-item"><input type="checkbox" id="c6"><label for="c6">I used at least one conjunction: weil / wenn / dass</label></div>
+  </div>
+
+  <div class="flex-center mt-md mb-lg gap-md">
+    <button class="btn btn-primary btn-lg" onclick="complete()">✅ I'm Done — Award XP</button>
+    <button class="btn btn-secondary" onclick="toggleModel()">👀 Show Model Answer</button>
+  </div>
+
+  <!-- MODEL ANSWER -->
+  <div class="model-answer" id="model">
+    <div style="font-size:13px;color:var(--correct);font-weight:700;margin-bottom:10px">📝 MODEL ANSWER (~80 words)</div>
+    <div class="model-body">
+      Liebe Julia,<br><br>
+      vielen Dank für deine E-Mail! Mir geht es gut.<br><br>
+      Am Samstag war ich mit meiner Freundin im Park. Das Wetter war wirklich schön – die Sonne hat geschienen und es war warm. 
+      Danach haben wir zusammen Pizza gegessen und viel gelacht. Es war toll!<br><br>
+      Wollen wir uns nächste Woche treffen? Am Samstag habe ich Zeit, wenn du möchtest. 
+      Wir könnten ins Café gehen!<br><br>
+      Liebe Grüße,<br>
+      Angel
+    </div>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">✉️</div>
+    <div class="finish-title">Writing done!</div>
+    <div class="finish-xp" id="fin-xp">+80 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-checks">0</div><div class="lbl">Checks done</div></div>
+      <div class="finish-stat"><div class="val" id="fin-words">0</div><div class="lbl">Words written</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Start Over</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+function countWords(){
+  const text=document.getElementById('email-area').value.trim();
+  const words=text?text.split(/\s+/).length:0;
+  document.getElementById('wcount').textContent=words;
+  const st=document.getElementById('wstatus');
+  if(words<40){ st.textContent='← keep writing!'; st.className='low'; }
+  else if(words<65){ st.textContent='← good, almost there'; st.className=''; }
+  else { st.textContent='✅ great length!'; st.className='ok'; }
+}
+
+function insert(text){
+  const area=document.getElementById('email-area');
+  const pos=area.selectionStart;
+  const before=area.value.substring(0,pos);
+  const after=area.value.substring(pos);
+  area.value=before+text+after;
+  area.selectionStart=area.selectionEnd=pos+text.length;
+  area.focus(); countWords();
+}
+
+function toggleModel(){
+  const m=document.getElementById('model');
+  m.classList.toggle('show');
+}
+
+function complete(){
+  const text=document.getElementById('email-area').value.trim();
+  const words=text?text.split(/\s+/).length:0;
+  if(words<20){ showToast('Write at least 20 words first!','error'); return; }
+  const checks=[...document.querySelectorAll('.checklist input[type=checkbox]')].filter(c=>c.checked).length;
+  const pct=Math.round(checks/6*100);
+  document.getElementById('fin-checks').textContent=checks+'/6';
+  document.getElementById('fin-words').textContent=words;
+  const earned=Math.round(80*pct/100)+20; // 20 base for writing anything
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  markDone('mod_writing_email');
+  document.getElementById('finish').classList.add('visible');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  document.getElementById('email-area').value='';
+  document.getElementById('finish').classList.remove('visible');
+  document.querySelectorAll('.checklist input').forEach(c=>c.checked=false);
+  countWords();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading: Signs – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.signs-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:600px; margin:0 auto 32px; }
+@media(max-width:500px){ .signs-grid{grid-template-columns:1fr;} }
+.sign-card { background:var(--surface); border:2px solid var(--border); border-radius:var(--radius); padding:14px 16px; cursor:pointer; transition:border-color .15s; }
+.sign-card:hover { border-color:var(--accent); }
+.sign-num { font-size:11px;font-weight:900;color:var(--muted);margin-bottom:4px; }
+.sign-floor { font-size:28px;font-weight:900;color:var(--accent2);margin-bottom:2px; }
+.sign-dept { font-size:14px;font-weight:700;margin-bottom:2px; }
+.sign-items { font-size:12px;color:var(--muted);line-height:1.5; }
+.q-row { max-width:620px;margin:0 auto; }
+.q-block { background:var(--surface); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; border:1px solid var(--border); }
+.q-opts { display:flex;flex-wrap:wrap;gap:8px;margin-top:10px; }
+.q-opt { background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--text);font-family:inherit;transition:border-color .15s; }
+.q-opt:hover { border-color:var(--accent); }
+.q-opt.chosen  { border-color:var(--accent); background:#1a1040; }
+.q-opt.correct { border-color:var(--correct); background:#0d2e1e; color:var(--correct); }
+.q-opt.wrong   { border-color:var(--wrong);   background:#2e0d0d; color:var(--wrong); }
+.q-opt.reveal  { border-color:var(--correct); background:#0d2e1e; color:var(--correct); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🏬</span>
+  <span class="header-title">Reading: Signs</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">🏬 Reading Type 2: Department Store Signs</div>
+  <div class="page-subtitle">Read the floor directory of Kaufhaus Alexa and answer 10 questions.</div>
+
+  <div class="info-box mb-lg">
+    <h3>💡 Strategy</h3>
+    <p>Scan each question for the key word (item or service). Then look at the floor signs and find which floor sells it. 
+       Quick skimming is the skill here — not every word needs reading.</p>
+  </div>
+
+  <!-- FLOOR SIGNS -->
+  <div class="signs-grid">
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">EG</div>
+      <div class="sign-dept">Ground Floor</div>
+      <div class="sign-items">Food & Supermarket · Bakery · Café · Tourist Information · Pharmacy · Lottery</div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">1. OG</div>
+      <div class="sign-dept">1st Floor</div>
+      <div class="sign-items">Women's Fashion · Lingerie & Swimwear · Jewellery · Accessories · Bags & Purses</div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">2. OG</div>
+      <div class="sign-dept">2nd Floor</div>
+      <div class="sign-items">Men's Fashion · Sportswear · Shoes (Men & Women) · Outdoor & Camping</div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">3. OG</div>
+      <div class="sign-dept">3rd Floor</div>
+      <div class="sign-items">Children's Clothing & Toys · Baby Equipment · Books & Stationery · School Supplies</div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">4. OG</div>
+      <div class="sign-dept">4th Floor</div>
+      <div class="sign-items">Electronics · Phones & Computers · Cameras · Home Appliances · Electrical</div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">5. OG</div>
+      <div class="sign-dept">5th Floor</div>
+      <div class="sign-items">Furniture · Home Textiles · Kitchenware · Décor · Bedding & Mattresses</div>
+    </div>
+    <div class="sign-card">
+      <div class="sign-num">FLOOR</div>
+      <div class="sign-floor">6. OG</div>
+      <div class="sign-dept">6th Floor</div>
+      <div class="sign-items">Restaurant · Food Court · Terrace Café · Toilets · Customer Service · Lost & Found</div>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="q-row" id="q-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Check My Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🏬</div>
+    <div class="finish-title" id="fin-title">Signs done!</div>
+    <div class="finish-xp" id="fin-xp">+70 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">10</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const qs = [
+  { text:'You want to buy a birthday present for your 5-year-old niece. A toy would be ideal. Which floor?',
+    opts:['EG','1. OG','3. OG','5. OG'], correct:'3. OG' },
+  { text:'You need new sports shoes before your football match this weekend. Which floor?',
+    opts:['1. OG','2. OG','3. OG','4. OG'], correct:'2. OG' },
+  { text:'Your laptop broke and you need a replacement fast. Which floor?',
+    opts:['2. OG','3. OG','4. OG','5. OG'], correct:'4. OG' },
+  { text:'You forgot your medication at home. You urgently need the pharmacy. Which floor?',
+    opts:['EG','1. OG','4. OG','6. OG'], correct:'EG' },
+  { text:'You want to have lunch at the restaurant with a view over the city. Which floor?',
+    opts:['EG','4. OG','5. OG','6. OG'], correct:'6. OG' },
+  { text:'You want to buy new bed linen for your bedroom. Which floor?',
+    opts:['3. OG','4. OG','5. OG','6. OG'], correct:'5. OG' },
+  { text:'You need to exchange a damaged item and talk to Customer Service. Which floor?',
+    opts:['EG','1. OG','5. OG','6. OG'], correct:'6. OG' },
+  { text:'You want a new handbag to match your new dress. Which floor?',
+    opts:['1. OG','2. OG','3. OG','5. OG'], correct:'1. OG' },
+  { text:'You need to buy a notebook and some pens for school. Which floor?',
+    opts:['1. OG','3. OG','4. OG','5. OG'], correct:'3. OG' },
+  { text:'You want to buy fresh bread for breakfast. Which floor?',
+    opts:['EG','1. OG','5. OG','6. OG'], correct:'EG' }
+];
+
+let chosen={};
+
+function build(){
+  const c = document.getElementById('q-container'); c.innerHTML='';
+  qs.forEach((q,qi)=>{
+    c.innerHTML += `<div class="q-block">
+      <div style="font-size:13px;color:var(--muted);font-weight:700;margin-bottom:6px">Question ${qi+1}</div>
+      <div style="font-size:16px;font-weight:600;line-height:1.5;">${q.text}</div>
+      <div class="q-opts">
+        ${q.opts.map(o=>`<button class="q-opt" id="opt-${qi}-${o.replace(' ','_')}" onclick="pick(${qi},'${o}',this)">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  });
+}
+
+function pick(qi,val,btn){
+  qs[qi].opts.forEach(o=>{
+    const el=document.getElementById(`opt-${qi}-${o.replace(' ','_')}`);
+    if(el && !el.classList.contains('correct') && !el.classList.contains('wrong') && !el.classList.contains('reveal'))
+      el.classList.remove('chosen');
+  });
+  chosen[qi]=val; btn.classList.add('chosen');
+}
+
+function submitAll(){
+  let score=0;
+  qs.forEach((q,qi)=>{
+    q.opts.forEach(o=>{
+      const el=document.getElementById(`opt-${qi}-${o.replace(' ','_')}`);
+      if(!el)return; el.disabled=true; el.classList.remove('chosen');
+      if(o===q.correct) el.classList.add('reveal');
+    });
+    const sel=chosen[qi];
+    if(sel){
+      const sEl=document.getElementById(`opt-${qi}-${sel.replace(' ','_')}`);
+      if(sel===q.correct){ sEl.classList.replace('reveal','correct'); score++; }
+      else sEl.classList.add('wrong');
+    }
+  });
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  const pct=Math.round(score/qs.length*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  const earned=Math.round(70*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_reading_signs');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  chosen={}; document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex'; build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

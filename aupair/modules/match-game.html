@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Game – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.match-area { max-width: 700px; margin: 0 auto; }
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+@media (max-width:500px) { .match-grid { grid-template-columns: 1fr; } }
+.match-btn {
+  background: var(--surface2); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 14px 10px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  color: var(--text); font-family: inherit;
+  text-align: center; min-height: 56px;
+  transition: border-color .15s, background .15s, opacity .15s;
+}
+.match-btn:hover       { border-color: var(--accent2); }
+.match-btn.sel         { border-color: var(--accent); background: #1a1040; }
+.match-btn.matched     { border-color: var(--correct); background: #0d2e1e; color: var(--correct); pointer-events: none; opacity: .7; }
+.match-btn.wrong-flash { border-color: var(--wrong); background: #2e0d0d; animation: shake .3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.round-info { text-align: center; font-size: 15px; color: var(--muted); margin-bottom: 14px; }
+.set-nav { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🧩</span>
+  <span class="header-title">Match Game</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title" id="page-title">Match Game</div>
+  <div class="page-subtitle" id="page-subtitle">Loading…</div>
+
+  <div class="info-box mb-md">
+    <h3>How to play</h3>
+    <p>Tap a German word, then tap its English meaning. Match all 8 pairs to move to the next set! 3 wrong guesses = set restarts. 🔨</p>
+  </div>
+
+  <div class="counter-row mb-sm">
+    <span>Set <span id="set-num">1</span> of <span id="set-total">?</span></span>
+    <span class="counter-correct">✅ Matched: <span id="matched-cnt">0</span> / 8</span>
+  </div>
+  <div class="progress-wrap mb-md">
+    <div class="progress-bar" id="match-prog" style="width:0%"></div>
+  </div>
+
+  <div class="match-area">
+    <div class="round-info" id="round-info">Tap a German word to start…</div>
+    <div class="match-grid" id="match-grid"></div>
+  </div>
+
+  <!-- FINISH -->
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🎉</div>
+    <div class="finish-title">All Matched!</div>
+    <div class="finish-xp" id="finish-xp">+50 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-sets">0</div><div class="lbl">Sets completed</div></div>
+      <div class="finish-stat"><div class="val" id="fin-pairs">0</div><div class="lbl">Total pairs</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="startGame()">🔁 Play Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const SET_SIZE  = 8;
+const XP_REWARD = 50;
+
+let allWords  = [];
+let sets      = [];
+let setIndex  = 0;
+let matched   = 0;
+let errors    = 0;
+let selected  = null; // { el, type, word }
+let lektion   = '';
+
+const params = new URLSearchParams(location.search);
+lektion = params.get('lektion') || 'lektion3';
+
+fetch('../data/vokabeln.json')
+  .then(r => r.json())
+  .then(data => {
+    const ldata = data[lektion];
+    if (!ldata) return;
+    document.getElementById('page-title').textContent = '🧩 Match: ' + ldata.title;
+    document.getElementById('page-subtitle').textContent = `${ldata.words.length} words — sets of ${SET_SIZE}`;
+    allWords = ldata.words;
+    startGame();
+  });
+
+function startGame() {
+  const pool = shuffle([...allWords]);
+  sets = [];
+  for (let i = 0; i < pool.length; i += SET_SIZE) sets.push(pool.slice(i, i + SET_SIZE));
+  setIndex = 0; matched = 0; errors = 0;
+  document.getElementById('set-total').textContent = sets.length;
+  document.getElementById('finish').classList.remove('visible');
+  loadSet();
+}
+
+function loadSet() {
+  if (setIndex >= sets.length) return showFinish();
+  matched  = 0; errors = 0; selected = null;
+  document.getElementById('set-num').textContent      = setIndex + 1;
+  document.getElementById('matched-cnt').textContent  = 0;
+  document.getElementById('round-info').textContent   = 'Tap a word to start matching…';
+  updateProgress();
+  buildGrid();
+}
+
+function buildGrid() {
+  const words = sets[setIndex];
+  const deItems = words.map((w,i) => ({ id: i, type: 'de', text: w.de, word: w }));
+  const enItems = words.map((w,i) => ({ id: i, type: 'en', text: w.en, word: w }));
+
+  // Interleave de/en columns
+  const all = [];
+  const deSh = shuffle([...deItems]);
+  const enSh = shuffle([...enItems]);
+  // Put de on left col, en on right col — interleaved in the grid
+  for (let i = 0; i < words.length; i++) {
+    all.push(deSh[i]); all.push(enSh[i]);
+  }
+
+  const grid = document.getElementById('match-grid');
+  grid.innerHTML = '';
+  all.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'match-btn';
+    btn.textContent = item.text;
+    btn.dataset.id   = item.id;
+    btn.dataset.type = item.type;
+    btn.onclick = () => tapItem(btn, item);
+    grid.appendChild(btn);
+  });
+}
+
+function tapItem(btn, item) {
+  if (btn.classList.contains('matched')) return;
+
+  if (!selected) {
+    // First tap
+    selected = { btn, item };
+    btn.classList.add('sel');
+    document.getElementById('round-info').textContent = 'Now tap the matching translation…';
+    return;
+  }
+
+  if (selected.btn === btn) {
+    // Deselect
+    btn.classList.remove('sel');
+    selected = null;
+    document.getElementById('round-info').textContent = 'Tap a word to start matching…';
+    return;
+  }
+
+  // Check match — same id, different type
+  const first = selected.item;
+  if (first.id === item.id && first.type !== item.type) {
+    // Correct!
+    selected.btn.classList.remove('sel');
+    selected.btn.classList.add('matched');
+    btn.classList.add('matched');
+    matched++;
+    document.getElementById('matched-cnt').textContent = matched;
+    document.getElementById('round-info').textContent = '✅ Match! ' + (SET_SIZE - matched) + ' left…';
+    showToast('✅ Match!', 'correct');
+    selected = null;
+    updateProgress();
+    if (matched >= sets[setIndex].length) {
+      setTimeout(() => { setIndex++; loadSet(); }, 800);
+    }
+  } else {
+    // Wrong
+    errors++;
+    btn.classList.add('wrong-flash');
+    selected.btn.classList.add('wrong-flash');
+    document.getElementById('round-info').textContent = '❌ No match — try again!';
+    showToast('❌ Not a match', 'wrong');
+    setTimeout(() => {
+      btn.classList.remove('wrong-flash', 'sel');
+      selected.btn.classList.remove('wrong-flash', 'sel');
+      selected = null;
+      document.getElementById('round-info').textContent = 'Tap a word to continue…';
+    }, 700);
+    if (errors >= 5) {
+      setTimeout(() => { errors = 0; loadSet(); }, 900);
+    }
+  }
+}
+
+function updateProgress() {
+  const totalPairs = sets.reduce((a,s) => a + s.length, 0);
+  const donePairs  = sets.slice(0, setIndex).reduce((a,s) => a + s.length, 0) + matched;
+  const pct        = totalPairs ? (donePairs / totalPairs * 100) : 0;
+  document.getElementById('match-prog').style.width = pct + '%';
+}
+
+function showFinish() {
+  document.getElementById('finish').classList.add('visible');
+  document.getElementById('fin-sets').textContent  = sets.length;
+  document.getElementById('fin-pairs').textContent = allWords.length;
+  document.getElementById('finish-xp').textContent = '+' + XP_REWARD + ' XP';
+  addXP(XP_REWARD);
+  markDone('mod_' + lektion + '_match');
+  launchConfetti();
+}
+</script>
+</body>
+</html>

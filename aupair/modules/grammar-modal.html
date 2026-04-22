@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar: Modal Verbs – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.modal-table { width:100%;border-collapse:collapse;font-size:14px;max-width:720px;margin:0 auto 28px; }
+.modal-table th { background:var(--accent);color:#fff;padding:10px 12px;text-align:left;font-weight:700; }
+.modal-table td { padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top; }
+.modal-table tr:nth-child(even) td { background:var(--surface2); }
+.modal-table .person { color:var(--muted);font-size:13px; }
+.modal-table .special { color:var(--accent2);font-weight:700; }
+.fill-block { background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;border:1px solid var(--border);max-width:640px; }
+.fill-input { background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:6px 12px;
+  font-size:15px;color:var(--text);font-family:inherit;width:140px;outline:none;transition:border-color .15s; }
+.fill-input:focus { border-color:var(--accent); }
+.fill-input.correct { border-color:var(--correct);background:#0d2e1e; }
+.fill-input.wrong   { border-color:var(--wrong);background:#2e0d0d; }
+.sent { font-size:16px;line-height:1.9; }
+.hint-tag { display:inline-block;background:var(--border);border-radius:4px;padding:2px 7px;font-size:12px;color:var(--muted);margin-left:6px; }
+.explain { font-size:13px;color:var(--muted);margin-top:6px;display:none; }
+.explain.show { display:block; }
+.meaning-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;margin:0 auto 28px; }
+@media(max-width:600px){ .meaning-grid{grid-template-columns:1fr 1fr;} }
+.meaning-card { background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:14px; }
+.meaning-verb { font-size:22px;font-weight:900;color:var(--accent); }
+.meaning-en { font-size:13px;color:var(--accent2);font-weight:700;margin-top:2px; }
+.meaning-ex { font-size:12px;color:var(--muted);margin-top:6px;font-style:italic;line-height:1.5; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">🔧</span>
+  <span class="header-title">Grammar: Modal Verbs</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">🔧 Modal Verbs (Modalverben)</div>
+  <div class="page-subtitle">Learn können, müssen, wollen, dürfen, sollen, möchten — then practise!</div>
+
+  <!-- MEANING CARDS -->
+  <h2 class="section-heading">What do they mean?</h2>
+  <div class="meaning-grid">
+    <div class="meaning-card">
+      <div class="meaning-verb">können</div>
+      <div class="meaning-en">can / to be able to</div>
+      <div class="meaning-ex">Ich kann Deutsch sprechen.<br>(I can speak German.)</div>
+    </div>
+    <div class="meaning-card">
+      <div class="meaning-verb">müssen</div>
+      <div class="meaning-en">must / have to</div>
+      <div class="meaning-ex">Er muss jetzt arbeiten.<br>(He must work now.)</div>
+    </div>
+    <div class="meaning-card">
+      <div class="meaning-verb">wollen</div>
+      <div class="meaning-en">want to</div>
+      <div class="meaning-ex">Wir wollen ins Kino gehen.<br>(We want to go to the cinema.)</div>
+    </div>
+    <div class="meaning-card">
+      <div class="meaning-verb">dürfen</div>
+      <div class="meaning-en">may / to be allowed to</div>
+      <div class="meaning-ex">Du darfst hier nicht rauchen.<br>(You may not smoke here.)</div>
+    </div>
+    <div class="meaning-card">
+      <div class="meaning-verb">sollen</div>
+      <div class="meaning-en">should / to be supposed to</div>
+      <div class="meaning-ex">Sie soll um 8 Uhr da sein.<br>(She is supposed to be there at 8.)</div>
+    </div>
+    <div class="meaning-card">
+      <div class="meaning-verb">möchten</div>
+      <div class="meaning-en">would like to</div>
+      <div class="meaning-ex">Ich möchte einen Kaffee.<br>(I would like a coffee.)</div>
+    </div>
+  </div>
+
+  <!-- CONJUGATION TABLE -->
+  <h2 class="section-heading">Conjugation Table</h2>
+  <div style="overflow-x:auto">
+  <table class="modal-table">
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>können</th>
+        <th>müssen</th>
+        <th>wollen</th>
+        <th>dürfen</th>
+        <th>sollen</th>
+        <th>möchten</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="person">ich</td><td class="special">kann</td><td class="special">muss</td><td class="special">will</td><td class="special">darf</td><td>soll</td><td class="special">möchte</td></tr>
+      <tr><td class="person">du</td><td>kannst</td><td>musst</td><td>willst</td><td>darfst</td><td>sollst</td><td>möchtest</td></tr>
+      <tr><td class="person">er / sie / es</td><td class="special">kann</td><td class="special">muss</td><td class="special">will</td><td class="special">darf</td><td>soll</td><td class="special">möchte</td></tr>
+      <tr><td class="person">wir</td><td>können</td><td>müssen</td><td>wollen</td><td>dürfen</td><td>sollen</td><td>möchten</td></tr>
+      <tr><td class="person">ihr</td><td>könnt</td><td>müsst</td><td>wollt</td><td>dürft</td><td>sollt</td><td>möchtet</td></tr>
+      <tr><td class="person">sie / Sie</td><td>können</td><td>müssen</td><td>wollen</td><td>dürfen</td><td>sollen</td><td>möchten</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box mb-lg">
+    <h3>🔑 Key rule: infinitive goes to the END</h3>
+    <p>The modal verb is conjugated and takes position 2. The action verb goes as an infinitive <strong>at the end of the sentence</strong>.</p>
+    <p>Example: <strong>Ich <span style="color:var(--accent)">kann</span> heute nicht <span style="color:var(--accent2)">kommen</span>.</strong> (I cannot come today.)</p>
+  </div>
+
+  <!-- EXERCISES -->
+  <h2 class="section-heading">Practice — Fill in the correct form</h2>
+  <div id="ex-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="checkAll()">✅ Check Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">🔧</div>
+    <div class="finish-title" id="fin-title">Modal Verbs done!</div>
+    <div class="finish-xp" id="fin-xp">+50 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">10</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const exs = [
+  { before:'Ich', blank:'kann', after:'heute nicht kommen. (I cannot come today.)', hint:'können, ich', explain:'ich → kann (irregular stem!)' },
+  { before:'Du', blank:'musst', after:'jetzt deine Hausaufgaben machen. (You must do your homework now.)', hint:'müssen, du', explain:'du → musst' },
+  { before:'Er', blank:'will', after:'nächstes Jahr nach Deutschland reisen. (He wants to travel to Germany next year.)', hint:'wollen, er', explain:'er → will (not "wollen"!)' },
+  { before:'Kinder', blank:'dürfen', after:'hier nicht alleine spielen. (Children are not allowed to play here alone.)', hint:'dürfen, Kinder', explain:'Kinder (like sie plural) → dürfen' },
+  { before:'Sie (she)', blank:'soll', after:'um 9 Uhr beim Arzt sein. (She is supposed to be at the doctor\'s at 9.)', hint:'sollen, sie', explain:'sie (she) → soll' },
+  { before:'Wir', blank:'möchten', after:'einen Tisch reservieren. (We would like to reserve a table.)', hint:'möchten, wir', explain:'wir → möchten (same as infinitive)' },
+  { before:'Ihr', blank:'könnt', after:'morgen früher nach Hause gehen. (You all can go home earlier tomorrow.)', hint:'können, ihr', explain:'ihr → könnt' },
+  { before:'Ich', blank:'möchte', after:'bitte die Speisekarte. (I would like the menu, please.)', hint:'möchten, ich', explain:'ich → möchte (irregular!)' },
+  { before:'Du', blank:'darfst', after:'das Buch behalten. (You are allowed to keep the book.)', hint:'dürfen, du', explain:'du → darfst' },
+  { before:'Sie (they)', blank:'müssen', after:'den Ausweis mitbringen. (They must bring their ID.)', hint:'müssen, sie plural', explain:'sie (plural) → müssen' }
+];
+
+function build(){
+  const c=document.getElementById('ex-container'); c.innerHTML='';
+  exs.forEach((e,i)=>{
+    c.innerHTML+=`<div class="fill-block">
+      <div style="font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px">Exercise ${i+1}</div>
+      <div class="sent">${e.before} <input class="fill-input" id="inp-${i}" placeholder="?" autocomplete="off"> ${e.after}
+      <span class="hint-tag">💡 ${e.hint}</span></div>
+      <div class="explain" id="exp-${i}">${e.explain}</div>
+    </div>`;
+  });
+}
+
+function checkAll(){
+  let score=0;
+  exs.forEach((e,i)=>{
+    const inp=document.getElementById(`inp-${i}`);
+    const exp=document.getElementById(`exp-${i}`);
+    const val=inp.value.trim().toLowerCase();
+    const correct=e.blank.toLowerCase();
+    inp.disabled=true;
+    if(val===correct){ inp.classList.add('correct'); score++; }
+    else { inp.classList.add('wrong'); inp.value=e.blank; }
+    exp.classList.add('show');
+  });
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  const pct=Math.round(score/exs.length*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  const earned=Math.round(50*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_grammar_modal');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex'; build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock Test 2 – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.mock-section { background:var(--surface);border-radius:var(--radius);overflow:hidden;max-width:680px;margin-bottom:28px;border:2px solid var(--border); }
+.mock-section-header { background:var(--accent2);color:#fff;padding:14px 20px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px; }
+.mock-section-body { padding:18px 20px; }
+.q-block { margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border); }
+.q-block:last-child { border-bottom:none;margin-bottom:0;padding-bottom:0; }
+.q-text { font-size:15px;font-weight:600;margin-bottom:8px;line-height:1.5; }
+.q-opts { display:flex;flex-wrap:wrap;gap:6px; }
+.q-opt { background:var(--surface2);border:2px solid var(--border);border-radius:6px;padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text);font-family:inherit;transition:border-color .15s; }
+.q-opt:hover { border-color:var(--accent2); }
+.q-opt.chosen  { border-color:var(--accent2);background:#041e2e; }
+.q-opt.correct { border-color:var(--correct);background:#0d2e1e;color:var(--correct); }
+.q-opt.wrong   { border-color:var(--wrong);background:#2e0d0d;color:var(--wrong); }
+.q-opt.reveal  { border-color:var(--correct);background:#0d2e1e;color:var(--correct); }
+.timer-banner { background:var(--surface);border:2px solid var(--gold);border-radius:var(--radius);padding:14px 20px;max-width:680px;margin-bottom:20px;display:flex;align-items:center;gap:16px; }
+.timer-big { font-size:32px;font-weight:900;color:var(--gold); }
+.score-banner { display:flex;gap:14px;flex-wrap:wrap;max-width:680px;margin-bottom:20px; }
+.score-box { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;text-align:center;flex:1; }
+.score-box .val { font-size:22px;font-weight:900; }
+.score-box .lbl { font-size:11px;color:var(--muted);font-weight:700; }
+.reading-text { background:var(--surface2);border-radius:var(--radius);padding:14px 18px;font-size:14px;line-height:1.9;margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">📋</span>
+  <span class="header-title">Mock Test 2</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">📋 Mock Test 2 — Goethe A2 Format</div>
+  <div class="page-subtitle">Different text types. Reading + Language structures. Submit when ready.</div>
+
+  <div class="timer-banner">
+    <div class="timer-big" id="test-timer">60:00</div>
+    <div>
+      <div style="font-size:14px;font-weight:700;">Test Timer</div>
+      <div style="font-size:12px;color:var(--muted);">60 minutes for reading + grammar</div>
+    </div>
+    <button class="btn btn-secondary" onclick="toggleTimer()" id="timer-btn" style="margin-left:auto;">▶ Start Timer</button>
+  </div>
+
+  <div class="score-banner">
+    <div class="score-box"><div class="val" id="sc-read">—</div><div class="lbl">Reading</div></div>
+    <div class="score-box"><div class="val" id="sc-gram">—</div><div class="lbl">Grammar</div></div>
+    <div class="score-box"><div class="val" id="sc-total">—</div><div class="lbl">Total</div></div>
+    <div class="score-box"><div class="val" id="sc-pct">—</div><div class="lbl">Score %</div></div>
+  </div>
+
+  <!-- READING 1: Forum post -->
+  <div class="mock-section">
+    <div class="mock-section-header">📖 Reading Part 1 — Online Forum Post (5 pts)</div>
+    <div class="mock-section-body">
+      <div class="reading-text">
+        <strong>Forum: Mein Leben im Ausland</strong><br>
+        <em>Posted by: Mihail, 29</em><br><br>
+        Ich wohne seit zwei Jahren in Deutschland und arbeite als Ingenieur bei einer kleinen Firma in München. 
+        Am Anfang war es schwer, weil ich kein Deutsch konnte und alles auf Englisch machen musste. 
+        Aber ich habe einen Sprachkurs besucht und heute kann ich mich gut auf Deutsch unterhalten. 
+        Die Deutschen sind freundlich, aber am Anfang etwas distanziert – man muss geduldig sein. 
+        Was mir besonders gut gefällt: Das öffentliche Verkehrssystem ist ausgezeichnet und die Städte sind sehr sauber. 
+        Was ich vermisse: das Essen meiner Mutter und die warmen Sommer in Rumänien!
+      </div>
+      <div id="read1-container"></div>
+    </div>
+  </div>
+
+  <!-- READING 2: Ads matching -->
+  <div class="mock-section">
+    <div class="mock-section-header">📰 Reading Part 2 — Match People to Adverts (5 pts)</div>
+    <div class="mock-section-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+        Match each person to the most suitable course/offer (a–f). Not all options will be used.
+      </p>
+      <div style="background:var(--surface2);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;font-size:13px;">
+        <strong style="color:var(--accent2);">Offers:</strong><br>
+        <strong>a)</strong> German for beginners — Tuesdays 18:00–20:00, €80/month<br>
+        <strong>b)</strong> Advanced German conversation — Thursdays 19:00, small group, €60/month<br>
+        <strong>c)</strong> German for professionals — online, flexible, €120/month<br>
+        <strong>d)</strong> German children's course — Saturdays 10:00–11:00, €40/month<br>
+        <strong>e)</strong> Intensive German crash course — 2 weeks, Mon–Fri 8:00–14:00, €350 total<br>
+        <strong>f)</strong> Free German practice via language exchange (Tandem)<br>
+      </div>
+      <div id="read2-container"></div>
+    </div>
+  </div>
+
+  <!-- GRAMMAR -->
+  <div class="mock-section">
+    <div class="mock-section-header">🔧 Grammar — Fill in the gap (5 pts)</div>
+    <div class="mock-section-body">
+      <div id="gram1-container"></div>
+    </div>
+  </div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="submitAll()">✅ Submit Test</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">📋</div>
+    <div class="finish-title" id="fin-title">Test done!</div>
+    <div class="finish-xp" id="fin-xp">+150 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">15</div><div class="lbl">Total</div></div>
+      <div class="finish-stat"><div class="val" id="fin-pct">0%</div><div class="lbl">Score</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Retry</button>
+      <a class="btn btn-secondary" href="mock-test-1.html">← Mock Test 1</a>
+      <a class="btn" style="background:var(--border);" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+const read1 = [
+  {t:'1. Mihail says that at the beginning in Germany …',
+   opts:['everything was in German','he had to use English for everything','the Germans were unfriendly','he already spoke German well'],c:'he had to use English for everything'},
+  {t:'2. How did he improve his German?',
+   opts:['He watched German TV','He took a language course','His colleagues only spoke German','He had a German girlfriend'],c:'He took a language course'},
+  {t:'3. His opinion of Germans is …',
+   opts:['they are unfriendly','they are friendly but a bit distant at first','they are loud and talkative','they are always very open'],c:'they are friendly but a bit distant at first'},
+  {t:'4. What does Mihail particularly like about Germany?',
+   opts:['the food','the warm summers','the public transport and clean cities','the job opportunities'],c:'the public transport and clean cities'},
+  {t:'5. What does he miss from home?',
+   opts:['his friends and winter','his mother\'s cooking and warm summers','the language and culture','his old job'],c:'his mother\'s cooking and warm summers'},
+];
+
+const read2 = [
+  {t:'6. Anna is a complete beginner in German. She works during the day and can only come in the evenings.',
+   opts:['a','b','c','d','e','f'],c:'a'},
+  {t:'7. Peter wants to practise speaking German — for free. He is already at intermediate level.',
+   opts:['a','b','c','d','e','f'],c:'f'},
+  {t:'8. Maria needs to learn German quickly. She has two free weeks and can study full time.',
+   opts:['a','b','c','d','e','f'],c:'e'},
+  {t:'9. Klaus uses German at work. He wants to improve his professional vocabulary and prefers online learning.',
+   opts:['a','b','c','d','e','f'],c:'c'},
+  {t:'10. Lena wants her 7-year-old son to start learning German on weekends.',
+   opts:['a','b','c','d','e','f'],c:'d'},
+];
+
+const gram1 = [
+  {t:'11. Kannst du mir ___ helfen?',opts:['bitte','gerne','hier','auch'],c:'bitte'},
+  {t:'12. Das Wetter war ___ nicht so schön.',opts:['gestern','morgen','jetzt','vielleicht'],c:'gestern'},
+  {t:'13. Ich habe keine Zeit, ___ ich viel arbeiten muss.',opts:['wenn','weil','dass','als'],c:'weil'},
+  {t:'14. Er kommt ___ Hamburg.',opts:['nach','aus','von','zu'],c:'aus'},
+  {t:'15. ___ hast du das gemacht?',opts:['Wo','Wann','Warum','Wie'],c:'Wie'},
+];
+
+let chosen={};
+const allQ=[...read1,...read2,...gram1];
+let timerOn=false, timerInterval=null, timerSeconds=3600;
+
+function renderQ(container, qList, offset){
+  const c=document.getElementById(container); c.innerHTML='';
+  qList.forEach((q,i)=>{
+    const qi=offset+i;
+    c.innerHTML+=`<div class="q-block">
+      <div class="q-text">${q.t}</div>
+      <div class="q-opts">
+        ${q.opts.map(o=>`<button class="q-opt" id="opt-${qi}-${o.replace(/\W/g,'_').substring(0,20)}" onclick="pick(${qi},'${o.replace(/'/g,'\\'')}',this)">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  });
+}
+
+function pick(qi,val,btn){
+  allQ[qi].opts.forEach(o=>{
+    const el=document.getElementById(`opt-${qi}-${o.replace(/\W/g,'_').substring(0,20)}`);
+    if(el&&!el.classList.contains('correct')&&!el.classList.contains('wrong')&&!el.classList.contains('reveal'))
+      el.classList.remove('chosen');
+  });
+  chosen[qi]=val; btn.classList.add('chosen');
+}
+
+function submitAll(){
+  stopTimer();
+  let score=0, readScore=0, gramScore=0;
+  allQ.forEach((q,qi)=>{
+    q.opts.forEach(o=>{
+      const el=document.getElementById(`opt-${qi}-${o.replace(/\W/g,'_').substring(0,20)}`);
+      if(!el)return; el.disabled=true; el.classList.remove('chosen');
+      if(o===q.c) el.classList.add('reveal');
+    });
+    const sel=chosen[qi];
+    let correct=false;
+    if(sel){
+      const sEl=document.getElementById(`opt-${qi}-${sel.replace(/\W/g,'_').substring(0,20)}`);
+      if(sEl){ if(sel===q.c){ sEl.classList.replace('reveal','correct'); score++; correct=true; } else sEl.classList.add('wrong'); }
+    }
+    if(qi<10&&correct) readScore++;
+    else if(correct) gramScore++;
+  });
+  document.getElementById('sc-read').textContent=readScore+'/10';
+  document.getElementById('sc-gram').textContent=gramScore+'/5';
+  document.getElementById('sc-total').textContent=score+'/15';
+  const pct=Math.round(score/15*100);
+  document.getElementById('sc-pct').textContent=pct+'%';
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Passing score!':'💪 Keep studying!';
+  document.getElementById('fin-score').textContent=score;
+  document.getElementById('fin-pct').textContent=pct+'%';
+  const earned=Math.round(150*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_mock2');
+  if(pct>=80) launchConfetti();
+}
+
+function toggleTimer(){
+  if(timerOn){ stopTimer(); }
+  else { startTestTimer(); }
+}
+function startTestTimer(){
+  timerOn=true; document.getElementById('timer-btn').textContent='⏸ Pause';
+  timerInterval=setInterval(()=>{
+    timerSeconds--;
+    if(timerSeconds<0){ stopTimer(); return; }
+    const m=Math.floor(timerSeconds/60), s=timerSeconds%60;
+    document.getElementById('test-timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+}
+function stopTimer(){ timerOn=false; if(timerInterval) clearInterval(timerInterval); document.getElementById('timer-btn').textContent='▶ Resume'; }
+
+function restart(){
+  chosen={}; timerSeconds=3600;
+  document.getElementById('test-timer').textContent='60:00';
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex';
+  ['sc-read','sc-gram','sc-total','sc-pct'].forEach(id=>document.getElementById(id).textContent='—');
+  renderQ('read1-container',read1,0);
+  renderQ('read2-container',read2,5);
+  renderQ('gram1-container',gram1,10);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  renderQ('read1-container',read1,0);
+  renderQ('read2-container',read2,5);
+  renderQ('gram1-container',gram1,10);
+});
+</script>
+</body>
+</html>

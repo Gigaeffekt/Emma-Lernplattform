@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar: Perfekt – Angel lernt Deutsch A2</title>
+<link rel="stylesheet" href="../assets/css/aupair.css">
+<style>
+.rule-card { background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;max-width:680px; }
+.rule-title { font-size:16px;font-weight:800;color:var(--accent2);margin-bottom:10px; }
+.rule-box { background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:15px;font-style:italic;line-height:1.9;margin-top:6px; }
+.haben { color:#10b981;font-weight:700; }
+.sein { color:var(--accent2);font-weight:700; }
+.pp { color:var(--gold);font-weight:700; }
+.pp-table { width:100%;border-collapse:collapse;font-size:14px;max-width:680px;margin:0 auto 28px; }
+.pp-table th { background:var(--accent);color:#fff;padding:9px 12px;text-align:left; }
+.pp-table td { padding:8px 12px;border-bottom:1px solid var(--border); }
+.pp-table tr:nth-child(even) td { background:var(--surface2); }
+.pp-table .irreg { color:var(--gold); }
+.fill-block { background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;border:1px solid var(--border);max-width:640px; }
+.fill-input { background:var(--surface2);border:2px solid var(--border);border-radius:8px;padding:6px 12px;
+  font-size:15px;color:var(--text);font-family:inherit;width:160px;outline:none;transition:border-color .15s; }
+.fill-input:focus { border-color:var(--accent); }
+.fill-input.correct { border-color:var(--correct);background:#0d2e1e; }
+.fill-input.wrong   { border-color:var(--wrong);background:#2e0d0d; }
+.sent { font-size:16px;line-height:1.9; }
+.hint-tag { display:inline-block;background:var(--border);border-radius:4px;padding:2px 7px;font-size:12px;color:var(--muted);margin-left:6px; }
+.explain { font-size:13px;color:var(--muted);margin-top:6px;display:none; }
+.explain.show { display:block; }
+.haben-sein-grid { display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:680px;margin-bottom:28px; }
+@media(max-width:500px){ .haben-sein-grid{grid-template-columns:1fr;} }
+.hs-card { background:var(--surface);border-radius:var(--radius);padding:16px 18px;border:2px solid var(--border); }
+.hs-card.haben-card { border-color:#10b981; }
+.hs-card.sein-card  { border-color:var(--accent2); }
+.hs-title { font-size:18px;font-weight:900;margin-bottom:10px; }
+.hs-list { font-size:13px;color:var(--muted);line-height:1.8; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="nav-back" href="../index.html">← Dashboard</a>
+  <span class="header-logo">⏮️</span>
+  <span class="header-title">Grammar: Perfekt</span>
+  <span class="header-streak">🔥 0d</span>
+  <span class="header-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="page-title">⏮️ Past Tense: Perfekt</div>
+  <div class="page-subtitle">How to talk about the past in spoken German — with haben or sein + past participle.</div>
+
+  <!-- STRUCTURE -->
+  <h2 class="section-heading">The Formula</h2>
+  <div class="rule-card">
+    <div class="rule-title">Subject + haben/sein (conjugated, position 2) + … + Partizip II (at the END)</div>
+    <div class="rule-box">
+      Ich <span class="haben">habe</span> gestern viel <span class="pp">gelernt</span>. (I studied a lot yesterday.)<br>
+      Er <span class="haben">hat</span> den Film <span class="pp">gesehen</span>. (He watched the film.)<br>
+      Wir <span class="sein">sind</span> nach Berlin <span class="pp">gefahren</span>. (We drove to Berlin.)
+    </div>
+  </div>
+
+  <!-- HABEN VS SEIN -->
+  <h2 class="section-heading">haben or sein?</h2>
+  <div class="haben-sein-grid">
+    <div class="hs-card haben-card">
+      <div class="hs-title" style="color:#10b981">🟢 haben</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Use for most verbs — especially transitive verbs (verbs that take an object):</p>
+      <div class="hs-list">
+        kaufen → habe <strong>gekauft</strong><br>
+        essen → habe <strong>gegessen</strong><br>
+        sehen → habe <strong>gesehen</strong><br>
+        schreiben → habe <strong>geschrieben</strong><br>
+        arbeiten → habe <strong>gearbeitet</strong><br>
+        lesen → habe <strong>gelesen</strong>
+      </div>
+    </div>
+    <div class="hs-card sein-card">
+      <div class="hs-title" style="color:var(--accent2)">🔵 sein</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Use for movement verbs &amp; change-of-state verbs:</p>
+      <div class="hs-list">
+        fahren → bin <strong>gefahren</strong><br>
+        gehen → bin <strong>gegangen</strong><br>
+        kommen → bin <strong>gekommen</strong><br>
+        fliegen → bin <strong>geflogen</strong><br>
+        aufstehen → bin <strong>aufgestanden</strong><br>
+        einschlafen → bin <strong>eingeschlafen</strong><br>
+        bleiben → bin <strong>geblieben</strong><br>
+        sein (to be) → bin <strong>gewesen</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTICIPLE PATTERNS -->
+  <h2 class="section-heading">Forming Partizip II (Past Participle)</h2>
+  <div class="info-box mb-lg">
+    <h3>📋 Formation rules</h3>
+    <p><strong>Regular verbs:</strong> ge + stem + t &nbsp;→&nbsp; <span style="color:var(--gold)">ge</span>lern<span style="color:var(--gold)">t</span>, <span style="color:var(--gold)">ge</span>mach<span style="color:var(--gold)">t</span></p>
+    <p><strong>Irregular verbs:</strong> ge + changed stem + en &nbsp;→&nbsp; <span style="color:var(--gold)">ge</span>seh<span style="color:var(--gold)">en</span>, <span style="color:var(--gold)">ge</span>gess<span style="color:var(--gold)">en</span></p>
+    <p><strong>Verbs with inseparable prefix (be-, er-, ver-…):</strong> NO ge- &nbsp;→&nbsp; besucht, erklärt, verkauft</p>
+    <p><strong>Separable verbs:</strong> ge goes between prefix and stem &nbsp;→&nbsp; auf<span style="color:var(--gold)">ge</span>standen, ein<span style="color:var(--gold)">ge</span>schlafen</p>
+  </div>
+
+  <div style="overflow-x:auto">
+  <table class="pp-table">
+    <thead><tr><th>Infinitive</th><th>English</th><th>Partizip II</th><th>Helper</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td>machen</td><td>to do/make</td><td class="pp">gemacht</td><td class="haben">haben</td><td>regular</td></tr>
+      <tr><td>lernen</td><td>to learn</td><td class="pp">gelernt</td><td class="haben">haben</td><td>regular</td></tr>
+      <tr><td>kaufen</td><td>to buy</td><td class="pp">gekauft</td><td class="haben">haben</td><td>regular</td></tr>
+      <tr><td>arbeiten</td><td>to work</td><td class="pp">gearbeitet</td><td class="haben">haben</td><td>regular (+e)</td></tr>
+      <tr><td>essen</td><td>to eat</td><td class="pp irreg">gegessen</td><td class="haben">haben</td><td>irregular</td></tr>
+      <tr><td>sehen</td><td>to see</td><td class="pp irreg">gesehen</td><td class="haben">haben</td><td>irregular</td></tr>
+      <tr><td>schreiben</td><td>to write</td><td class="pp irreg">geschrieben</td><td class="haben">haben</td><td>irregular</td></tr>
+      <tr><td>lesen</td><td>to read</td><td class="pp irreg">gelesen</td><td class="haben">haben</td><td>irregular</td></tr>
+      <tr><td>sprechen</td><td>to speak</td><td class="pp irreg">gesprochen</td><td class="haben">haben</td><td>irregular</td></tr>
+      <tr><td>trinken</td><td>to drink</td><td class="pp irreg">getrunken</td><td class="haben">haben</td><td>irregular</td></tr>
+      <tr><td>gehen</td><td>to go</td><td class="pp irreg">gegangen</td><td class="sein">sein</td><td>irregular</td></tr>
+      <tr><td>fahren</td><td>to drive/travel</td><td class="pp irreg">gefahren</td><td class="sein">sein</td><td>irregular</td></tr>
+      <tr><td>kommen</td><td>to come</td><td class="pp irreg">gekommen</td><td class="sein">sein</td><td>irregular</td></tr>
+      <tr><td>fliegen</td><td>to fly</td><td class="pp irreg">geflogen</td><td class="sein">sein</td><td>irregular</td></tr>
+      <tr><td>aufstehen</td><td>to get up</td><td class="pp irreg">aufgestanden</td><td class="sein">sein</td><td>separable</td></tr>
+      <tr><td>besuchen</td><td>to visit</td><td class="pp irreg">besucht</td><td class="haben">haben</td><td>inseparable (no ge-)</td></tr>
+      <tr><td>bezahlen</td><td>to pay</td><td class="pp irreg">bezahlt</td><td class="haben">haben</td><td>inseparable (no ge-)</td></tr>
+      <tr><td>bekommen</td><td>to receive</td><td class="pp irreg">bekommen</td><td class="haben">haben</td><td>inseparable (no ge-)</td></tr>
+      <tr><td>sein</td><td>to be</td><td class="pp irreg">gewesen</td><td class="sein">sein</td><td>irregular</td></tr>
+      <tr><td>haben</td><td>to have</td><td class="pp irreg">gehabt</td><td class="haben">haben</td><td>irregular</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- EXERCISES -->
+  <h2 class="section-heading">Practice — Fill in the correct Perfekt form</h2>
+  <div id="ex-container"></div>
+
+  <div class="flex-center mt-md mb-lg" id="action-row">
+    <button class="btn btn-primary btn-lg" onclick="checkAll()">✅ Check Answers</button>
+  </div>
+
+  <div class="finish-screen" id="finish">
+    <div class="finish-trophy">⏮️</div>
+    <div class="finish-title" id="fin-title">Perfekt done!</div>
+    <div class="finish-xp" id="fin-xp">+60 XP</div>
+    <div class="finish-stats">
+      <div class="finish-stat"><div class="val" id="fin-score">0</div><div class="lbl">Correct</div></div>
+      <div class="finish-stat"><div class="val">10</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="flex-center mt-md">
+      <button class="btn btn-primary" onclick="restart()">🔁 Try Again</button>
+      <a class="btn btn-secondary" href="../index.html">← Dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/app.js"></script>
+<script>
+// Each exercise: sentence with ONE blank (the Partizip II), preceded by the correct helper
+const exs = [
+  { before:'Ich habe gestern viel', blank:'gelernt', after:'. (I learnt a lot yesterday.)', hint:'lernen → regular', explain:'lernen: ge + lern + t = gelernt' },
+  { before:'Wir sind gestern nach Hamburg', blank:'gefahren', after:'. (We drove to Hamburg yesterday.)', hint:'fahren → sein', explain:'fahren: irregular, sein helper → gefahren' },
+  { before:'Er hat einen film', blank:'gesehen', after:'. (He watched a film.)', hint:'sehen → irregular, haben', explain:'sehen → gesehen (irregular)' },
+  { before:'Sie ist um 7 Uhr', blank:'aufgestanden', after:'. (She got up at 7 o\'clock.)', hint:'aufstehen → sein, separable', explain:'auf|stehen → auf + ge + stand + en = aufgestanden, with sein' },
+  { before:'Hast du schon', blank:'gegessen', after:'? (Have you already eaten?)', hint:'essen → irregular, haben', explain:'essen → gegessen (irregular)' },
+  { before:'Ich habe meinen Freund', blank:'besucht', after:'. (I visited my friend.)', hint:'besuchen → no ge- (inseparable)', explain:'besuchen has prefix be-: no ge- prefix → besucht' },
+  { before:'Wir haben viel Wasser', blank:'getrunken', after:'. (We drank a lot of water.)', hint:'trinken → irregular, haben', explain:'trinken → getrunken (irregular)' },
+  { before:'Sie sind um 22 Uhr nach Hause', blank:'gekommen', after:'. (They came home at 10 pm.)', hint:'kommen → sein', explain:'kommen: movement verb, sein → gekommen' },
+  { before:'Ich habe 50 Euro', blank:'bezahlt', after:'. (I paid 50 euros.)', hint:'bezahlen → no ge- (inseparable be-)', explain:'bezahlen has prefix be-: no ge- → bezahlt' },
+  { before:'Er hat mir eine E-Mail', blank:'geschrieben', after:'. (He wrote me an email.)', hint:'schreiben → irregular, haben', explain:'schreiben → geschrieben (irregular)' }
+];
+
+function build(){
+  const c=document.getElementById('ex-container'); c.innerHTML='';
+  exs.forEach((e,i)=>{
+    c.innerHTML+=`<div class="fill-block">
+      <div style="font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px">Exercise ${i+1}</div>
+      <div class="sent">${e.before} <input class="fill-input" id="inp-${i}" placeholder="Partizip II" autocomplete="off"> ${e.after}
+      <span class="hint-tag">💡 ${e.hint}</span></div>
+      <div class="explain" id="exp-${i}">${e.explain}</div>
+    </div>`;
+  });
+}
+
+function checkAll(){
+  let score=0;
+  exs.forEach((e,i)=>{
+    const inp=document.getElementById(`inp-${i}`);
+    const exp=document.getElementById(`exp-${i}`);
+    const val=inp.value.trim().toLowerCase();
+    const correct=e.blank.toLowerCase();
+    inp.disabled=true;
+    if(val===correct){ inp.classList.add('correct'); score++; }
+    else { inp.classList.add('wrong'); inp.value=e.blank; }
+    exp.classList.add('show');
+  });
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('finish').classList.add('visible');
+  const pct=Math.round(score/exs.length*100);
+  document.getElementById('fin-title').textContent=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good job!':'💪 Keep practising!';
+  document.getElementById('fin-score').textContent=score;
+  const earned=Math.round(60*pct/100);
+  document.getElementById('fin-xp').textContent=`+${earned} XP`;
+  addXP(earned);
+  if(pct>=60) markDone('mod_grammar_perfectum');
+  if(pct>=80) launchConfetti();
+}
+
+function restart(){
+  document.getElementById('finish').classList.remove('visible');
+  document.getElementById('action-row').style.display='flex'; build();
+}
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>
