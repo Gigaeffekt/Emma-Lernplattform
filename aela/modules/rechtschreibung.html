@@ -1,393 +1,603 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rechtschreibung - Aela's Deutschkurs</title>
-  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/css/aela-main.css">
-  <style>
-    .exercise-nav {
-      display: flex;
-      gap: 20px;
-      justify-content: space-between;
-      margin: 40px 0;
-      flex-wrap: wrap;
-    }
-    .exercise-nav button {
-      min-width: 150px;
-    }
-    .progress-bar {
-      width: 100%;
-      height: 50px;
-      background-color: #f0f0f0;
-      border: 3px solid black;
-      border-radius: 8px;
-      overflow: hidden;
-      margin: 20px 0;
-    }
-    .progress-fill {
-      height: 100%;
-      background-color: #0066cc;
-      width: 0%;
-      transition: width 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 28px;
-    }
-    .task-counter {
-      font-size: 40px;
-      text-align: center;
-      margin: 20px 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rechtschreibung – Aelas Wortpferd</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+  --pink:#c2185b; --pink-dark:#880e4f; --pink-light:#fce4ec; --pink-mid:#f48fb1;
+  --purple:#7b1fa2; --purple-light:#f3e5f5; --gold:#f9a825; --gold-dark:#e65100;
+  --green:#2e7d32; --green-light:#e8f5e9; --red:#c62828; --red-light:#ffebee;
+  --text:#1a0a2e; --text-soft:#5d4e75; --bg:#fff8fc; --surface:#ffffff;
+  --border:#f48fb1; --radius:20px; --radius-sm:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:18px;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--pink-dark),var(--purple));color:#fff;padding:0 18px;height:68px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 3px 14px rgba(136,14,79,.4);}
+.nav-back{color:#fff;text-decoration:none;font-size:1.1rem;font-weight:900;background:rgba(255,255,255,.2);padding:9px 16px;border-radius:30px;transition:background .15s;white-space:nowrap;}
+.nav-back:hover{background:rgba(255,255,255,.35);}
+.h-title{font-size:1.3rem;font-weight:900;flex:1;}
+.h-xp{font-size:1rem;font-weight:900;background:rgba(249,168,37,.3);padding:6px 12px;border-radius:30px;white-space:nowrap;}
+
+main{max-width:760px;margin:0 auto;padding:22px 16px 80px;}
+
+/* WOLKE STRIP */
+.wolke-strip{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--pink-light),var(--purple-light));border:3px solid var(--pink-mid);border-radius:var(--radius);padding:16px 20px;margin-bottom:22px;}
+.ws-horse{font-size:3.5rem;flex-shrink:0;cursor:default;user-select:none;}
+.ws-horse.happy{animation:horse-happy .55s ease;}
+@keyframes horse-happy{0%,100%{transform:scale(1)rotate(0)}30%{transform:scale(1.3)rotate(-12deg)translateY(-8px)}65%{transform:scale(1.15)rotate(8deg)translateY(-4px)}}
+.ws-msg{font-size:1.05rem;color:var(--text-soft);}
+.ws-msg strong{color:var(--pink-dark);font-size:1.15rem;}
+
+/* PROGRESS */
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:1rem;color:var(--text-soft);font-weight:700;}
+.prog-bar-bg{background:#f0e4f8;border-radius:30px;height:16px;overflow:hidden;border:2px solid var(--border);margin-bottom:22px;}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:30px;transition:width .5s ease;}
+
+/* TASK CARD */
+.task-card{background:var(--surface);border:3px solid var(--border);border-radius:var(--radius);padding:26px 22px;margin-bottom:22px;}
+.task-label{font-size:.9rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--pink-dark);margin-bottom:8px;}
+.task-question{font-size:1.3rem;font-weight:800;color:var(--text);line-height:1.6;margin-bottom:20px;}
+.tts-btn{background:var(--purple);color:#fff;border:none;border-radius:30px;padding:9px 18px;font-size:.95rem;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:18px;display:inline-flex;align-items:center;gap:6px;transition:transform .12s;}
+.tts-btn:hover{transform:scale(1.05);}
+.tts-btn.slow{background:var(--text-soft);}
+
+/* MC OPTIONS */
+.options-list{display:flex;flex-direction:column;gap:12px;}
+.opt-btn{background:var(--bg);border:3px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;font-size:1.1rem;font-weight:700;font-family:inherit;color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .1s;min-height:56px;}
+.opt-btn:hover:not(:disabled){border-color:var(--pink);background:var(--pink-light);transform:translateX(4px);}
+.opt-btn.selected{border-color:var(--pink);background:var(--pink-light);}
+.opt-btn.correct{border-color:var(--green);background:var(--green-light);color:var(--green);pointer-events:none;}
+.opt-btn.wrong{border-color:var(--red);background:var(--red-light);color:var(--red);pointer-events:none;}
+.opt-btn:disabled:not(.correct):not(.wrong){opacity:.5;}
+
+/* MATCHING */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:500px){.match-grid{grid-template-columns:1fr;}}
+.match-btn{background:var(--bg);border:3px solid var(--border);border-radius:var(--radius-sm);padding:14px 12px;font-size:1rem;font-weight:700;font-family:inherit;color:var(--text);cursor:pointer;text-align:center;min-height:54px;transition:border-color .15s,background .15s;}
+.match-btn:hover:not(:disabled){border-color:var(--pink);background:var(--pink-light);}
+.match-btn.sel{border-color:var(--purple);background:var(--purple-light);}
+.match-btn.matched{border-color:var(--green);background:var(--green-light);color:var(--green);pointer-events:none;}
+.match-btn.shake{animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* WORD PUZZLE */
+.sentence-display{font-size:1.5rem;font-weight:900;color:var(--pink-dark);text-align:center;min-height:56px;padding:14px;background:var(--pink-light);border:3px solid var(--pink-mid);border-radius:var(--radius-sm);margin-bottom:16px;letter-spacing:1px;}
+.word-slots{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:60px;padding:12px;background:#f5f0fa;border:3px dashed var(--border);border-radius:var(--radius-sm);margin-bottom:14px;}
+.word-chip{background:var(--surface);border:3px solid var(--pink-mid);border-radius:30px;padding:10px 18px;font-size:1rem;font-weight:800;cursor:pointer;transition:transform .12s,background .12s;user-select:none;}
+.word-chip:hover{background:var(--pink-light);transform:scale(1.07);}
+.word-chip.placed{background:var(--purple-light);border-color:var(--purple);}
+.word-chip.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.word-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:14px;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-sm);}
+
+/* FEEDBACK */
+.feedback-box{border-radius:var(--radius-sm);padding:16px 18px;margin-top:16px;font-size:1.05rem;font-weight:700;display:none;}
+.feedback-box.correct{display:block;background:var(--green-light);border:3px solid var(--green);color:var(--green);}
+.feedback-box.wrong{display:block;background:var(--red-light);border:3px solid var(--red);color:var(--red);}
+
+/* NAV BUTTONS */
+.nav-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;}
+.btn-check{flex:2;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border:none;border-radius:14px;padding:16px 20px;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;transition:transform .12s;min-height:56px;}
+.btn-check:hover{transform:scale(1.03);}
+.btn-check:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-next{flex:1;background:var(--purple);color:#fff;border:none;border-radius:14px;padding:16px 20px;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;display:none;min-height:56px;}
+.btn-next:hover{filter:brightness(1.1);}
+
+/* FINISH SCREEN */
+.finish-screen{display:none;text-align:center;padding:40px 20px;}
+.finish-screen.show{display:block;}
+.finish-trophy{font-size:5rem;display:block;margin-bottom:12px;}
+.finish-title{font-size:2rem;font-weight:900;color:var(--pink-dark);margin-bottom:8px;}
+.finish-xp{font-size:1.5rem;font-weight:900;color:var(--gold-dark);margin-bottom:20px;}
+.finish-stars{font-size:2.5rem;color:var(--gold);letter-spacing:8px;margin-bottom:28px;}
+.btn-finish{display:inline-block;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;text-decoration:none;border-radius:14px;padding:16px 32px;font-size:1.1rem;font-weight:900;margin:6px;border:none;cursor:pointer;font-family:inherit;}
+
+@media(max-width:540px){main{padding:14px 12px 60px;}h-title{font-size:1.1rem;}.task-question{font-size:1.1rem;}}
+</style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h1>✏️ Rechtschreibung-Strategien</h1>
-      <a href="../" class="btn btn-secondary">← Zurück</a>
-    </div>
-  </header>
 
-  <main class="container">
-    <!-- PROGRESS BAR -->
-    <div class="task-counter">
-      Aufgabe <span id="current-task">1</span> von <span id="total-tasks">6</span>
-    </div>
-    
-    <div class="progress-bar">
-      <div class="progress-fill" id="progress-fill">0%</div>
-    </div>
+<header>
+  <a class="nav-back" href="../index.html">← Zurück</a>
+  <span class="h-title">✏️ Rechtschreibung</span>
+  <span class="h-xp" id="h-xp">⭐ 0 XP</span>
+</header>
 
-    <!-- EXERCISE CONTAINER -->
-    <div id="exercise-container" class="task-container">
-      <p style="font-size: 44px; text-align: center;">⏳ Lädt Aufgabe...</p>
-    </div>
+<main>
 
-    <!-- EXERCISE NAVIGATION -->
-    <div class="exercise-nav">
-      <button class="btn btn-secondary" id="prev-btn" onclick="previousExercise()" disabled>
-        ← Zurück
-      </button>
-      
-      <button class="btn btn-primary" id="next-btn" onclick="nextExercise()" disabled>
-        Weiter →
-      </button>
-    </div>
+  <!-- WOLKE STRIP -->
+  <div class="wolke-strip">
+    <span class="ws-horse" id="wolke">🐴</span>
+    <div class="ws-msg"><strong id="wolke-title">Rechtschreibung-Strategien</strong><br><span id="wolke-hint">Klick auf 🔊 damit ich die Aufgabe vorlese!</span></div>
+  </div>
 
-    <!-- AUTO-READ INFO -->
-    <div class="info" style="text-align: center; margin-top: 40px;">
-      <p>🔊 <strong>Automatische Vorlesung aktiv!</strong></p>
-      <p>Die Aufgaben werden dir vorgelesen.</p>
-      <button class="btn btn-secondary" onclick="toggleAutoRead()">
-        🔊 Aus/An schalten
-      </button>
-    </div>
-  </main>
+  <!-- PROGRESS -->
+  <div class="prog-row">
+    <span>Aufgabe <strong id="task-num">1</strong> von <strong id="task-total">7</strong></span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>Du schaffst das! 💪 Rechtschreibung braucht Übung.</p>
-  </footer>
+  <!-- TASK AREA -->
+  <div id="task-area"></div>
 
-  <!-- SCRIPTS -->
-  <script src="http://localhost/tools/js/axios/axios.min.js"></script>
-  <script src="../assets/js/core.js"></script>
-  <script src="../assets/js/tts.js"></script>
-  <script src="../assets/js/qrcode-gen.js"></script>
-  <script src="../assets/js/exercises.js"></script>
+  <!-- FINISH SCREEN -->
+  <div class="finish-screen" id="finish">
+    <span class="finish-trophy">🏆</span>
+    <div class="finish-title" id="fin-title">Super gemacht, Aela!</div>
+    <div class="finish-xp" id="fin-xp">+150 XP</div>
+    <div class="finish-stars" id="fin-stars">★★★</div>
+    <p style="font-size:1.1rem;color:var(--text-soft);margin-bottom:28px" id="fin-msg">Wolke ist so stolz auf dich!</p>
+    <a class="btn-finish" href="../index.html">🏠 Zur Startseite</a>
+    <button class="btn-finish" onclick="restartModule()">🔁 Nochmal</button>
+  </div>
 
-  <script>
-    // Module data and state
-    let tasks = [];
-    let currentTaskIndex = 0;
-    let exerciseScores = [];
-    let autoReadEnabled = true;
+</main>
 
-    /**
-     * Load tasks from JSON
-     */
-    async function loadTasks() {
-      try {
-        const response = await fetch('../data/rechtschreibung.json');
-        const data = await response.json();
-        tasks = data.tasks;
-        
-        document.getElementById('total-tasks').textContent = tasks.length;
-        
-        // Load first task
-        if (tasks.length > 0) {
-          loadTask(0);
-        }
-      } catch (error) {
-        console.error('Fehler beim Laden der Aufgaben:', error);
-        document.getElementById('exercise-container').innerHTML = 
-          '<p class="error">❌ Fehler beim Laden der Aufgaben!</p>';
-      }
+<script>
+// ── STORAGE ──
+const NS = 'aela_';
+function gs(k){ try{return JSON.parse(localStorage.getItem(NS+k));}catch(e){return null;} }
+function ss(k,v){ try{localStorage.setItem(NS+k,JSON.stringify(v));}catch(e){} }
+
+// ── TTS ──
+function speak(text, rate){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='de-DE'; u.rate=rate||(gs('tts_rate')||0.8); u.pitch=1.1;
+  speechSynthesis.speak(u);
+}
+
+// ── TASKS ──
+const TASKS = [
+  {
+    id: 1, type: 'mc',
+    label: 'Aufgabe 1 – Wer sagt was?',
+    question: 'Dilan sagt: „Ich finde die Rechtschreibung total schwer."\nWas meint Dilan damit?',
+    options: [
+      'Rechtschreiben macht ihr keinen Spaß.',
+      'Rechtschreiben ist einfach für sie.',
+      'Sie schreibt gerne lange Sätze.',
+      'Sie lernt Rechtschreibung nicht in der Schule.'
+    ],
+    correct: 0,
+    feedback_ok: 'Genau! Dilan findet Rechtschreibung schwierig. Das kennen viele!',
+    feedback_err: 'Schau noch mal. Dilan sagt „total schwer" – das bedeutet es macht ihr keinen Spaß.'
+  },
+  {
+    id: 2, type: 'mc',
+    label: 'Aufgabe 2 – Nils und Strategien',
+    question: 'Nils sagt: „Ich kann rechtschreiben und muss dabei nicht nachdenken."\nWas bedeutet das für Nils?',
+    options: [
+      'Nils schreibt immer Fehler.',
+      'Nils hat gute Strategien gelernt.',
+      'Nils denkt gar nicht beim Schreiben.',
+      'Nils mag Deutsch nicht.'
+    ],
+    correct: 1,
+    feedback_ok: 'Super! Nils hat Strategien gelernt – deshalb ist es einfach für ihn.',
+    feedback_err: 'Nils schreibt OHNE Fehler. Das kommt von guten Strategien!'
+  },
+  {
+    id: 3, type: 'match',
+    label: 'Aufgabe 3 – Strategie zuordnen',
+    question: 'Ordne die Strategie dem richtigen Beispiel zu!',
+    pairs: [
+      { left: 'Wörter verlängern', right: 'der Hund → die Hunde' },
+      { left: 'Laut sprechen',     right: 'Haus – man hört das „s"' },
+      { left: 'Wortstamm suchen',  right: 'Hand → Handschuh' },
+      { left: 'Wörterbuch nutzen', right: 'nachschlagen wenn unsicher' },
+    ],
+    feedback_ok: 'Perfekt! Du kennst alle Strategien!',
+    feedback_err: 'Fast! Schau dir die Paare noch einmal an.'
+  },
+  {
+    id: 4, type: 'mc',
+    label: 'Aufgabe 4 – Fehler finden',
+    question: 'Welches Wort ist FALSCH geschrieben?',
+    options: ['das Haus', 'die Strasse', 'der Hund', 'das Kind'],
+    correct: 1,
+    feedback_ok: 'Richtig! „Straße" schreibt man mit ß, nicht ss (nach langem Vokal).',
+    feedback_err: 'Tipp: „Straße" – nach einem langen Vokal kommt ß, nicht ss.'
+  },
+  {
+    id: 5, type: 'mc',
+    label: 'Aufgabe 5 – Groß oder klein?',
+    question: 'Welches Wort muss GROSS geschrieben werden?\n„Heute gehe ich mit meiner ___ in den Park."',
+    options: ['schnell', 'freundin', 'gerne', 'immer'],
+    correct: 1,
+    feedback_ok: 'Genau! Nomen (Namenwörter) schreibt man groß: die Freundin.',
+    feedback_err: 'Freundin ist ein Nomen (Namenwort) → immer groß schreiben!'
+  },
+  {
+    id: 6, type: 'puzzle',
+    label: 'Aufgabe 6 – Satz bauen',
+    question: 'Baue den richtigen Satz! Tippe auf die Wörter in der richtigen Reihenfolge.',
+    words: ['Ich', 'lerne', 'jeden', 'Tag', 'ein', 'neues', 'Wort', '.'],
+    correct_sentence: 'Ich lerne jeden Tag ein neues Wort.',
+    feedback_ok: 'Wunderbar! Perfekter Satz!',
+    feedback_err: 'Fast! Der Satz lautet: Ich lerne jeden Tag ein neues Wort.'
+  },
+  {
+    id: 7, type: 'mc',
+    label: 'Aufgabe 7 – Dein Wissen',
+    question: 'Du findest ein Wort und weißt nicht ob es groß oder klein geschrieben wird. Was machst du?',
+    options: [
+      'Ich rate einfach.',
+      'Ich frage einen Mitschüler.',
+      'Ich prüfe ob es ein Nomen ist – dann groß.',
+      'Ich schreibe das Wort gar nicht.'
+    ],
+    correct: 2,
+    feedback_ok: 'Genau! Das ist die richtige Strategie: Ist es ein Nomen? → Groß!',
+    feedback_err: 'Die beste Strategie: Prüfe ob das Wort ein Nomen (Namenwort) ist!'
+  }
+];
+
+// ── STATE ──
+let currentIdx = 0;
+let score      = 0;
+let xpEarned   = 0;
+let matchSel   = null;
+let puzzlePlaced = [];
+
+// ── RENDER TASK ──
+function renderTask() {
+  const t = TASKS[currentIdx];
+  document.getElementById('task-num').textContent   = currentIdx + 1;
+  document.getElementById('task-total').textContent = TASKS.length;
+  const pct = Math.round(currentIdx / TASKS.length * 100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent  = pct + '%';
+
+  const area = document.getElementById('task-area');
+  area.innerHTML = '';
+  area.appendChild(buildTaskHTML(t));
+
+  // Auto-read question
+  setTimeout(() => speak(t.question), 400);
+  wolkeMsg('Hör gut zu! 🐴', 'Tippe die richtige Antwort!');
+}
+
+function buildTaskHTML(t) {
+  const wrap = document.createElement('div');
+
+  // Task card
+  const card = document.createElement('div');
+  card.className = 'task-card';
+  card.innerHTML = `
+    <div class="task-label">${t.label}</div>
+    <div class="task-question">${t.question.replace(/\n/g,'<br>')}</div>
+    <button class="tts-btn" onclick="speak(TASKS[${currentIdx}].question)">🔊 Vorlesen</button>
+    <button class="tts-btn slow" onclick="speak(TASKS[${currentIdx}].question, 0.4)" style="margin-left:8px">🐌 Langsam</button>
+    <div id="exercise-area"></div>
+    <div class="feedback-box" id="feedback"></div>
+  `;
+  wrap.appendChild(card);
+
+  // Nav row
+  const nav = document.createElement('div');
+  nav.className = 'nav-row';
+  nav.innerHTML = `
+    <button class="btn-check" id="btn-check" onclick="checkAnswer()">✅ Prüfen</button>
+    <button class="btn-next"  id="btn-next"  onclick="nextTask()">Weiter →</button>
+  `;
+  wrap.appendChild(nav);
+
+  // Build exercise after appending (so we can querySelector)
+  setTimeout(() => buildExercise(t), 0);
+  return wrap;
+}
+
+function buildExercise(t) {
+  const area = document.getElementById('exercise-area');
+  if (!area) return;
+
+  if (t.type === 'mc') {
+    const ul = document.createElement('div');
+    ul.className = 'options-list';
+    t.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.id = 'opt-' + i;
+      btn.textContent = opt;
+      btn.onclick = () => selectOpt(i, t.options.length);
+      ul.appendChild(btn);
+    });
+    area.appendChild(ul);
+  }
+
+  if (t.type === 'match') {
+    matchSel = null;
+    const leftItems  = t.pairs.map((p,i) => ({ id: i, side: 'L', text: p.left  }));
+    const rightItems = t.pairs.map((p,i) => ({ id: i, side: 'R', text: p.right }));
+    const shuffle = arr => arr.sort(() => Math.random() - .5);
+    const all = [...shuffle(leftItems), ...shuffle(rightItems)];
+    const grid = document.createElement('div');
+    grid.className = 'match-grid';
+    // Show left column then right column
+    const lefts  = shuffle([...leftItems]);
+    const rights = shuffle([...rightItems]);
+    lefts.forEach(item => grid.appendChild(makeMatchBtn(item)));
+    rights.forEach(item => grid.appendChild(makeMatchBtn(item)));
+    area.appendChild(grid);
+  }
+
+  if (t.type === 'puzzle') {
+    puzzlePlaced = [];
+    const bank = document.createElement('div');
+    bank.className = 'word-bank';
+    bank.id = 'word-bank';
+
+    const slots = document.createElement('div');
+    slots.className = 'word-slots';
+    slots.id = 'word-slots';
+
+    const display = document.createElement('div');
+    display.className = 'sentence-display';
+    display.id = 'sentence-display';
+    display.textContent = '...';
+
+    const shuffle = arr => arr.sort(() => Math.random() - .5);
+    shuffle([...t.words]).forEach((w, i) => {
+      const chip = document.createElement('button');
+      chip.className = 'word-chip';
+      chip.id = 'chip-' + i;
+      chip.textContent = w;
+      chip.dataset.word = w;
+      chip.dataset.idx  = i;
+      chip.onclick = () => placeWord(chip);
+      bank.appendChild(chip);
+    });
+
+    area.appendChild(display);
+    area.appendChild(slots);
+
+    const hint = document.createElement('p');
+    hint.style.cssText = 'text-align:center;color:var(--text-soft);font-size:.95rem;margin-bottom:10px;';
+    hint.textContent = '↑ Dein Satz erscheint hier. ↓ Tippe die Wörter!';
+    area.insertBefore(hint, slots);
+    area.appendChild(bank);
+
+    // Clear button
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'tts-btn slow';
+    clearBtn.style.cssText = 'margin-top:10px;';
+    clearBtn.textContent = '🗑 Alles löschen';
+    clearBtn.onclick = clearPuzzle;
+    area.appendChild(clearBtn);
+  }
+}
+
+// ── MC LOGIC ──
+let selectedOpt = null;
+function selectOpt(i, total) {
+  selectedOpt = i;
+  for (let j = 0; j < total; j++) {
+    document.getElementById('opt-' + j).classList.toggle('selected', j === i);
+  }
+}
+
+// ── MATCH LOGIC ──
+const matchedPairs = new Set();
+function makeMatchBtn(item) {
+  const btn = document.createElement('button');
+  btn.className = 'match-btn';
+  btn.id = 'mb-' + item.side + '-' + item.id;
+  btn.textContent = item.text;
+  btn.dataset.side = item.side;
+  btn.dataset.id   = item.id;
+  btn.onclick = () => handleMatchClick(btn);
+  return btn;
+}
+function handleMatchClick(btn) {
+  if (btn.classList.contains('matched')) return;
+  if (!matchSel) {
+    if (matchSel) matchSel.classList.remove('sel');
+    matchSel = btn;
+    btn.classList.add('sel');
+    return;
+  }
+  // Second click: check pair
+  if (matchSel === btn) { btn.classList.remove('sel'); matchSel = null; return; }
+  if (matchSel.dataset.side === btn.dataset.side) {
+    matchSel.classList.remove('sel');
+    matchSel = btn;
+    btn.classList.add('sel');
+    return;
+  }
+  if (matchSel.dataset.id === btn.dataset.id) {
+    // Correct pair!
+    matchSel.classList.remove('sel'); matchSel.classList.add('matched');
+    btn.classList.add('matched');
+    matchedPairs.add(btn.dataset.id);
+    matchSel = null;
+    const t = TASKS[currentIdx];
+    if (matchedPairs.size === t.pairs.length) {
+      document.getElementById('btn-check').disabled = false;
     }
+  } else {
+    // Wrong pair
+    btn.classList.add('shake');
+    matchSel.classList.add('shake');
+    setTimeout(() => { btn.classList.remove('shake','sel'); matchSel.classList.remove('shake','sel'); matchSel = null; }, 400);
+  }
+}
 
-    /**
-     * Load and render task
-     */
-    function loadTask(index) {
-      if (index < 0 || index >= tasks.length) return;
+// ── PUZZLE LOGIC ──
+function placeWord(chip) {
+  if (chip.classList.contains('placed')) {
+    // Remove from placed
+    chip.classList.remove('placed');
+    const idx = puzzlePlaced.indexOf(chip.dataset.word + '_' + chip.dataset.idx);
+    if (idx > -1) puzzlePlaced.splice(idx, 1);
+    document.getElementById('word-bank').appendChild(chip);
+  } else {
+    chip.classList.add('placed');
+    puzzlePlaced.push(chip.dataset.word + '_' + chip.dataset.idx);
+    document.getElementById('word-slots').appendChild(chip);
+  }
+  updateSentenceDisplay();
+}
+function updateSentenceDisplay() {
+  const words = [...document.getElementById('word-slots').querySelectorAll('.word-chip')].map(c => c.dataset.word);
+  document.getElementById('sentence-display').textContent = words.length ? words.join(' ') : '...';
+}
+function clearPuzzle() {
+  const bank = document.getElementById('word-bank');
+  document.querySelectorAll('#word-slots .word-chip').forEach(c => {
+    c.classList.remove('placed','correct');
+    bank.appendChild(c);
+  });
+  puzzlePlaced = [];
+  updateSentenceDisplay();
+}
 
-      currentTaskIndex = index;
-      const task = tasks[index];
+// ── CHECK ANSWER ──
+function checkAnswer() {
+  const t = TASKS[currentIdx];
+  let isCorrect = false;
 
-      // Update counters
-      document.getElementById('current-task').textContent = index + 1;
-      updateProgressBar();
-
-      // Create exercise based on type
-      let exercise;
-      switch (task.type) {
-        case 'multiple-choice':
-          exercise = new MultipleChoiceExercise(task);
-          break;
-        case 'matching':
-          exercise = createMatchingExercise(task);
-          break;
-        case 'text-input':
-          exercise = new TextInputExercise(task);
-          break;
-        default:
-          exercise = null;
-      }
-
-      currentExercise = exercise;
-
-      // Render exercise
-      const container = document.getElementById('exercise-container');
-      if (exercise) {
-        container.innerHTML = exercise.render();
-        exercise.startTimer();
-
-        // Auto-read task
-        if (autoReadEnabled && task.autoRead) {
-          setTimeout(() => {
-            readTaskAloud(task);
-          }, 500);
-        }
-      }
-
-      // Update buttons
-      document.getElementById('prev-btn').disabled = index === 0;
-      document.getElementById('next-btn').disabled = true; // Enable after answering
+  if (t.type === 'mc') {
+    if (selectedOpt === null) { speak('Wähle bitte eine Antwort!'); return; }
+    isCorrect = selectedOpt === t.correct;
+    for (let i = 0; i < t.options.length; i++) {
+      const btn = document.getElementById('opt-' + i);
+      btn.disabled = true;
+      if (i === t.correct) btn.classList.add('correct');
+      else if (i === selectedOpt && !isCorrect) btn.classList.add('wrong');
     }
+    selectedOpt = null;
+  }
 
-    /**
-     * Create matching exercise
-     */
-    function createMatchingExercise(task) {
-      class MatchExercise extends AelaExercise {
-        constructor(data) {
-          super(data);
-          this.matches = {};
-        }
+  if (t.type === 'match') {
+    isCorrect = matchedPairs.size === t.pairs.length;
+    if (!isCorrect) { speak('Verbinde alle Paare!'); return; }
+  }
 
-        checkMatches() {
-          this.endTimer();
-          let correct = 0;
-          this.data.pairs.forEach((pair, idx) => {
-            const selected = document.querySelector(`.pair-${idx} .selected-right`);
-            if (selected) {
-              const rightIdx = parseInt(selected.dataset.rightIndex);
-              if (rightIdx === pair.correctIndex) {
-                correct++;
-              }
-            }
-          });
+  if (t.type === 'puzzle') {
+    const placedWords = [...document.getElementById('word-slots').querySelectorAll('.word-chip')].map(c => c.dataset.word);
+    const sentence = placedWords.join(' ');
+    // Allow with or without trailing period
+    const clean = s => s.replace(/\s*\.$/, '').trim().toLowerCase();
+    isCorrect = clean(sentence) === clean(t.correct_sentence);
+    if (!isCorrect && placedWords.length < t.words.length - 1) { speak('Lege alle Wörter in den Satz!'); return; }
+  }
 
-          this.isCorrect = correct === this.data.pairs.length;
-          this.calculateScore(this.isCorrect, this.data.basePoints);
-          return this.isCorrect;
-        }
+  showFeedback(isCorrect, t);
+}
 
-        render() {
-          let html = `
-            <div class="task-container">
-              <h2>${this.data.title}</h2>
-              <p style="font-size: 40px; margin: 20px 0;">${this.data.instruction}</p>
-              <div class="matching-container">
-          `;
+function showFeedback(isCorrect, t) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box ' + (isCorrect ? 'correct' : 'wrong');
+  fb.textContent = isCorrect ? ('✅ ' + t.feedback_ok) : ('❌ ' + t.feedback_err);
 
-          // Left side
-          html += '<div class="matching-left">';
-          this.data.pairs.forEach((pair, idx) => {
-            html += `
-              <div class="word pair-${idx}" 
-                   onclick="selectLeftPair(${idx})"
-                   data-pair="${idx}"
-                   style="margin: 20px 0; padding: 15px; background: white; border: 2px solid black; cursor: pointer; border-radius: 8px;">
-                ${pair.left}
-              </div>
-            `;
-          });
-          html += '</div>';
+  document.getElementById('btn-check').style.display = 'none';
+  document.getElementById('btn-next').style.display  = 'block';
 
-          // Right side
-          html += '<div class="matching-right">';
-          this.data.rightItems.forEach((item, idx) => {
-            html += `
-              <div class="word" 
-                   onclick="selectRightItem(${idx})"
-                   data-right="${idx}"
-                   style="margin: 20px 0; padding: 15px; background: white; border: 2px solid black; cursor: pointer; border-radius: 8px;">
-                ${item}
-              </div>
-            `;
-          });
-          html += '</div>';
+  if (isCorrect) {
+    score++;
+    const pts = 20;
+    xpEarned += pts;
+    addXP(pts);
+    wolkeHappy();
+    speak(t.feedback_ok);
+    if (score >= 3) shootConfetti();
+  } else {
+    speak(t.feedback_err, 0.7);
+    wolkeMsg('Nicht ganz...', 'Schau dir die richtige Antwort an!');
+  }
+  document.getElementById('h-xp').textContent = '⭐ ' + (getTotalXP()) + ' XP';
+}
 
-          html += `
-              </div>
-              <button class="btn btn-primary" style="display: block; margin: 40px auto;" 
-                      onclick="currentExercise.checkMatches(); enableNextButton(); showFeedback()">
-                ✔️ Überprüfen
-              </button>
-              <div id="feedback-container"></div>
-            </div>
-          `;
+// ── NEXT TASK ──
+function nextTask() {
+  currentIdx++;
+  matchedPairs.clear();
+  if (currentIdx >= TASKS.length) {
+    finishModule();
+  } else {
+    renderTask();
+  }
+}
 
-          return html;
-        }
-      }
+// ── FINISH ──
+function finishModule() {
+  document.getElementById('prog-bar').style.width = '100%';
+  document.getElementById('prog-pct').textContent = '100%';
+  document.getElementById('task-area').style.display = 'none';
+  document.getElementById('finish').classList.add('show');
 
-      return new MatchExercise(task);
-    }
+  const pct = Math.round(score / TASKS.length * 100);
+  const stars = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
+  const xp = 50 + score * 15;
 
-    /**
-     * Select matching pair
-     */
-    let selectedLeft = null;
-    let selectedRight = null;
+  document.getElementById('fin-xp').textContent    = '+' + xp + ' XP';
+  document.getElementById('fin-stars').textContent = '★'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('fin-msg').textContent   = score >= 5
+    ? 'Wolke springt vor Freude! Du bist ein Rechtschreib-Profi!'
+    : 'Gut gemacht! Übe noch einmal um alle Sterne zu sammeln!';
 
-    function selectLeftPair(idx) {
-      document.querySelectorAll('.matching-left .word').forEach(w => w.classList.remove('selected'));
-      document.querySelector(`.pair-${idx}`).classList.add('selected');
-      selectedLeft = idx;
-    }
+  addXP(xp);
 
-    function selectRightItem(idx) {
-      if (selectedLeft !== null) {
-        // Mark connection
-        const rightEl = document.querySelector(`[data-right="${idx}"]`);
-        rightEl.classList.add(`selected-right`);
-        rightEl.dataset.rightIndex = idx;
-        selectedLeft = null;
-      }
-    }
+  // Save to progress
+  const p = gs('progress') || {};
+  if (!p.modules) p.modules = {};
+  p.modules.rechtschreibung = { done: true, stars, score: pct };
+  ss('progress', p);
 
-    /**
-     * Read task aloud
-     */
-    function readTaskAloud(task) {
-      let text = task.question;
-      if (task.text) text += '. ' + task.text;
-      if (task.instruction) text += '. ' + task.instruction;
-      
-      aelaTTS.speak(text);
-    }
+  speak('Herzlichen Glückwunsch! Du hast das Modul Rechtschreibung abgeschlossen!');
+  setTimeout(() => { shootConfetti(); shootConfetti(); }, 500);
+  setTimeout(shootConfetti, 1200);
+}
 
-    /**
-     * Update progress bar
-     */
-    function updateProgressBar() {
-      const percent = Math.round((currentTaskIndex / tasks.length) * 100);
-      const fill = document.getElementById('progress-fill');
-      fill.style.width = percent + '%';
-      fill.textContent = percent + '%';
-    }
+function restartModule() {
+  currentIdx = 0; score = 0; xpEarned = 0; selectedOpt = null;
+  matchedPairs.clear();
+  document.getElementById('task-area').style.display = '';
+  document.getElementById('finish').classList.remove('show');
+  renderTask();
+}
 
-    /**
-     * Show feedback and enable next
-     */
-    function showFeedback() {
-      const container = document.getElementById('feedback-container');
-      currentExercise.showFeedback(container);
-      
-      // Store score
-      exerciseScores.push(currentExercise.score);
+// ── WOLKE ──
+function wolkeHappy() {
+  const el = document.getElementById('wolke');
+  el.classList.remove('happy');
+  void el.offsetWidth;
+  el.classList.add('happy');
+  setTimeout(() => el.classList.remove('happy'), 700);
+}
+function wolkeMsg(title, hint) {
+  document.getElementById('wolke-title').textContent = title;
+  document.getElementById('wolke-hint').textContent  = hint;
+}
 
-      // Read feedback aloud
-      const result = currentExercise.isCorrect ? 'Richtig! ' : 'Leider falsch. ';
-      aelaTTS.speak(result + ' +' + currentExercise.score + ' Punkte');
-    }
+// ── XP ──
+function addXP(pts) {
+  const p = gs('progress') || { xp: 0 };
+  p.xp = (p.xp || 0) + pts;
+  ss('progress', p);
+}
+function getTotalXP() {
+  return (gs('progress') || { xp: 0 }).xp;
+}
 
-    /**
-     * Enable next button
-     */
-    function enableNextButton() {
-      document.getElementById('next-btn').disabled = false;
-    }
+// ── CONFETTI ──
+function shootConfetti() {
+  if (typeof confetti !== 'undefined') {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#c2185b','#7b1fa2','#f9a825','#2e7d32'] });
+  }
+}
 
-    /**
-     * Navigation
-     */
-    function nextExercise() {
-      if (currentTaskIndex < tasks.length - 1) {
-        loadTask(currentTaskIndex + 1);
-      } else {
-        finishModule();
-      }
-    }
-
-    function previousExercise() {
-      if (currentTaskIndex > 0) {
-        loadTask(currentTaskIndex - 1);
-      }
-    }
-
-    /**
-     * Toggle auto-read
-     */
-    function toggleAutoRead() {
-      autoReadEnabled = !autoReadEnabled;
-      aelaTTS.speak(autoReadEnabled ? 'Automatische Vorlesung an' : 'Automatische Vorlesung aus');
-    }
-
-    /**
-     * Finish module
-     */
-    function finishModule() {
-      // Calculate module score
-      const totalScore = exerciseScores.reduce((a, b) => a + b, 0);
-      const maxScore = tasks.reduce((sum, t) => sum + t.basePoints, 0);
-      const percentScore = Math.round((totalScore / maxScore) * 100);
-
-      // Save to progress
-      aelaCore.completeModule('rechtschreibung', percentScore);
-      aelaCore.addXP(totalScore);
-
-      // Generate QR
-      const qrData = aelaqr.generateResultQR('Rechtschreibung-Strategien', percentScore);
-
-      // Show result
-      const resultHTML = aelaqr.createResultCard(
-        'Rechtschreibung-Strategien',
-        percentScore,
-        qrData.uuid,
-        qrData.qrImageURL
-      );
-
-      document.getElementById('exercise-container').innerHTML = resultHTML;
-      document.getElementById('prev-btn').hidden = true;
-      document.getElementById('next-btn').innerHTML = '🏠 Zur Startseite';
-      document.getElementById('next-btn').disabled = false;
-      document.getElementById('next-btn').onclick = () => window.location.href = '../';
-
-      // Read result
-      aelaTTS.speak(`Modul abgeschlossen! Du hast ${percentScore} Prozent erreicht. ${totalScore} neue Punkte!`);
-    }
-
-    // Load tasks on page load
-    window.addEventListener('load', loadTasks);
-  </script>
+// ── INIT ──
+document.getElementById('h-xp').textContent = '⭐ ' + getTotalXP() + ' XP';
+renderTask();
+</script>
 </body>
 </html>

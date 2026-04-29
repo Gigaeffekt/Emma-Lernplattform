@@ -1,287 +1,525 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aela's Deutschkurs - Barrierefreie Lernplattform für Rechtschreibung und Grammatik">
-  
-  <title>Aela's Deutschkurs 🎓</title>
-  
-  <!-- Accessibility CSS -->
-  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/aela-main.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aelas Wortpferd 🐴</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+/* ======================================================
+   AELAS WORTPFERD – main dashboard
+   Inspiriert von Lunas Reiterhof + Angel's Au-pair
+   Für Aela: 10 Jahre, ADHS, Sehbehinderung, iPad
+   - Mindest-Font: 22px (1.375rem bei 16px base)
+   - Klare Touch-Targets: min 56px
+   - Hoher Kontrast
+   - Immer nur 1 Fokus-Bereich sichtbar
+   ====================================================== */
+:root {
+  --pink:        #c2185b;
+  --pink-dark:   #880e4f;
+  --pink-light:  #fce4ec;
+  --pink-mid:    #f48fb1;
+  --purple:      #7b1fa2;
+  --purple-light:#f3e5f5;
+  --gold:        #f9a825;
+  --gold-dark:   #e65100;
+  --green:       #2e7d32;
+  --green-light: #e8f5e9;
+  --blue:        #1565c0;
+  --text:        #1a0a2e;
+  --text-soft:   #5d4e75;
+  --bg:          #fff8fc;
+  --surface:     #ffffff;
+  --border:      #f48fb1;
+  --correct:     #2e7d32;
+  --wrong:       #c62828;
+  --radius:      20px;
+  --radius-sm:   12px;
+  --shadow:      0 4px 20px rgba(194,24,91,.18);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.55;
+}
+
+/* ── HEADER ── */
+header {
+  background: linear-gradient(135deg, var(--pink-dark) 0%, var(--purple) 100%);
+  color: #fff;
+  padding: 0 20px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 3px 14px rgba(136,14,79,.4);
+}
+.h-logo  { font-size: 2.4rem; }
+.h-title { font-size: 1.5rem; font-weight: 900; flex: 1; }
+.h-xp    { font-size: 1.1rem; font-weight: 900; background: rgba(255,255,255,.18); padding: 6px 14px; border-radius: 30px; white-space: nowrap; }
+.h-streak{ font-size: 1.1rem; font-weight: 900; background: rgba(249,168,37,.3); padding: 6px 14px; border-radius: 30px; white-space: nowrap; }
+
+/* ── MAIN ── */
+main { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+
+/* ── WOLKE WELCOME ── */
+.wolke-box {
+  background: linear-gradient(135deg, var(--pink-light), var(--purple-light));
+  border: 3px solid var(--pink-mid);
+  border-radius: var(--radius);
+  padding: 24px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.wolke-horse { font-size: 5rem; flex-shrink: 0; cursor: default; user-select: none; transition: transform .3s; }
+.wolke-horse:hover { transform: scale(1.12) rotate(-5deg); }
+.wolke-text h2 { font-size: 1.6rem; font-weight: 900; color: var(--pink-dark); margin-bottom: 6px; }
+.wolke-text p  { font-size: 1.1rem; color: var(--text-soft); }
+
+/* ── WEIDE (Wolkes Fortschritt) ── */
+.weide-box {
+  background: var(--surface);
+  border: 3px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 28px;
+}
+.weide-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+.weide-title  { font-size: 1.2rem; font-weight: 900; color: var(--pink-dark); }
+.weide-count  { font-size: 1.1rem; font-weight: 800; color: var(--purple); }
+.weide-bar-bg { background: #f0e4f8; border-radius: 30px; height: 18px; overflow: hidden; border: 2px solid var(--border); }
+.weide-bar    { height: 100%; background: linear-gradient(90deg, var(--pink) 0%, var(--purple) 100%); border-radius: 30px; transition: width .6s ease; min-width: 0%; }
+.weide-visual { font-size: 2rem; text-align: center; margin: 12px 0 4px; letter-spacing: 4px; min-height: 44px; }
+.weide-msg    { font-size: 1rem; color: var(--text-soft); text-align: center; }
+
+/* ── STATS ROW ── */
+.stats-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+.stat-card {
+  flex: 1; min-width: 120px;
+  background: var(--surface);
+  border: 3px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 14px;
+  text-align: center;
+}
+.stat-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+.stat-val  { font-size: 2rem; font-weight: 900; color: var(--pink-dark); display: block; }
+.stat-lbl  { font-size: .85rem; color: var(--text-soft); }
+
+/* ── SECTION LABELS ── */
+.section-label {
+  font-size: 1.25rem; font-weight: 900;
+  color: var(--pink-dark);
+  margin: 28px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--pink-mid);
+}
+
+/* ── CARDS GRID ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* ── MODULE CARD ── */
+.mod-card {
+  background: var(--surface);
+  border: 3px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-decoration: none;
+  color: var(--text);
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color .2s, transform .15s, box-shadow .2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.mod-card:hover {
+  border-color: var(--pink);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+.mod-card.locked { opacity: .45; pointer-events: none; filter: grayscale(.5); }
+.mod-card.done   { border-color: var(--green); }
+.mod-card.done::after {
+  content: '✅';
+  position: absolute; top: 12px; right: 14px;
+  font-size: 1.5rem;
+}
+.mc-icon  { font-size: 2.6rem; }
+.mc-title { font-size: 1.2rem; font-weight: 900; }
+.mc-desc  { font-size: .95rem; color: var(--text-soft); flex: 1; }
+.mc-meta  { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 2px solid #f5e7f5; font-size: .9rem; color: var(--text-soft); }
+.mc-xp    { color: var(--gold-dark); font-weight: 800; font-size: 1rem; }
+.mc-stars { color: var(--gold); font-size: 1rem; letter-spacing: 1px; }
+
+/* ── START BUTTON ── */
+.btn-start {
+  display: block; width: 100%; margin-top: 8px;
+  background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+  color: #fff; border: none; border-radius: 14px;
+  padding: 14px 20px; font-size: 1.1rem; font-weight: 900;
+  font-family: inherit; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(194,24,91,.3);
+  transition: transform .12s, box-shadow .12s;
+  text-align: center;
+}
+.btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(194,24,91,.45); }
+.btn-start:active { transform: scale(.97); }
+
+/* ── PACK POPUP ── */
+.popup-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.65);
+  z-index: 900; display: none; align-items: center; justify-content: center;
+}
+.popup-overlay.show { display: flex; }
+.popup-box {
+  background: #fff; border-radius: 28px; padding: 38px 30px 28px;
+  text-align: center; max-width: 340px; width: 92%;
+  border: 4px solid var(--pink);
+  box-shadow: 0 20px 60px rgba(194,24,91,.4);
+  animation: pop-in .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop-in { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.popup-icon  { font-size: 4.5rem; display: block; margin-bottom: 10px; }
+.popup-title { font-size: 1.6rem; font-weight: 900; color: var(--pink-dark); margin-bottom: 8px; }
+.popup-msg   { font-size: 1rem; color: var(--text-soft); margin-bottom: 20px; }
+.btn-popup {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff; border: none; border-radius: 14px;
+  padding: 14px 30px; font-size: 1.1rem; font-weight: 900;
+  font-family: inherit; cursor: pointer; width: 100%; margin-bottom: 10px;
+}
+.btn-popup-sec {
+  background: none; border: 2px solid var(--border); color: var(--text-soft);
+  border-radius: 14px; padding: 12px 20px; font-size: 1rem; font-weight: 700;
+  font-family: inherit; cursor: pointer; width: 100%;
+}
+
+/* ── TTS SETTINGS ── */
+.settings-box {
+  background: var(--purple-light);
+  border: 3px solid #ce93d8;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 28px;
+}
+.settings-box h3 { font-size: 1.15rem; font-weight: 900; margin-bottom: 14px; color: var(--purple); }
+.setting-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+.setting-row label { font-size: 1rem; font-weight: 700; min-width: 120px; }
+input[type=range] { flex: 1; min-width: 120px; accent-color: var(--purple); height: 8px; }
+.speed-val { font-size: 1rem; font-weight: 900; color: var(--purple); min-width: 40px; }
+.btn-test-tts {
+  background: var(--purple); color: #fff; border: none; border-radius: 12px;
+  padding: 12px 22px; font-size: 1rem; font-weight: 900; font-family: inherit; cursor: pointer;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 540px) {
+  .h-title { font-size: 1.15rem; }
+  main { padding: 16px 12px 60px; }
+  .wolke-horse { font-size: 3.5rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <h1>📚 Aela's Deutschkurs</h1>
-    <nav>
-      <a href="#progress">Fortschritt</a>
-      <a href="#modules">Module</a>
-      <a href="#settings">Einstellungen</a>
-    </nav>
-  </header>
 
-  <!-- MAIN CONTENT -->
-  <main class="container">
-    
-    <!-- PROGRESS SECTION -->
-    <section id="progress" class="mb-xl">
-      <h2>📊 Dein Fortschritt</h2>
-      
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
-        <div class="card text-center">
-          <h3>⭐ Punkte (XP)</h3>
-          <p id="xp-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">0</p>
-        </div>
-        
-        <div class="card text-center">
-          <h3>🔥 Streak</h3>
-          <p id="streak-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">0</p>
-          <p style="font-size: 32px;">Tage</p>
-        </div>
-        
-        <div class="card text-center">
-          <h3>✅ Fertig</h3>
-          <p id="completion-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">0%</p>
-        </div>
-        
-        <div class="card text-center">
-          <h3>📈 Ergebnis</h3>
-          <p id="score-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">-</p>
-        </div>
+<header>
+  <span class="h-logo">🐴</span>
+  <span class="h-title">Aelas Wortpferd</span>
+  <span class="h-streak" id="h-streak">🔥 0 Tage</span>
+  <span class="h-xp" id="h-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+
+  <!-- WOLKE WELCOME -->
+  <div class="wolke-box">
+    <div class="wolke-horse" id="wolke" title="Wolke, dein Wortpferd!" onclick="petWolke()">🐴</div>
+    <div class="wolke-text">
+      <h2 id="wolke-greeting">Hallo, Aela! 👋</h2>
+      <p id="wolke-msg">Wolke wartet auf dich! Lös Aufgaben und deine Weide wächst! 🌸</p>
+    </div>
+  </div>
+
+  <!-- WOLKES WEIDE -->
+  <div class="weide-box">
+    <div class="weide-header">
+      <span class="weide-title">🌿 Wolkes Weide</span>
+      <span class="weide-count" id="weide-count">0 / 4 Module</span>
+    </div>
+    <div class="weide-bar-bg"><div class="weide-bar" id="weide-bar" style="width:0%"></div></div>
+    <div class="weide-visual" id="weide-visual">🏚️</div>
+    <div class="weide-msg" id="weide-msg">Löse Module um Wolkes Weide zu verschönern!</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-icon">⭐</span>
+      <span class="stat-val" id="stat-xp">0</span>
+      <span class="stat-lbl">Gesamt-XP</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🔥</span>
+      <span class="stat-val" id="stat-streak">0</span>
+      <span class="stat-lbl">Tage-Streak</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✅</span>
+      <span class="stat-val" id="stat-done">0</span>
+      <span class="stat-lbl">Module fertig</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">📈</span>
+      <span class="stat-val" id="stat-avg">–</span>
+      <span class="stat-lbl">Ø Ergebnis</span>
+    </div>
+  </div>
+
+  <!-- MODULE -->
+  <div class="section-label">🎮 Deine Aufgaben</div>
+  <div class="cards-grid">
+
+    <div class="mod-card" id="card-rechts" onclick="goModule('rechtschreibung')">
+      <div class="mc-icon">✏️</div>
+      <div class="mc-title">Rechtschreibung</div>
+      <div class="mc-desc">Lerne Tricks und Strategien für die Rechtschreibung. Mit Dilan, Nils und Kira!</div>
+      <div class="mc-meta">
+        <span class="mc-stars" id="stars-rechts">☆☆☆</span>
+        <span class="mc-xp">+150 XP</span>
       </div>
+      <button class="btn-start">▶ Starten</button>
+    </div>
 
-      <!-- QR Code für aktuellen Fortschritt -->
-      <div style="text-align: center; margin-top: 40px;">
-        <h3>📱 Teile deinen Fortschritt</h3>
-        <button class="btn btn-primary" onclick="generateProgressQR()">
-          🔗 QR-Code generieren
-        </button>
-        <div id="qr-container" style="margin-top: 20px;"></div>
+    <div class="mod-card" id="card-wortarten" onclick="goModule('wortarten')">
+      <div class="mc-icon">🔤</div>
+      <div class="mc-title">Wortarten</div>
+      <div class="mc-desc">Nomen, Verben, Adjektive – finde alle Wortarten in Sätzen!</div>
+      <div class="mc-meta">
+        <span class="mc-stars" id="stars-wortarten">☆☆☆</span>
+        <span class="mc-xp">+150 XP</span>
       </div>
-    </section>
+      <button class="btn-start">▶ Starten</button>
+    </div>
 
-    <!-- DIVIDER -->
-    <hr style="border: 2px solid black; margin: 60px 0;">
-
-    <!-- MODULES SECTION -->
-    <section id="modules" class="mb-xl">
-      <h2>🎮 Module</h2>
-      <p style="font-size: 40px; margin: 20px 0;">Wähle ein Modul zum Starten:</p>
-      
-      <div class="grid">
-        <!-- MODUL 1: Rechtschreibung -->
-        <div class="card module-card" onclick="window.location.href='modules/rechtschreibung.html'">
-          <h3>✏️ Rechtschreibung</h3>
-          <p>Lerne Rechtschreib-Strategien!</p>
-          <div class="module-status" id="modul1-status">
-            <p>📊 Nicht begonnen</p>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
-            ▶️ STARTEN
-          </button>
-        </div>
-
-        <!-- MODUL 2: Wortarten -->
-        <div class="card module-card" onclick="window.location.href='modules/wortarten.html'">
-          <h3>📝 Wortarten</h3>
-          <p>Erkenne Nomen, Verben, Adjektive!</p>
-          <div class="module-status" id="modul2-status">
-            <p>📊 Nicht begonnen</p>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
-            ▶️ STARTEN
-          </button>
-        </div>
-
-        <!-- MODUL 3: Satzglieder -->
-        <div class="card module-card" onclick="window.location.href='modules/satzglieder.html'">
-          <h3>🔗 Satzglieder</h3>
-          <p>Lerne Subjekt, Prädikat, Objekt!</p>
-          <div class="module-status" id="modul3-status">
-            <p>📊 Nicht begonnen</p>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
-            ▶️ STARTEN
-          </button>
-        </div>
-
-        <!-- MODUL 4: Kreativität -->
-        <div class="card module-card" onclick="window.location.href='modules/spielanleitung.html'">
-          <h3>✨ Kreativität</h3>
-          <p>Schreibe deine eigene Anleitung!</p>
-          <div class="module-status" id="modul4-status">
-            <p>📊 Nicht begonnen</p>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
-            ▶️ STARTEN
-          </button>
-        </div>
+    <div class="mod-card" id="card-satzglieder" onclick="goModule('satzglieder')">
+      <div class="mc-icon">🔗</div>
+      <div class="mc-title">Satzglieder</div>
+      <div class="mc-desc">Wer tut was? Finde Subjekt, Prädikat und Objekt in jedem Satz!</div>
+      <div class="mc-meta">
+        <span class="mc-stars" id="stars-satzglieder">☆☆☆</span>
+        <span class="mc-xp">+150 XP</span>
       </div>
-    </section>
+      <button class="btn-start">▶ Starten</button>
+    </div>
 
-    <!-- DIVIDER -->
-    <hr style="border: 2px solid black; margin: 60px 0;">
-
-    <!-- SETTINGS SECTION -->
-    <section id="settings" class="mb-xl">
-      <h2>⚙️ Einstellungen</h2>
-      
-      <div class="card">
-        <h3>🔊 Text-to-Speech</h3>
-        
-        <label style="font-size: 40px; margin: 20px 0;">
-          <strong>Sprech-Geschwindigkeit:</strong>
-        </label>
-        
-        <div class="flex" style="align-items: center; gap: 20px;">
-          <input type="range" id="tts-speed" min="0.3" max="2" step="0.1" value="0.8"
-                 onchange="updateTTSSpeed(this.value)"
-                 style="font-size: 40px; width: 60%; min-width: 200px;">
-          <button class="btn btn-secondary" onclick="testTTS()">
-            🔊 TEST
-          </button>
-        </div>
-
-        <p id="tts-speed-display" style="font-size: 40px; margin-top: 20px;">
-          Aktuelle Geschwindigkeit: 0.8x
-        </p>
+    <div class="mod-card" id="card-puzzle" onclick="goModule('wortpuzzle')">
+      <div class="mc-icon">🧩</div>
+      <div class="mc-title">Wort-Puzzle</div>
+      <div class="mc-desc">Baue Sätze aus Wörtern! Ziehe die Wörter in die richtige Reihenfolge.</div>
+      <div class="mc-meta">
+        <span class="mc-stars" id="stars-puzzle">☆☆☆</span>
+        <span class="mc-xp">+150 XP</span>
       </div>
+      <button class="btn-start">▶ Starten</button>
+    </div>
 
-      <div class="card" style="margin-top: 40px;">
-        <h3>🎨 Design</h3>
-        
-        <label style="font-size: 40px; margin: 20px 0;">
-          <strong>Schrift-Größe:</strong>
-        </label>
-        
-        <div class="flex" style="gap: 20px; flex-wrap: wrap;">
-          <button class="btn btn-secondary" onclick="setFontSize('small')">
-            🔤 Klein
-          </button>
-          <button class="btn btn-primary" onclick="setFontSize('normal')">
-            🔤 Normal
-          </button>
-          <button class="btn btn-secondary" onclick="setFontSize('large')">
-            🔤 Groß
-          </button>
-        </div>
-      </div>
+  </div>
 
-      <div class="card" style="margin-top: 40px;">
-        <h3>💾 Daten</h3>
-        
-        <button class="btn btn-secondary" onclick="exportProgress()">
-          💾 Fortschritt exportieren
-        </button>
-        
-        <button class="btn btn-secondary" style="margin-left: 20px;" onclick="if(confirm('Wirklich alles löschen?')) { aelaCore.clearAll(); location.reload(); }">
-          🗑️ Alles zurücksetzen
-        </button>
-      </div>
-    </section>
+  <!-- TTS EINSTELLUNGEN -->
+  <div class="section-label">🔊 Vorlesestimme</div>
+  <div class="settings-box">
+    <h3>Wie schnell soll Wolke vorlesen?</h3>
+    <div class="setting-row">
+      <label for="speed-slider">Geschwindigkeit</label>
+      <input type="range" id="speed-slider" min="0.3" max="1.5" step="0.1" value="0.8" oninput="updateSpeed(this.value)">
+      <span class="speed-val" id="speed-val">0.8×</span>
+    </div>
+    <button class="btn-test-tts" onclick="testTTS()">🔊 Anhören</button>
+  </div>
 
-  </main>
+</main>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>Aela's Deutschkurs 🎓 | Alle Inhalte sind barrierefrei</p>
-    <p style="font-size: 32px;">Viel Erfolg beim Lernen! 📚✨</p>
-  </footer>
+<!-- POPUP: Wolke ist glücklich -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <span class="popup-icon" id="popup-icon">🐴</span>
+    <div class="popup-title" id="popup-title">Super!</div>
+    <div class="popup-msg" id="popup-msg">Wolke freut sich!</div>
+    <button class="btn-popup" id="popup-btn" onclick="closePopup()">Weiter →</button>
+  </div>
+</div>
 
-  <!-- SCRIPTS -->
-  <script src="assets/js/core.js"></script>
-  <script src="assets/js/tts.js"></script>
-  <script src="assets/js/qrcode-gen.js"></script>
-  <script src="assets/js/exercises.js"></script>
-  
-  <script>
-    // Update progress display on page load
-    function updateProgressDisplay() {
-      const progress = aelaCore.getProgress();
-      const totalScore = aelaCore.getTotalScore();
-      const completionPercent = aelaCore.getCompletionPercent();
+<script>
+// ── STORAGE ──
+const NS = 'aela_';
+function gs(k) { try { return JSON.parse(localStorage.getItem(NS+k)); } catch(e) { return null; } }
+function ss(k,v) { try { localStorage.setItem(NS+k, JSON.stringify(v)); } catch(e) {} }
 
-      document.getElementById('xp-display').textContent = progress.xp;
-      document.getElementById('streak-display').textContent = progress.streak;
-      document.getElementById('completion-display').textContent = completionPercent + '%';
-      document.getElementById('score-display').textContent = totalScore > 0 ? totalScore + '%' : '-';
+// ── INIT DATA ──
+function initData() {
+  if (!gs('progress')) {
+    ss('progress', {
+      xp: 0, streak: 0, lastDate: null,
+      modules: {
+        rechtschreibung: { done: false, stars: 0, score: 0 },
+        wortarten:       { done: false, stars: 0, score: 0 },
+        satzglieder:     { done: false, stars: 0, score: 0 },
+        wortpuzzle:      { done: false, stars: 0, score: 0 }
+      }
+    });
+  }
+  if (gs('tts_rate') === null) ss('tts_rate', 0.8);
+  return gs('progress');
+}
 
-      // Update module status
-      const modules = ['rechtschreibung', 'wortarten', 'satzglieder', 'spielanleitung'];
-      modules.forEach((mod, idx) => {
-        const statusEl = document.getElementById(`modul${idx + 1}-status`);
-        const data = progress.modules[mod];
-        if (data.completed) {
-          statusEl.innerHTML = `<p>✅ Abgeschlossen: ${data.score}%</p>`;
-        }
-      });
+// ── STREAK ──
+function updateStreak(p) {
+  const today = new Date().toDateString();
+  if (p.lastDate === today) return p;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (p.lastDate === yesterday) { p.streak++; }
+  else if (p.lastDate !== today) { p.streak = 1; }
+  p.lastDate = today;
+  return p;
+}
 
-      // Auto-read progress on load
-      setTimeout(() => {
-        aelaTTS.speak('Willkommen zu Aela Deutschkurs! Wähle ein Modul zum Starten.');
-      }, 500);
+// ── WEIDE LEVELS ──
+const weideLevels = [
+  { min: 0,  visual: '🏚️',              desc: 'Eine leere Weide... Lös Module um sie zu verschönern!', color: '#9e9e9e' },
+  { min: 1,  visual: '🌿',              desc: 'Das erste Gras wächst! Wolke freut sich!', color: '#43a047' },
+  { min: 2,  visual: '🌿🌸',            desc: 'Blumen blühen! Die Weide wird schöner!', color: '#d81b60' },
+  { min: 3,  visual: '🌿🌸🌳',          desc: 'Ein Baum wächst! Fast fertig!', color: '#6a1b9a' },
+  { min: 4,  visual: '🌿🌸🌳🏡🐴✨',    desc: 'Wolkes Traumweide! Du hast alles geschafft!', color: '#f9a825' },
+];
+
+// ── RENDER DASHBOARD ──
+function render() {
+  const p = initData();
+  updateStreak(p);
+  ss('progress', p);
+
+  document.getElementById('h-xp').textContent     = '⭐ ' + p.xp + ' XP';
+  document.getElementById('h-streak').textContent = '🔥 ' + p.streak + ' Tage';
+  document.getElementById('stat-xp').textContent    = p.xp;
+  document.getElementById('stat-streak').textContent= p.streak;
+
+  const mods = Object.values(p.modules);
+  const done = mods.filter(m => m.done).length;
+  const scores = mods.filter(m => m.done).map(m => m.score);
+  const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-avg').textContent  = avg !== null ? avg + '%' : '–';
+  document.getElementById('weide-count').textContent = done + ' / 4 Module';
+
+  const pct = done / 4 * 100;
+  document.getElementById('weide-bar').style.width = pct + '%';
+  const wl = weideLevels.filter(l => done >= l.min).pop();
+  document.getElementById('weide-visual').textContent = wl.visual;
+  document.getElementById('weide-msg').textContent   = wl.desc;
+
+  // greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Guten Morgen, Aela! ☀️' : hour < 17 ? 'Hallo, Aela! 👋' : 'Guten Abend, Aela! 🌙';
+  document.getElementById('wolke-greeting').textContent = greet;
+
+  // module cards
+  ['rechtschreibung','wortarten','satzglieder','wortpuzzle'].forEach(id => {
+    const m = p.modules[id];
+    const card = document.getElementById('card-' + (id === 'wortpuzzle' ? 'puzzle' : id.replace('wortarten','wortarten').replace('satzglieder','satzglieder')));
+    if (!card) return;
+    const starsEl = document.getElementById('stars-' + (id === 'wortpuzzle' ? 'puzzle' : id));
+    if (starsEl) {
+      const s = m.stars;
+      starsEl.textContent = (s>=1?'★':'☆') + (s>=2?'★':'☆') + (s>=3?'★':'☆');
     }
+    if (m.done) card.classList.add('done');
+  });
 
-    // Generate progress QR
-    function generateProgressQR() {
-      const progress = aelaCore.getProgress();
-      const totalScore = aelaCore.getTotalScore();
-      const completionPercent = aelaCore.getCompletionPercent();
+  // speed slider
+  const rate = gs('tts_rate') || 0.8;
+  document.getElementById('speed-slider').value = rate;
+  document.getElementById('speed-val').textContent = rate + '×';
+}
 
-      // Create summary and QR
-      const summary = `Aela: ${completionPercent}% fertig, ${totalScore}% Ergebnis, ${progress.xp} XP`;
-      const uuid = 'progress-' + Date.now();
-      const qrURL = aelaqr.getQRImageURL(window.location.href, 300);
+// ── NAVIGATION ──
+function goModule(id) {
+  window.location.href = 'modules/' + id + '.html';
+}
 
-      const container = document.getElementById('qr-container');
-      container.innerHTML = `
-        <div style="text-align: center;">
-          <img src="${qrURL}" alt="Progress QR Code" style="max-width: 300px; border: 3px solid black; padding: 10px;">
-          <p style="font-size: 40px; margin-top: 20px;">${summary}</p>
-          <button class="btn btn-secondary" onclick="aelaqr.downloadQR('${qrURL}', 'aela-progress.png')">
-            💾 QR downloaden
-          </button>
-        </div>
-      `;
+// ── PET WOLKE ──
+function petWolke() {
+  const el = document.getElementById('wolke');
+  el.style.animation = 'none';
+  setTimeout(() => {
+    el.style.animation = '';
+    el.style.transform = 'scale(1.3) rotate(-15deg)';
+    setTimeout(() => { el.style.transform = ''; }, 400);
+  }, 10);
+  speak('Wiiiehhhh! Danke Aela!', 1.0);
+}
 
-      aelaTTS.speak('QR-Code generiert! Du kannst ihn deinem Lehrer zeigen.');
-    }
+// ── TTS ──
+let ttsRate = 0.8;
+function speak(text, rate) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'de-DE';
+  u.rate = rate || ttsRate;
+  u.pitch = 1.1;
+  speechSynthesis.speak(u);
+}
+function updateSpeed(v) {
+  ttsRate = parseFloat(v);
+  document.getElementById('speed-val').textContent = v + '×';
+  ss('tts_rate', ttsRate);
+}
+function testTTS() {
+  speak('Hallo Aela! Ich bin Wolke, dein Wortpferd! Viel Spaß beim Lernen!', ttsRate);
+}
 
-    // Test TTS
-    function testTTS() {
-      aelaTTS.speak('Dies ist ein Test. Die Geschwindigkeit ist: ' + document.getElementById('tts-speed').value + ' mal normal.');
-    }
+// ── POPUP ──
+function showPopup(icon, title, msg, btnText, cb) {
+  document.getElementById('popup-icon').textContent  = icon;
+  document.getElementById('popup-title').textContent = title;
+  document.getElementById('popup-msg').textContent   = msg;
+  document.getElementById('popup-btn').textContent   = btnText || 'OK';
+  document.getElementById('popup-btn').onclick = () => { closePopup(); if(cb) cb(); };
+  document.getElementById('popup').classList.add('show');
+}
+function closePopup() {
+  document.getElementById('popup').classList.remove('show');
+}
 
-    // Update TTS speed
-    function updateTTSSpeed(value) {
-      aelaTTS.setRate(parseFloat(value));
-      document.getElementById('tts-speed-display').textContent = 'Aktuelle Geschwindigkeit: ' + value + 'x';
-    }
+// ── INIT ──
+render();
 
-    // Set font size
-    function setFontSize(size) {
-      document.documentElement.style.setProperty('--font-size-base', 
-        size === 'small' ? '36px' : size === 'large' ? '52px' : '44px'
-      );
-    }
-
-    // Export progress
-    function exportProgress() {
-      const data = aelaCore.exportData();
-      const json = JSON.stringify(data, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'aela-progress-' + new Date().toISOString().split('T')[0] + '.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Initialize on load
-    window.addEventListener('load', updateProgressDisplay);
-  </script>
+// Welcome-TTS after short delay
+setTimeout(() => {
+  const p = gs('progress');
+  const done = Object.values(p.modules).filter(m=>m.done).length;
+  if (done === 0) {
+    speak('Hallo Alea! Ich bin Wolke. Lass uns Deutsch lernen!');
+  } else {
+    speak('Willkommen zurück, Aela! Weiter so!');
+  }
+}, 800);
+</script>
 </body>
 </html>

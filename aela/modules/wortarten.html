@@ -1,155 +1,431 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wortarten - Aela's Deutschkurs</title>
-  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/css/aela-main.css">
-  <style>
-    .exercise-nav { display: flex; gap: 20px; justify-content: space-between; margin: 40px 0; }
-    .progress-bar { width: 100%; height: 50px; background-color: #f0f0f0; border: 3px solid black; border-radius: 8px; overflow: hidden; margin: 20px 0; }
-    .progress-fill { height: 100%; background-color: #0066cc; width: 0%; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 28px; }
-    .task-counter { font-size: 40px; text-align: center; margin: 20px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wortarten – Aelas Wortpferd</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{
+  --pink:#c2185b;--pink-dark:#880e4f;--pink-light:#fce4ec;--pink-mid:#f48fb1;
+  --purple:#7b1fa2;--purple-light:#f3e5f5;--gold:#f9a825;--gold-dark:#e65100;
+  --green:#2e7d32;--green-light:#e8f5e9;--red:#c62828;--red-light:#ffebee;
+  --blue:#1565c0;--blue-light:#e3f2fd;
+  --text:#1a0a2e;--text-soft:#5d4e75;--bg:#fff8fc;--surface:#ffffff;
+  --border:#f48fb1;--radius:20px;--radius-sm:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:18px;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;}
+
+header{background:linear-gradient(135deg,var(--pink-dark),var(--purple));color:#fff;padding:0 18px;height:68px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 3px 14px rgba(136,14,79,.4);}
+.nav-back{color:#fff;text-decoration:none;font-size:1.1rem;font-weight:900;background:rgba(255,255,255,.2);padding:9px 16px;border-radius:30px;}
+.h-title{font-size:1.3rem;font-weight:900;flex:1;}
+.h-xp{font-size:1rem;font-weight:900;background:rgba(249,168,37,.3);padding:6px 12px;border-radius:30px;white-space:nowrap;}
+
+main{max-width:760px;margin:0 auto;padding:22px 16px 80px;}
+
+.wolke-strip{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--pink-light),var(--purple-light));border:3px solid var(--pink-mid);border-radius:var(--radius);padding:16px 20px;margin-bottom:22px;}
+.ws-horse{font-size:3.5rem;flex-shrink:0;}
+.ws-horse.happy{animation:horse-happy .55s ease;}
+@keyframes horse-happy{0%,100%{transform:scale(1)rotate(0)}30%{transform:scale(1.3)rotate(-12deg)translateY(-8px)}65%{transform:scale(1.15)rotate(8deg)translateY(-4px)}}
+.ws-msg{font-size:1.05rem;color:var(--text-soft);}
+.ws-msg strong{color:var(--pink-dark);font-size:1.15rem;}
+
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:1rem;color:var(--text-soft);font-weight:700;}
+.prog-bar-bg{background:#f0e4f8;border-radius:30px;height:16px;overflow:hidden;border:2px solid var(--border);margin-bottom:22px;}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:30px;transition:width .5s ease;}
+
+.task-card{background:var(--surface);border:3px solid var(--border);border-radius:var(--radius);padding:26px 22px;margin-bottom:22px;}
+.task-label{font-size:.9rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--pink-dark);margin-bottom:8px;}
+.task-question{font-size:1.3rem;font-weight:800;color:var(--text);line-height:1.6;margin-bottom:20px;}
+.tts-btn{background:var(--purple);color:#fff;border:none;border-radius:30px;padding:9px 18px;font-size:.95rem;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:18px;margin-right:8px;transition:transform .12s;}
+.tts-btn.slow{background:var(--text-soft);}
+
+/* WORD TAGGING (tap to mark Wortart) */
+.tag-sentence{font-size:1.5rem;font-weight:800;color:var(--text);line-height:2.5;margin-bottom:16px;text-align:center;}
+.tag-word{display:inline-block;background:var(--bg);border:2px solid var(--border);border-radius:8px;padding:6px 14px;margin:4px;cursor:pointer;transition:all .15s;font-size:1.3rem;font-weight:800;user-select:none;}
+.tag-word:hover{background:var(--pink-light);border-color:var(--pink);}
+.tag-word.N{background:#e3f2fd;border-color:#1565c0;color:#1565c0;}
+.tag-word.V{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;}
+.tag-word.A{background:#fff3e0;border-color:#e65100;color:#e65100;}
+.tag-word.correct{outline:4px solid var(--green);}
+.tag-word.wrong{outline:4px solid var(--red);}
+
+/* LEGEND */
+.wortart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.wl-badge{padding:8px 16px;border-radius:30px;font-size:.95rem;font-weight:900;cursor:pointer;border:2px solid transparent;transition:transform .1s;}
+.wl-badge.N{background:#e3f2fd;color:#1565c0;border-color:#1565c0;}
+.wl-badge.V{background:#e8f5e9;color:#2e7d32;border-color:#2e7d32;}
+.wl-badge.A{background:#fff3e0;color:#e65100;border-color:#e65100;}
+.wl-badge.active-N{background:#1565c0;color:#fff;}
+.wl-badge.active-V{background:#2e7d32;color:#fff;}
+.wl-badge.active-A{background:#e65100;color:#fff;}
+.wl-badge:hover{transform:scale(1.07);}
+
+/* MC */
+.options-list{display:flex;flex-direction:column;gap:12px;}
+.opt-btn{background:var(--bg);border:3px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;font-size:1.1rem;font-weight:700;font-family:inherit;color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .1s;min-height:56px;}
+.opt-btn:hover:not(:disabled){border-color:var(--pink);background:var(--pink-light);transform:translateX(4px);}
+.opt-btn.selected{border-color:var(--pink);background:var(--pink-light);}
+.opt-btn.correct{border-color:var(--green);background:var(--green-light);color:var(--green);pointer-events:none;}
+.opt-btn.wrong{border-color:var(--red);background:var(--red-light);color:var(--red);pointer-events:none;}
+.opt-btn:disabled:not(.correct):not(.wrong){opacity:.5;}
+
+.feedback-box{border-radius:var(--radius-sm);padding:16px 18px;margin-top:16px;font-size:1.05rem;font-weight:700;display:none;}
+.feedback-box.correct{display:block;background:var(--green-light);border:3px solid var(--green);color:var(--green);}
+.feedback-box.wrong{display:block;background:var(--red-light);border:3px solid var(--red);color:var(--red);}
+
+.nav-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;}
+.btn-check{flex:2;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border:none;border-radius:14px;padding:16px 20px;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;transition:transform .12s;min-height:56px;}
+.btn-check:hover{transform:scale(1.03);}
+.btn-check:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-next{flex:1;background:var(--purple);color:#fff;border:none;border-radius:14px;padding:16px 20px;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;display:none;min-height:56px;}
+
+.finish-screen{display:none;text-align:center;padding:40px 20px;}
+.finish-screen.show{display:block;}
+.finish-trophy{font-size:5rem;display:block;margin-bottom:12px;}
+.finish-title{font-size:2rem;font-weight:900;color:var(--pink-dark);margin-bottom:8px;}
+.finish-xp{font-size:1.5rem;font-weight:900;color:var(--gold-dark);margin-bottom:20px;}
+.finish-stars{font-size:2.5rem;color:var(--gold);letter-spacing:8px;margin-bottom:28px;}
+.btn-finish{display:inline-block;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;text-decoration:none;border-radius:14px;padding:16px 32px;font-size:1.1rem;font-weight:900;margin:6px;border:none;cursor:pointer;font-family:inherit;}
+
+/* INFO TABLE */
+.info-table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:1rem;}
+.info-table th{padding:10px 14px;text-align:left;border-bottom:3px solid var(--border);font-weight:900;}
+.info-table td{padding:10px 14px;border-bottom:1px solid #f5e4f5;}
+.info-table tr:hover td{background:var(--pink-light);}
+
+@media(max-width:540px){main{padding:14px 12px 60px;}.task-question{font-size:1.1rem;}.tag-word{font-size:1.1rem;padding:5px 10px;}}
+</style>
 </head>
 <body>
-  <header>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h1>📝 Wortarten</h1>
-      <a href="../" class="btn btn-secondary">← Zurück</a>
-    </div>
-  </header>
 
-  <main class="container">
-    <div class="task-counter">Aufgabe <span id="current-task">1</span> von <span id="total-tasks">5</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill">0%</div></div>
-    <div id="exercise-container" class="task-container"><p style="font-size: 44px; text-align: center;">⏳ Lädt Aufgabe...</p></div>
-    <div class="exercise-nav">
-      <button class="btn btn-secondary" id="prev-btn" onclick="previousExercise()" disabled>← Zurück</button>
-      <button class="btn btn-primary" id="next-btn" onclick="nextExercise()" disabled>Weiter →</button>
-    </div>
-    <div class="info" style="text-align: center; margin-top: 40px;">
-      <p>🔊 <strong>Automatische Vorlesung aktiv!</strong></p>
-      <button class="btn btn-secondary" onclick="toggleAutoRead()">🔊 Aus/An</button>
-    </div>
-  </main>
+<header>
+  <a class="nav-back" href="../index.html">← Zurück</a>
+  <span class="h-title">🔤 Wortarten</span>
+  <span class="h-xp" id="h-xp">⭐ 0 XP</span>
+</header>
 
-  <footer><p>Du schaffst das! 💪 Grammatik ist Schritt für Schritt zu verstehen.</p></footer>
+<main>
 
-  <script src="http://localhost/tools/js/axios/axios.min.js"></script>
-  <script src="../assets/js/core.js"></script>
-  <script src="../assets/js/tts.js"></script>
-  <script src="../assets/js/qrcode-gen.js"></script>
-  <script src="../assets/js/exercises.js"></script>
+  <div class="wolke-strip">
+    <span class="ws-horse" id="wolke">🐴</span>
+    <div class="ws-msg"><strong id="wolke-title">Wortarten erkennen!</strong><br><span id="wolke-hint">Nomen, Verb oder Adjektiv? Ich helfe dir!</span></div>
+  </div>
 
-  <script>
-    let tasks = [];
-    let currentTaskIndex = 0;
-    let exerciseScores = [];
-    let autoReadEnabled = true;
+  <div class="prog-row">
+    <span>Aufgabe <strong id="task-num">1</strong> von <strong id="task-total">8</strong></span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
 
-    async function loadTasks() {
-      try {
-        const response = await fetch('../data/wortarten.json');
-        const data = await response.json();
-        tasks = data.tasks;
-        document.getElementById('total-tasks').textContent = tasks.length;
-        if (tasks.length > 0) loadTask(0);
-      } catch (error) {
-        console.error('Fehler:', error);
-        document.getElementById('exercise-container').innerHTML = '<p class="error">❌ Fehler beim Laden!</p>';
-      }
+  <div id="task-area"></div>
+
+  <div class="finish-screen" id="finish">
+    <span class="finish-trophy">🏆</span>
+    <div class="finish-title">Du kennst alle Wortarten!</div>
+    <div class="finish-xp" id="fin-xp">+150 XP</div>
+    <div class="finish-stars" id="fin-stars">★★★</div>
+    <p style="font-size:1.1rem;color:var(--text-soft);margin-bottom:28px" id="fin-msg">Wolke ist begeistert von dir!</p>
+    <a class="btn-finish" href="../index.html">🏠 Zur Startseite</a>
+    <button class="btn-finish" onclick="restartModule()">🔁 Nochmal</button>
+  </div>
+
+</main>
+
+<script>
+const NS='aela_';
+function gs(k){try{return JSON.parse(localStorage.getItem(NS+k));}catch(e){return null;}}
+function ss(k,v){try{localStorage.setItem(NS+k,JSON.stringify(v));}catch(e){}}
+function speak(text,rate){if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';u.rate=rate||(gs('tts_rate')||0.8);u.pitch=1.1;speechSynthesis.speak(u);}
+function addXP(pts){const p=gs('progress')||{xp:0};p.xp=(p.xp||0)+pts;ss('progress',p);}
+function getTotalXP(){return(gs('progress')||{xp:0}).xp;}
+function shootConfetti(){if(typeof confetti!=='undefined'){confetti({particleCount:120,spread:80,origin:{y:.6},colors:['#c2185b','#7b1fa2','#f9a825','#2e7d32']});}}
+function wolkeHappy(){const el=document.getElementById('wolke');el.classList.remove('happy');void el.offsetWidth;el.classList.add('happy');setTimeout(()=>el.classList.remove('happy'),700);}
+function wolkeMsg(t,h){document.getElementById('wolke-title').textContent=t;document.getElementById('wolke-hint').textContent=h;}
+
+// ── TASKS ──
+const TASKS = [
+  {
+    id:1, type:'info',
+    label:'Erklärung – Was sind Wortarten?',
+    question:'Es gibt 3 wichtige Wortarten:\n\n🔵 NOMEN = Dinge, Personen, Tiere (immer groß!)\n🟢 VERBEN = Tätigkeiten (laufen, essen, lernen)\n🟠 ADJEKTIVE = Eigenschaften (groß, schnell, schön)',
+    table:[
+      {art:'🔵 Nomen',beispiel:'Hund, Schule, Freundin',tipp:'Frage: Was ist das? Wer ist das?'},
+      {art:'🟢 Verb',beispiel:'lernen, rennen, schlafen',tipp:'Frage: Was tut jemand?'},
+      {art:'🟠 Adjektiv',beispiel:'groß, rot, schnell',tipp:'Frage: Wie ist etwas?'},
+    ],
+    feedback_ok:'Jetzt geht\'s los!',
+    feedback_err:''
+  },
+  {
+    id:2, type:'mc',
+    label:'Aufgabe 1 – Nomen erkennen',
+    question:'Welches Wort ist ein NOMEN (Namenwort)?',
+    options:['laufen','Schule','schön','schnell'],
+    correct:1,
+    feedback_ok:'Richtig! "Schule" ist ein Nomen – es wird groß geschrieben!',
+    feedback_err:'Nomen sind Dinge, Orte, Personen – und immer groß. "Schule" ist der Ort!'
+  },
+  {
+    id:3, type:'mc',
+    label:'Aufgabe 2 – Verb erkennen',
+    question:'Welches Wort ist ein VERB (Tunwort)?',
+    options:['Hund','blau','springen','Haus'],
+    correct:2,
+    feedback_ok:'Super! "springen" ist ein Verb – eine Tätigkeit!',
+    feedback_err:'Verben sagen was jemand TUT. "springen" ist eine Tätigkeit!'
+  },
+  {
+    id:4, type:'mc',
+    label:'Aufgabe 3 – Adjektiv erkennen',
+    question:'Welches Wort ist ein ADJEKTIV (Wie-Wort)?',
+    options:['Freundin','rennen','lustig','Buch'],
+    correct:2,
+    feedback_ok:'Ja! "lustig" ist ein Adjektiv – es beschreibt wie jemand ist!',
+    feedback_err:'Adjektive sagen WIE etwas ist. "lustig" beschreibt eine Eigenschaft!'
+  },
+  {
+    id:5, type:'tag',
+    label:'Aufgabe 4 – Wortarten im Satz',
+    question:'Tippe zuerst auf eine Farbe, dann auf das Wort dazu!\nFärbe alle Wörter richtig ein.',
+    sentence:'Das kleine Pferd läuft durch den Wald.',
+    words:[
+      {w:'Das',  correct:''},   // Artikel – skip (no Wortart to assign)
+      {w:'kleine',correct:'A'},
+      {w:'Pferd',correct:'N'},
+      {w:'läuft',correct:'V'},
+      {w:'durch',correct:''},   // Präposition
+      {w:'den',  correct:''},   // Artikel
+      {w:'Wald.',correct:'N'},
+    ],
+    feedback_ok:'Perfekt! Pferd=Nomen, kleine=Adjektiv, läuft=Verb, Wald=Nomen!',
+    feedback_err:'Tipp: Pferd und Wald sind Nomen (groß!), kleine ist ein Adjektiv, läuft ist ein Verb.'
+  },
+  {
+    id:6, type:'mc',
+    label:'Aufgabe 5 – Im Satz erkennen',
+    question:'„Die rote Rose blüht im Garten."\nWas für ein Wort ist „blüht"?',
+    options:['Nomen','Adjektiv','Verb','Artikel'],
+    correct:2,
+    feedback_ok:'Genau! "blüht" = Verb. Es sagt was die Rose TUT!',
+    feedback_err'"blüht" beschreibt eine Tätigkeit der Rose → das ist ein Verb!'
+  },
+  {
+    id:7, type:'mc',
+    label:'Aufgabe 6 – Nomen großschreiben',
+    question:'Welcher Satz ist RICHTIG geschrieben?',
+    options:[
+      'der hund spielt im garten.',
+      'Der Hund spielt im Garten.',
+      'der Hund spielt im garten.',
+      'Der hund spielt im Garten.'
+    ],
+    correct:1,
+    feedback_ok:'Super! Nomen (Hund, Garten) immer groß. Satzanfang immer groß.',
+    feedback_err:'Nomen sind immer groß: der HUND, der GARTEN. Und Satzanfang auch groß!'
+  },
+  {
+    id:8, type:'mc',
+    label:'Aufgabe 7 – Alles zusammen',
+    question:'„Meine beste Freundin schwimmt sehr schnell."\nWelche Wortart ist „schwimmt"?',
+    options:['Nomen – es ist ein Ding','Adjektiv – es beschreibt etwas','Verb – es ist eine Tätigkeit','Artikel – es ist klein'],
+    correct:2,
+    feedback_ok:'Richtig! schwimmt = Verb. Frage: Was TUT die Freundin? Sie schwimmt!',
+    feedback_err:'Frage: Was TUT die Freundin? Sie schwimmt! → schwimmt ist ein Verb!'
+  }
+];
+
+let currentIdx=0, score=0;
+let selectedOpt=null;
+let tagActive=null; // 'N','V','A'
+
+function renderTask(){
+  const t=TASKS[currentIdx];
+  document.getElementById('task-num').textContent=currentIdx+1;
+  document.getElementById('task-total').textContent=TASKS.length;
+  const pct=Math.round(currentIdx/TASKS.length*100);
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  const area=document.getElementById('task-area');
+  area.innerHTML='';
+  area.appendChild(buildHTML(t));
+  setTimeout(()=>speak(t.question.replace(/\n/g,' ')),400);
+  wolkeMsg('Los geht\'s!','Tippe die richtige Antwort!');
+}
+
+function buildHTML(t){
+  const wrap=document.createElement('div');
+  const card=document.createElement('div');
+  card.className='task-card';
+
+  let inner=`<div class="task-label">${t.label}</div>
+    <div class="task-question">${t.question.replace(/\n/g,'<br>')}</div>
+    <button class="tts-btn" onclick="speak(TASKS[${currentIdx}].question.replace(/\\n/g,' '))">🔊 Vorlesen</button>
+    <button class="tts-btn slow" onclick="speak(TASKS[${currentIdx}].question.replace(/\\n/g,' '),0.4)">🐌 Langsam</button>`;
+
+  if(t.type==='info' && t.table){
+    inner+=`<table class="info-table"><tr><th>Wortart</th><th>Beispiele</th><th>Tipp</th></tr>`;
+    t.table.forEach(r=>{inner+=`<tr><td><strong>${r.art}</strong></td><td>${r.beispiel}</td><td>${r.tipp}</td></tr>`;});
+    inner+=`</table>`;
+  }
+
+  inner+=`<div id="exercise-area"></div><div class="feedback-box" id="feedback"></div>`;
+  card.innerHTML=inner;
+  wrap.appendChild(card);
+
+  const nav=document.createElement('div');
+  nav.className='nav-row';
+  if(t.type==='info'){
+    nav.innerHTML=`<button class="btn-next" id="btn-next" style="display:block;flex:1" onclick="nextTask()">Verstanden! Weiter →</button>`;
+  } else {
+    nav.innerHTML=`<button class="btn-check" id="btn-check" onclick="checkAnswer()">✅ Prüfen</button>
+      <button class="btn-next" id="btn-next" onclick="nextTask()">Weiter →</button>`;
+  }
+  wrap.appendChild(nav);
+
+  setTimeout(()=>buildExercise(t),0);
+  return wrap;
+}
+
+function buildExercise(t){
+  const area=document.getElementById('exercise-area');
+  if(!area) return;
+
+  if(t.type==='mc'){
+    const ul=document.createElement('div');
+    ul.className='options-list';
+    t.options.forEach((opt,i)=>{
+      const btn=document.createElement('button');
+      btn.className='opt-btn';btn.id='opt-'+i;btn.textContent=opt;
+      btn.onclick=()=>selectOpt(i,t.options.length);
+      ul.appendChild(btn);
+    });
+    area.appendChild(ul);
+  }
+
+  if(t.type==='tag'){
+    tagActive=null;
+    const legend=document.createElement('div');
+    legend.className='wortart-legend';
+    legend.innerHTML=`
+      <button class="wl-badge N" id="leg-N" onclick="setTagMode('N')">🔵 Nomen</button>
+      <button class="wl-badge V" id="leg-V" onclick="setTagMode('V')">🟢 Verb</button>
+      <button class="wl-badge A" id="leg-A" onclick="setTagMode('A')">🟠 Adjektiv</button>
+      <button class="wl-badge" style="background:#f5f5f5;border-color:#ccc" onclick="setTagMode(null)">✖ Abwählen</button>`;
+    area.appendChild(legend);
+    const sentDiv=document.createElement('div');
+    sentDiv.className='tag-sentence';
+    t.words.forEach((wd,i)=>{
+      const span=document.createElement('button');
+      span.className='tag-word';span.id='tw-'+i;span.textContent=wd.w;span.dataset.idx=i;
+      if(!wd.correct) span.style.opacity='.55'; // Artikel/Präp – not clickable for tagging
+      span.onclick=()=>{if(wd.correct&&tagActive){applyTag(i,tagActive);}};
+      sentDiv.appendChild(span);
+    });
+    area.appendChild(sentDiv);
+    const hint=document.createElement('p');
+    hint.style.cssText='color:var(--text-soft);font-size:.95rem;text-align:center;';
+    hint.textContent='1. Wähle eine Farbe (Nomen/Verb/Adjektiv). 2. Tippe das Wort.';
+    area.appendChild(hint);
+  }
+}
+
+// Tag mode
+function setTagMode(mode){
+  tagActive=mode;
+  ['N','V','A'].forEach(m=>{
+    const el=document.getElementById('leg-'+m);
+    if(!el) return;
+    el.className='wl-badge '+m+(mode===m?' active-'+m:'');
+  });
+}
+const tagState={};
+function applyTag(i, mode){
+  tagState[i]=mode;
+  const el=document.getElementById('tw-'+i);
+  el.className='tag-word '+mode;
+}
+
+let selectedOpt_=null;
+function selectOpt(i,total){selectedOpt_=i;for(let j=0;j<total;j++){document.getElementById('opt-'+j).classList.toggle('selected',j===i);}}
+
+function checkAnswer(){
+  const t=TASKS[currentIdx];
+  let isCorrect=false;
+
+  if(t.type==='mc'){
+    if(selectedOpt_===null){speak('Wähle bitte eine Antwort!');return;}
+    isCorrect=selectedOpt_===t.correct;
+    for(let i=0;i<t.options.length;i++){
+      const b=document.getElementById('opt-'+i);b.disabled=true;
+      if(i===t.correct) b.classList.add('correct');
+      else if(i===selectedOpt_&&!isCorrect) b.classList.add('wrong');
     }
+    selectedOpt_=null;
+  }
 
-    function loadTask(index) {
-      if (index < 0 || index >= tasks.length) return;
-      currentTaskIndex = index;
-      const task = tasks[index];
-      document.getElementById('current-task').textContent = index + 1;
-      updateProgressBar();
+  if(t.type==='tag'){
+    const target=t.words.filter(w=>w.correct);
+    const correct=target.every(w=>{const i=t.words.indexOf(w);return tagState[i]===w.correct;});
+    isCorrect=correct;
+    // Show correct/wrong on tagged words
+    t.words.forEach((w,i)=>{
+      if(!w.correct) return;
+      const el=document.getElementById('tw-'+i);
+      if(tagState[i]===w.correct) el.classList.add('correct');
+      else if(tagState[i]) el.classList.add('wrong');
+    });
+  }
 
-      let exercise;
-      if (task.type === 'multiple-choice') {
-        exercise = new MultipleChoiceExercise(task);
-      } else if (task.type === 'text-input') {
-        exercise = new TextInputExercise(task);
-      }
+  showFeedback(isCorrect,t);
+}
 
-      currentExercise = exercise;
-      const container = document.getElementById('exercise-container');
-      if (exercise) {
-        container.innerHTML = exercise.render();
-        exercise.startTimer();
-        if (autoReadEnabled && task.autoRead) {
-          setTimeout(() => {
-            let text = task.question;
-            if (task.options) text += '. ' + task.options.join(', ');
-            aelaTTS.speak(text);
-          }, 500);
-        }
-      }
+function showFeedback(isCorrect,t){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback-box '+(isCorrect?'correct':'wrong');
+  fb.textContent=isCorrect?('✅ '+t.feedback_ok):('❌ '+t.feedback_err);
+  document.getElementById('btn-check').style.display='none';
+  document.getElementById('btn-next').style.display='block';
+  if(isCorrect){score++;addXP(20);wolkeHappy();speak(t.feedback_ok);if(score>=3)shootConfetti();}
+  else{speak(t.feedback_err,0.7);}
+  document.getElementById('h-xp').textContent='⭐ '+getTotalXP()+' XP';
+}
 
-      document.getElementById('prev-btn').disabled = index === 0;
-      document.getElementById('next-btn').disabled = true;
-    }
+function nextTask(){
+  currentIdx++;selectedOpt_=null;tagActive=null;Object.keys(tagState).forEach(k=>delete tagState[k]);
+  if(currentIdx>=TASKS.length) finishModule();
+  else renderTask();
+}
 
-    function updateProgressBar() {
-      const percent = Math.round((currentTaskIndex / tasks.length) * 100);
-      document.getElementById('progress-fill').style.width = percent + '%';
-      document.getElementById('progress-fill').textContent = percent + '%';
-    }
+function finishModule(){
+  document.getElementById('prog-bar').style.width='100%';
+  document.getElementById('task-area').style.display='none';
+  document.getElementById('finish').classList.add('show');
+  const pct=Math.round(score/TASKS.length*100);
+  const stars=pct>=85?3:pct>=55?2:1;
+  const xp=50+score*15;
+  document.getElementById('fin-xp').textContent='+'+xp+' XP';
+  document.getElementById('fin-stars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
+  addXP(xp);
+  const p=gs('progress')||{};
+  if(!p.modules) p.modules={};
+  p.modules.wortarten={done:true,stars,score:pct};ss('progress',p);
+  speak('Wunderbar! Du kennst jetzt alle Wortarten!');
+  setTimeout(()=>{shootConfetti();shootConfetti();},500);
+  setTimeout(shootConfetti,1200);
+}
 
-    function showFeedback() {
-      const container = document.getElementById('feedback-container');
-      currentExercise.showFeedback(container);
-      exerciseScores.push(currentExercise.score);
-      const result = currentExercise.isCorrect ? 'Richtig!' : 'Leider falsch.';
-      aelaTTS.speak(result + ' Plus ' + currentExercise.score + ' Punkte');
-    }
+function restartModule(){
+  currentIdx=0;score=0;selectedOpt_=null;tagActive=null;
+  document.getElementById('task-area').style.display='';
+  document.getElementById('finish').classList.remove('show');
+  renderTask();
+}
 
-    function enableNextButton() {
-      document.getElementById('next-btn').disabled = false;
-    }
-
-    function nextExercise() {
-      if (currentTaskIndex < tasks.length - 1) {
-        loadTask(currentTaskIndex + 1);
-      } else {
-        finishModule();
-      }
-    }
-
-    function previousExercise() {
-      if (currentTaskIndex > 0) loadTask(currentTaskIndex - 1);
-    }
-
-    function toggleAutoRead() {
-      autoReadEnabled = !autoReadEnabled;
-      aelaTTS.speak(autoReadEnabled ? 'Automatische Vorlesung an' : 'Automatische Vorlesung aus');
-    }
-
-    function finishModule() {
-      const totalScore = exerciseScores.reduce((a, b) => a + b, 0);
-      const maxScore = tasks.reduce((sum, t) => sum + t.basePoints, 0);
-      const percentScore = Math.round((totalScore / maxScore) * 100);
-
-      aelaCore.completeModule('wortarten', percentScore);
-      aelaCore.addXP(totalScore);
-
-      const qrData = aelaqr.generateResultQR('Wortarten', percentScore);
-      const resultHTML = aelaqr.createResultCard('Wortarten', percentScore, qrData.uuid, qrData.qrImageURL);
-
-      document.getElementById('exercise-container').innerHTML = resultHTML;
-      document.getElementById('prev-btn').hidden = true;
-      document.getElementById('next-btn').innerHTML = '🏠 Zur Startseite';
-      document.getElementById('next-btn').disabled = false;
-      document.getElementById('next-btn').onclick = () => window.location.href = '../';
-
-      aelaTTS.speak(`Modul abgeschlossen! Du hast ${percentScore} Prozent erreicht. ${totalScore} neue Punkte!`);
-    }
-
-    window.addEventListener('load', loadTasks);
-  </script>
+document.getElementById('h-xp').textContent='⭐ '+getTotalXP()+' XP';
+renderTask();
+</script>
 </body>
 </html>

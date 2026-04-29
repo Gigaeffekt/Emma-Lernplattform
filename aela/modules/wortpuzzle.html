@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wort-Puzzle – Aelas Wortpferd</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{
+  --pink:#c2185b;--pink-dark:#880e4f;--pink-light:#fce4ec;--pink-mid:#f48fb1;
+  --purple:#7b1fa2;--purple-light:#f3e5f5;--gold:#f9a825;--gold-dark:#e65100;
+  --green:#2e7d32;--green-light:#e8f5e9;--red:#c62828;--red-light:#ffebee;
+  --text:#1a0a2e;--text-soft:#5d4e75;--bg:#fff8fc;--surface:#ffffff;
+  --border:#f48fb1;--radius:20px;--radius-sm:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:18px;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;}
+
+header{background:linear-gradient(135deg,var(--pink-dark),var(--purple));color:#fff;padding:0 18px;height:68px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 3px 14px rgba(136,14,79,.4);}
+.nav-back{color:#fff;text-decoration:none;font-size:1.1rem;font-weight:900;background:rgba(255,255,255,.2);padding:9px 16px;border-radius:30px;}
+.h-title{font-size:1.3rem;font-weight:900;flex:1;}
+.h-xp{font-size:1rem;font-weight:900;background:rgba(249,168,37,.3);padding:6px 12px;border-radius:30px;white-space:nowrap;}
+
+main{max-width:760px;margin:0 auto;padding:22px 16px 80px;}
+
+.wolke-strip{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--pink-light),var(--purple-light));border:3px solid var(--pink-mid);border-radius:var(--radius);padding:16px 20px;margin-bottom:22px;}
+.ws-horse{font-size:3.5rem;flex-shrink:0;}
+.ws-horse.happy{animation:horse-happy .55s ease;}
+@keyframes horse-happy{0%,100%{transform:scale(1)rotate(0)}30%{transform:scale(1.3)rotate(-12deg)translateY(-8px)}65%{transform:scale(1.15)rotate(8deg)translateY(-4px)}}
+.ws-msg{font-size:1.05rem;color:var(--text-soft);}
+.ws-msg strong{color:var(--pink-dark);font-size:1.15rem;}
+
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:1rem;color:var(--text-soft);font-weight:700;}
+.prog-bar-bg{background:#f0e4f8;border-radius:30px;height:16px;overflow:hidden;border:2px solid var(--border);margin-bottom:22px;}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:30px;transition:width .5s ease;}
+
+.task-card{background:var(--surface);border:3px solid var(--border);border-radius:var(--radius);padding:26px 22px;margin-bottom:22px;}
+.task-label{font-size:.9rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--pink-dark);margin-bottom:8px;}
+.task-question{font-size:1.3rem;font-weight:800;color:var(--text);line-height:1.6;margin-bottom:20px;}
+.tts-btn{background:var(--purple);color:#fff;border:none;border-radius:30px;padding:9px 18px;font-size:.95rem;font-weight:900;font-family:inherit;cursor:pointer;margin-bottom:18px;margin-right:8px;transition:transform .12s;}
+.tts-btn.slow{background:var(--text-soft);}
+
+/* PUZZLE */
+.sentence-display{font-size:1.5rem;font-weight:900;color:var(--pink-dark);text-align:center;min-height:58px;padding:14px;background:var(--pink-light);border:3px solid var(--pink-mid);border-radius:var(--radius-sm);margin-bottom:14px;}
+.sentence-display.win{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.word-slots{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:58px;padding:12px;background:#f5f0fa;border:3px dashed var(--border);border-radius:var(--radius-sm);margin-bottom:14px;}
+.word-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:14px;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-sm);}
+.word-chip{background:var(--surface);border:3px solid var(--pink-mid);border-radius:30px;padding:12px 20px;font-size:1.1rem;font-weight:800;cursor:pointer;transition:transform .12s,background .12s,border-color .12s;user-select:none;}
+.word-chip:hover{background:var(--pink-light);transform:scale(1.08);}
+.word-chip.placed{background:var(--purple-light);border-color:var(--purple);}
+.word-chip.correct-chip{background:var(--green-light);border-color:var(--green);color:var(--green);}
+
+/* MATCH */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.match-grid{grid-template-columns:1fr;}}
+.match-btn{background:var(--bg);border:3px solid var(--border);border-radius:var(--radius-sm);padding:14px 14px;font-size:1rem;font-weight:700;font-family:inherit;color:var(--text);cursor:pointer;text-align:center;min-height:54px;transition:border-color .15s,background .15s;}
+.match-btn:hover:not(:disabled){border-color:var(--pink);background:var(--pink-light);}
+.match-btn.sel{border-color:var(--purple);background:var(--purple-light);}
+.match-btn.matched{border-color:var(--green);background:var(--green-light);color:var(--green);pointer-events:none;}
+.match-btn.shake{animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* MC */
+.options-list{display:flex;flex-direction:column;gap:12px;}
+.opt-btn{background:var(--bg);border:3px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;font-size:1.1rem;font-weight:700;font-family:inherit;color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .1s;min-height:56px;}
+.opt-btn:hover:not(:disabled){border-color:var(--pink);background:var(--pink-light);transform:translateX(4px);}
+.opt-btn.selected{border-color:var(--pink);background:var(--pink-light);}
+.opt-btn.correct{border-color:var(--green);background:var(--green-light);color:var(--green);pointer-events:none;}
+.opt-btn.wrong{border-color:var(--red);background:var(--red-light);color:var(--red);pointer-events:none;}
+.opt-btn:disabled:not(.correct):not(.wrong){opacity:.5;}
+
+.feedback-box{border-radius:var(--radius-sm);padding:16px 18px;margin-top:16px;font-size:1.05rem;font-weight:700;display:none;}
+.feedback-box.correct{display:block;background:var(--green-light);border:3px solid var(--green);color:var(--green);}
+.feedback-box.wrong{display:block;background:var(--red-light);border:3px solid var(--red);color:var(--red);}
+
+.nav-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;}
+.btn-check{flex:2;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border:none;border-radius:14px;padding:16px 20px;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;transition:transform .12s;min-height:56px;}
+.btn-check:hover{transform:scale(1.03);}
+.btn-check:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-next{flex:1;background:var(--purple);color:#fff;border:none;border-radius:14px;padding:16px 20px;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;display:none;min-height:56px;}
+
+.finish-screen{display:none;text-align:center;padding:40px 20px;}
+.finish-screen.show{display:block;}
+.finish-trophy{font-size:5rem;display:block;margin-bottom:12px;}
+.finish-title{font-size:2rem;font-weight:900;color:var(--pink-dark);margin-bottom:8px;}
+.finish-xp{font-size:1.5rem;font-weight:900;color:var(--gold-dark);margin-bottom:20px;}
+.finish-stars{font-size:2.5rem;color:var(--gold);letter-spacing:8px;margin-bottom:28px;}
+.btn-finish{display:inline-block;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;text-decoration:none;border-radius:14px;padding:16px 32px;font-size:1.1rem;font-weight:900;margin:6px;border:none;cursor:pointer;font-family:inherit;}
+
+@media(max-width:540px){main{padding:14px 12px 60px;}.task-question{font-size:1.1rem;}.word-chip{padding:10px 14px;font-size:1rem;}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-back" href="../index.html">← Zurück</a>
+  <span class="h-title">🧩 Wort-Puzzle</span>
+  <span class="h-xp" id="h-xp">⭐ 0 XP</span>
+</header>
+
+<main>
+  <div class="wolke-strip">
+    <span class="ws-horse" id="wolke">🐴</span>
+    <div class="ws-msg"><strong id="wolke-title">Sätze bauen!</strong><br><span id="wolke-hint">Tippe die Wörter in der richtigen Reihenfolge!</span></div>
+  </div>
+
+  <div class="prog-row">
+    <span>Aufgabe <strong id="task-num">1</strong> von <strong id="task-total">7</strong></span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+
+  <div id="task-area"></div>
+
+  <div class="finish-screen" id="finish">
+    <span class="finish-trophy">🏆</span>
+    <div class="finish-title">Wort-Puzzle-Meisterin!</div>
+    <div class="finish-xp" id="fin-xp">+150 XP</div>
+    <div class="finish-stars" id="fin-stars">★★★</div>
+    <p style="font-size:1.1rem;color:var(--text-soft);margin-bottom:28px">Wolke wiehert vor Begeisterung!</p>
+    <a class="btn-finish" href="../index.html">🏠 Startseite</a>
+    <button class="btn-finish" onclick="restartModule()">🔁 Nochmal</button>
+  </div>
+</main>
+
+<script>
+const NS='aela_';
+function gs(k){try{return JSON.parse(localStorage.getItem(NS+k));}catch(e){return null;}}
+function ss(k,v){try{localStorage.setItem(NS+k,JSON.stringify(v));}catch(e){}}
+function speak(text,rate){if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';u.rate=rate||(gs('tts_rate')||0.8);u.pitch=1.1;speechSynthesis.speak(u);}
+function addXP(pts){const p=gs('progress')||{xp:0};p.xp=(p.xp||0)+pts;ss('progress',p);}
+function getTotalXP(){return(gs('progress')||{xp:0}).xp;}
+function shootConfetti(){if(typeof confetti!=='undefined'){confetti({particleCount:120,spread:80,origin:{y:.6},colors:['#c2185b','#7b1fa2','#f9a825','#2e7d32']});}}
+function wolkeHappy(){const el=document.getElementById('wolke');el.classList.remove('happy');void el.offsetWidth;el.classList.add('happy');setTimeout(()=>el.classList.remove('happy'),700);}
+function wolkeMsg(t,h){document.getElementById('wolke-title').textContent=t;document.getElementById('wolke-hint').textContent=h;}
+
+const TASKS=[
+  {
+    id:1,type:'puzzle',
+    label:'Runde 1 – Einfacher Satz',
+    question:'Baue den Satz:\nDas Pferd frisst Heu.',
+    words:['Das','Pferd','frisst','Heu','.'],
+    correct:'Das Pferd frisst Heu.',
+    feedback_ok:'Super! Subjekt (Pferd) kommt nach dem Artikel!',
+    feedback_err:'Anfang: Das Pferd – dann: frisst – dann: Heu.'
+  },
+  {
+    id:2,type:'puzzle',
+    label:'Runde 2 – Mit Adjektiv',
+    question:'Baue den Satz:\nDie kleine Katze schläft auf dem Sofa.',
+    words:['Die','kleine','Katze','schläft','auf','dem','Sofa','.'],
+    correct:'Die kleine Katze schläft auf dem Sofa.',
+    feedback_ok:'Wunderbar! Adjektiv (kleine) steht VOR dem Nomen (Katze)!',
+    feedback_err:'Reihenfolge: Die kleine Katze (Subjekt) – schläft (Prädikat) – auf dem Sofa.'
+  },
+  {
+    id:3,type:'match',
+    label:'Runde 3 – Wörter paaren',
+    question:'Verbinde jedes Nomen mit dem richtigen Verb!',
+    pairs:[
+      {left:'der Hund',right:'bellt'},
+      {left:'die Katze',right:'miaut'},
+      {left:'das Pferd',right:'wiehert'},
+      {left:'der Vogel',right:'zwitschert'},
+    ],
+    feedback_ok:'Perfekt! Du kennst alle Tiergeräusche!',
+    feedback_err:'Tipp: Hund=bellt, Katze=miaut, Pferd=wiehert, Vogel=zwitschert'
+  },
+  {
+    id:4,type:'puzzle',
+    label:'Runde 4 – Mit Objekt',
+    question:'Baue den Satz:\nAela liest jeden Tag ein Buch.',
+    words:['Aela','liest','jeden','Tag','ein','Buch','.'],
+    correct:'Aela liest jeden Tag ein Buch.',
+    feedback_ok:'Toll! Aela=Subjekt, liest=Prädikat, Buch=Objekt!',
+    feedback_err:'Aela liest (was?) ein Buch. Jeden Tag ist eine Zeitangabe.'
+  },
+  {
+    id:5,type:'mc',
+    label:'Runde 5 – Satzanfang',
+    question:'Welches Wort kommt am Satzanfang IMMER groß?',
+    options:[
+      'Das erste Wort im Satz',
+      'Alle Verben im Satz',
+      'Alle Adjektive im Satz',
+      'Nur Eigennamen'
+    ],
+    correct:0,
+    feedback_ok:'Richtig! Das erste Wort im Satz wird IMMER groß geschrieben!',
+    feedback_err:'Regel: Satzanfang = immer großes erstes Wort!'
+  },
+  {
+    id:6,type:'puzzle',
+    label:'Runde 6 – Längerer Satz',
+    question:'Baue den Satz:\nMeine Freundin und ich spielen heute Fußball.',
+    words:['Meine','Freundin','und','ich','spielen','heute','Fußball','.'],
+    correct:'Meine Freundin und ich spielen heute Fußball.',
+    feedback_ok:'Ausgezeichnet! Zwei Personen als Subjekt – sehr gut!',
+    feedback_err:'Anfang: Meine Freundin und ich (Subjekt) – spielen (Prädikat) – heute Fußball.'
+  },
+  {
+    id:7,type:'puzzle',
+    label:'Runde 7 – Abschluss-Challenge!',
+    question:'Letzte Aufgabe!\nBaue den Satz:\nWolke galoppiert glücklich über die grüne Wiese.',
+    words:['Wolke','galoppiert','glücklich','über','die','grüne','Wiese','.'],
+    correct:'Wolke galoppiert glücklich über die grüne Wiese.',
+    feedback_ok:'CHAMPION! Perfekter Satz! Wolke ist so stolz auf dich!',
+    feedback_err:'Wolke (Subjekt) galoppiert (Prädikat) glücklich über die grüne Wiese.'
+  }
+];
+
+let currentIdx=0,score=0,selectedOpt_=null;
+let matchSel4=null;
+const matchedPairs4=new Set();
+
+function renderTask(){
+  const t=TASKS[currentIdx];
+  document.getElementById('task-num').textContent=currentIdx+1;
+  document.getElementById('task-total').textContent=TASKS.length;
+  const pct=Math.round(currentIdx/TASKS.length*100);
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  const area=document.getElementById('task-area');
+  area.innerHTML='';
+  area.appendChild(buildHTML(t));
+  setTimeout(()=>speak(t.question.replace(/\n/g,' ')),400);
+  wolkeMsg('Puzzle-Zeit!','Tippe die Wörter in der richtigen Reihenfolge!');
+}
+
+function buildHTML(t){
+  const wrap=document.createElement('div');
+  const card=document.createElement('div');card.className='task-card';
+  let inner=`<div class="task-label">${t.label}</div>
+    <div class="task-question">${t.question.replace(/\n/g,'<br>')}</div>
+    <button class="tts-btn" onclick="speak(TASKS[${currentIdx}].question.replace(/\\n/g,' '))">🔊 Vorlesen</button>
+    <button class="tts-btn slow" onclick="speak(TASKS[${currentIdx}].question.replace(/\\n/g,' '),0.4)">🐌 Langsam</button>
+    <div id="exercise-area"></div>
+    <div class="feedback-box" id="feedback"></div>`;
+  card.innerHTML=inner;
+  wrap.appendChild(card);
+  const nav=document.createElement('div');nav.className='nav-row';
+  nav.innerHTML=`<button class="btn-check" id="btn-check" onclick="checkAnswer()">✅ Prüfen</button>
+    <button class="btn-next" id="btn-next" onclick="nextTask()">Weiter →</button>`;
+  wrap.appendChild(nav);
+  setTimeout(()=>buildExercise(t),0);
+  return wrap;
+}
+
+function buildExercise(t){
+  const area=document.getElementById('exercise-area');if(!area)return;
+
+  if(t.type==='puzzle'){
+    const display=document.createElement('div');display.className='sentence-display';display.id='sdp';display.textContent='...';
+    const hint=document.createElement('p');hint.style.cssText='text-align:center;color:var(--text-soft);font-size:.9rem;margin-bottom:8px;';
+    hint.textContent='↑ Dein Satz. Tippe Wörter unten um sie einzusetzen!';
+    const slots=document.createElement('div');slots.className='word-slots';slots.id='wsp';
+    const bank=document.createElement('div');bank.className='word-bank';bank.id='wbp';
+    const shuffle=arr=>arr.sort(()=>Math.random()-.5);
+    shuffle([...t.words]).forEach((w,i)=>{
+      const chip=document.createElement('button');
+      chip.className='word-chip';chip.id='cp-'+i;chip.textContent=w;chip.dataset.word=w;chip.dataset.idx=i;
+      chip.onclick=()=>placeW(chip);
+      bank.appendChild(chip);
+    });
+    const clearBtn=document.createElement('button');clearBtn.className='tts-btn slow';clearBtn.style.marginTop='10px';
+    clearBtn.textContent='🗑 Löschen';clearBtn.onclick=clearW;
+    area.appendChild(display);area.appendChild(hint);area.appendChild(slots);area.appendChild(bank);area.appendChild(clearBtn);
+  }
+
+  if(t.type==='match'){
+    matchSel4=null;matchedPairs4.clear();
+    const grid=document.createElement('div');grid.className='match-grid';
+    const shuffle=arr=>arr.sort(()=>Math.random()-.5);
+    const lefts=shuffle(t.pairs.map((p,i)=>({id:i,side:'L',text:p.left})));
+    const rights=shuffle(t.pairs.map((p,i)=>({id:i,side:'R',text:p.right})));
+    lefts.forEach(item=>grid.appendChild(makeMB(item)));
+    rights.forEach(item=>grid.appendChild(makeMB(item)));
+    area.appendChild(grid);
+  }
+
+  if(t.type==='mc'){
+    const ul=document.createElement('div');ul.className='options-list';
+    t.options.forEach((opt,i)=>{
+      const btn=document.createElement('button');
+      btn.className='opt-btn';btn.id='opt-'+i;btn.textContent=opt;
+      btn.onclick=()=>selectOpt(i,t.options.length);
+      ul.appendChild(btn);
+    });
+    area.appendChild(ul);
+  }
+}
+
+function placeW(chip){
+  if(chip.classList.contains('placed')){chip.classList.remove('placed');document.getElementById('wbp').appendChild(chip);}
+  else{chip.classList.add('placed');document.getElementById('wsp').appendChild(chip);}
+  updateSD();
+}
+function updateSD(){
+  const words=[...document.getElementById('wsp').querySelectorAll('.word-chip')].map(c=>c.dataset.word);
+  document.getElementById('sdp').textContent=words.length?words.join(' '):'...';
+}
+function clearW(){
+  const bank=document.getElementById('wbp');
+  document.querySelectorAll('#wsp .word-chip').forEach(c=>{c.classList.remove('placed','correct-chip');bank.appendChild(c);});
+  document.getElementById('sdp').textContent='...';
+}
+
+function makeMB(item){
+  const btn=document.createElement('button');btn.className='match-btn';btn.id='mb4-'+item.side+'-'+item.id;
+  btn.textContent=item.text;btn.dataset.side=item.side;btn.dataset.id=item.id;
+  btn.onclick=()=>handleMC(btn);return btn;
+}
+function handleMC(btn){
+  if(btn.classList.contains('matched')) return;
+  if(!matchSel4){matchSel4=btn;btn.classList.add('sel');return;}
+  if(matchSel4===btn){btn.classList.remove('sel');matchSel4=null;return;}
+  if(matchSel4.dataset.side===btn.dataset.side){matchSel4.classList.remove('sel');matchSel4=btn;btn.classList.add('sel');return;}
+  if(matchSel4.dataset.id===btn.dataset.id){
+    matchSel4.classList.remove('sel');matchSel4.classList.add('matched');btn.classList.add('matched');
+    matchedPairs4.add(btn.dataset.id);matchSel4=null;
+  } else {
+    btn.classList.add('shake');matchSel4.classList.add('shake');
+    setTimeout(()=>{btn.classList.remove('shake','sel');matchSel4.classList.remove('shake','sel');matchSel4=null;},400);
+  }
+}
+
+function selectOpt(i,total){selectedOpt_=i;for(let j=0;j<total;j++){document.getElementById('opt-'+j).classList.toggle('selected',j===i);}}
+
+function checkAnswer(){
+  const t=TASKS[currentIdx];let isCorrect=false;
+
+  if(t.type==='puzzle'){
+    const placedWords=[...document.getElementById('wsp').querySelectorAll('.word-chip')].map(c=>c.dataset.word);
+    const sentence=placedWords.join(' ');
+    const clean=s=>s.replace(/\s*\.$/,'').trim().toLowerCase();
+    isCorrect=clean(sentence)===clean(t.correct);
+    if(!isCorrect&&placedWords.length<t.words.length-1){speak('Lege alle Wörter in den Satz!');return;}
+    if(isCorrect){
+      document.getElementById('sdp').classList.add('win');
+      [...document.getElementById('wsp').querySelectorAll('.word-chip')].forEach(c=>c.classList.add('correct-chip'));
+    }
+  }
+
+  if(t.type==='match'){
+    if(matchedPairs4.size<t.pairs.length){speak('Verbinde alle Paare!');return;}
+    isCorrect=true;
+  }
+
+  if(t.type==='mc'){
+    if(selectedOpt_===null){speak('Wähle bitte eine Antwort!');return;}
+    isCorrect=selectedOpt_===t.correct;
+    for(let i=0;i<t.options.length;i++){
+      const b=document.getElementById('opt-'+i);b.disabled=true;
+      if(i===t.correct) b.classList.add('correct');
+      else if(i===selectedOpt_&&!isCorrect) b.classList.add('wrong');
+    }
+    selectedOpt_=null;
+  }
+
+  showFeedback(isCorrect,t);
+}
+
+function showFeedback(isCorrect,t){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback-box '+(isCorrect?'correct':'wrong');
+  fb.textContent=isCorrect?('✅ '+t.feedback_ok):('❌ '+t.feedback_err);
+  document.getElementById('btn-check').style.display='none';
+  document.getElementById('btn-next').style.display='block';
+  if(isCorrect){score++;addXP(20);wolkeHappy();speak(t.feedback_ok);if(score>=3)shootConfetti();}
+  else{speak(t.feedback_err,0.7);}
+  document.getElementById('h-xp').textContent='⭐ '+getTotalXP()+' XP';
+}
+
+function nextTask(){
+  currentIdx++;selectedOpt_=null;matchSel4=null;matchedPairs4.clear();
+  if(currentIdx>=TASKS.length) finishModule();
+  else renderTask();
+}
+
+function finishModule(){
+  document.getElementById('prog-bar').style.width='100%';
+  document.getElementById('task-area').style.display='none';
+  document.getElementById('finish').classList.add('show');
+  const pct=Math.round(score/TASKS.length*100);
+  const stars=pct>=85?3:pct>=55?2:1;
+  const xp=50+score*15;
+  document.getElementById('fin-xp').textContent='+'+xp+' XP';
+  document.getElementById('fin-stars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
+  addXP(xp);
+  const p=gs('progress')||{};if(!p.modules)p.modules={};
+  p.modules.wortpuzzle={done:true,stars,score:pct};ss('progress',p);
+  speak('Herzlichen Glückwunsch! Du hast alle Wort-Puzzles gelöst!');
+  setTimeout(()=>{shootConfetti();shootConfetti();},500);setTimeout(shootConfetti,1200);
+}
+
+function restartModule(){
+  currentIdx=0;score=0;selectedOpt_=null;matchSel4=null;matchedPairs4.clear();
+  document.getElementById('task-area').style.display='';
+  document.getElementById('finish').classList.remove('show');
+  renderTask();
+}
+
+document.getElementById('h-xp').textContent='⭐ '+getTotalXP()+' XP';
+renderTask();
+</script>
+</body>
+</html>
