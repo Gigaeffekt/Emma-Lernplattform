@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aela's Deutschkurs - Barrierefreie Lernplattform für Rechtschreibung und Grammatik">
+  
+  <title>Aela's Deutschkurs 🎓</title>
+  
+  <!-- Accessibility CSS -->
+  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/aela-main.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>📚 Aela's Deutschkurs</h1>
+    <nav>
+      <a href="#progress">Fortschritt</a>
+      <a href="#modules">Module</a>
+      <a href="#settings">Einstellungen</a>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+    
+    <!-- PROGRESS SECTION -->
+    <section id="progress" class="mb-xl">
+      <h2>📊 Dein Fortschritt</h2>
+      
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+        <div class="card text-center">
+          <h3>⭐ Punkte (XP)</h3>
+          <p id="xp-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">0</p>
+        </div>
+        
+        <div class="card text-center">
+          <h3>🔥 Streak</h3>
+          <p id="streak-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">0</p>
+          <p style="font-size: 32px;">Tage</p>
+        </div>
+        
+        <div class="card text-center">
+          <h3>✅ Fertig</h3>
+          <p id="completion-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">0%</p>
+        </div>
+        
+        <div class="card text-center">
+          <h3>📈 Ergebnis</h3>
+          <p id="score-display" style="font-size: 52px; font-weight: bold; margin: 20px 0;">-</p>
+        </div>
+      </div>
+
+      <!-- QR Code für aktuellen Fortschritt -->
+      <div style="text-align: center; margin-top: 40px;">
+        <h3>📱 Teile deinen Fortschritt</h3>
+        <button class="btn btn-primary" onclick="generateProgressQR()">
+          🔗 QR-Code generieren
+        </button>
+        <div id="qr-container" style="margin-top: 20px;"></div>
+      </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <hr style="border: 2px solid black; margin: 60px 0;">
+
+    <!-- MODULES SECTION -->
+    <section id="modules" class="mb-xl">
+      <h2>🎮 Module</h2>
+      <p style="font-size: 40px; margin: 20px 0;">Wähle ein Modul zum Starten:</p>
+      
+      <div class="grid">
+        <!-- MODUL 1: Rechtschreibung -->
+        <div class="card module-card" onclick="window.location.href='modules/rechtschreibung.html'">
+          <h3>✏️ Rechtschreibung</h3>
+          <p>Lerne Rechtschreib-Strategien!</p>
+          <div class="module-status" id="modul1-status">
+            <p>📊 Nicht begonnen</p>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+            ▶️ STARTEN
+          </button>
+        </div>
+
+        <!-- MODUL 2: Wortarten -->
+        <div class="card module-card" onclick="window.location.href='modules/wortarten.html'">
+          <h3>📝 Wortarten</h3>
+          <p>Erkenne Nomen, Verben, Adjektive!</p>
+          <div class="module-status" id="modul2-status">
+            <p>📊 Nicht begonnen</p>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+            ▶️ STARTEN
+          </button>
+        </div>
+
+        <!-- MODUL 3: Satzglieder -->
+        <div class="card module-card" onclick="window.location.href='modules/satzglieder.html'">
+          <h3>🔗 Satzglieder</h3>
+          <p>Lerne Subjekt, Prädikat, Objekt!</p>
+          <div class="module-status" id="modul3-status">
+            <p>📊 Nicht begonnen</p>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+            ▶️ STARTEN
+          </button>
+        </div>
+
+        <!-- MODUL 4: Kreativität -->
+        <div class="card module-card" onclick="window.location.href='modules/spielanleitung.html'">
+          <h3>✨ Kreativität</h3>
+          <p>Schreibe deine eigene Anleitung!</p>
+          <div class="module-status" id="modul4-status">
+            <p>📊 Nicht begonnen</p>
+          </div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+            ▶️ STARTEN
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIVIDER -->
+    <hr style="border: 2px solid black; margin: 60px 0;">
+
+    <!-- SETTINGS SECTION -->
+    <section id="settings" class="mb-xl">
+      <h2>⚙️ Einstellungen</h2>
+      
+      <div class="card">
+        <h3>🔊 Text-to-Speech</h3>
+        
+        <label style="font-size: 40px; margin: 20px 0;">
+          <strong>Sprech-Geschwindigkeit:</strong>
+        </label>
+        
+        <div class="flex" style="align-items: center; gap: 20px;">
+          <input type="range" id="tts-speed" min="0.3" max="2" step="0.1" value="0.8"
+                 onchange="updateTTSSpeed(this.value)"
+                 style="font-size: 40px; width: 60%; min-width: 200px;">
+          <button class="btn btn-secondary" onclick="testTTS()">
+            🔊 TEST
+          </button>
+        </div>
+
+        <p id="tts-speed-display" style="font-size: 40px; margin-top: 20px;">
+          Aktuelle Geschwindigkeit: 0.8x
+        </p>
+      </div>
+
+      <div class="card" style="margin-top: 40px;">
+        <h3>🎨 Design</h3>
+        
+        <label style="font-size: 40px; margin: 20px 0;">
+          <strong>Schrift-Größe:</strong>
+        </label>
+        
+        <div class="flex" style="gap: 20px; flex-wrap: wrap;">
+          <button class="btn btn-secondary" onclick="setFontSize('small')">
+            🔤 Klein
+          </button>
+          <button class="btn btn-primary" onclick="setFontSize('normal')">
+            🔤 Normal
+          </button>
+          <button class="btn btn-secondary" onclick="setFontSize('large')">
+            🔤 Groß
+          </button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 40px;">
+        <h3>💾 Daten</h3>
+        
+        <button class="btn btn-secondary" onclick="exportProgress()">
+          💾 Fortschritt exportieren
+        </button>
+        
+        <button class="btn btn-secondary" style="margin-left: 20px;" onclick="if(confirm('Wirklich alles löschen?')) { aelaCore.clearAll(); location.reload(); }">
+          🗑️ Alles zurücksetzen
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Aela's Deutschkurs 🎓 | Alle Inhalte sind barrierefrei</p>
+    <p style="font-size: 32px;">Viel Erfolg beim Lernen! 📚✨</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/tts.js"></script>
+  <script src="assets/js/qrcode-gen.js"></script>
+  <script src="assets/js/exercises.js"></script>
+  
+  <script>
+    // Update progress display on page load
+    function updateProgressDisplay() {
+      const progress = aelaCore.getProgress();
+      const totalScore = aelaCore.getTotalScore();
+      const completionPercent = aelaCore.getCompletionPercent();
+
+      document.getElementById('xp-display').textContent = progress.xp;
+      document.getElementById('streak-display').textContent = progress.streak;
+      document.getElementById('completion-display').textContent = completionPercent + '%';
+      document.getElementById('score-display').textContent = totalScore > 0 ? totalScore + '%' : '-';
+
+      // Update module status
+      const modules = ['rechtschreibung', 'wortarten', 'satzglieder', 'spielanleitung'];
+      modules.forEach((mod, idx) => {
+        const statusEl = document.getElementById(`modul${idx + 1}-status`);
+        const data = progress.modules[mod];
+        if (data.completed) {
+          statusEl.innerHTML = `<p>✅ Abgeschlossen: ${data.score}%</p>`;
+        }
+      });
+
+      // Auto-read progress on load
+      setTimeout(() => {
+        aelaTTS.speak('Willkommen zu Aela Deutschkurs! Wähle ein Modul zum Starten.');
+      }, 500);
+    }
+
+    // Generate progress QR
+    function generateProgressQR() {
+      const progress = aelaCore.getProgress();
+      const totalScore = aelaCore.getTotalScore();
+      const completionPercent = aelaCore.getCompletionPercent();
+
+      // Create summary and QR
+      const summary = `Aela: ${completionPercent}% fertig, ${totalScore}% Ergebnis, ${progress.xp} XP`;
+      const uuid = 'progress-' + Date.now();
+      const qrURL = aelaqr.getQRImageURL(window.location.href, 300);
+
+      const container = document.getElementById('qr-container');
+      container.innerHTML = `
+        <div style="text-align: center;">
+          <img src="${qrURL}" alt="Progress QR Code" style="max-width: 300px; border: 3px solid black; padding: 10px;">
+          <p style="font-size: 40px; margin-top: 20px;">${summary}</p>
+          <button class="btn btn-secondary" onclick="aelaqr.downloadQR('${qrURL}', 'aela-progress.png')">
+            💾 QR downloaden
+          </button>
+        </div>
+      `;
+
+      aelaTTS.speak('QR-Code generiert! Du kannst ihn deinem Lehrer zeigen.');
+    }
+
+    // Test TTS
+    function testTTS() {
+      aelaTTS.speak('Dies ist ein Test. Die Geschwindigkeit ist: ' + document.getElementById('tts-speed').value + ' mal normal.');
+    }
+
+    // Update TTS speed
+    function updateTTSSpeed(value) {
+      aelaTTS.setRate(parseFloat(value));
+      document.getElementById('tts-speed-display').textContent = 'Aktuelle Geschwindigkeit: ' + value + 'x';
+    }
+
+    // Set font size
+    function setFontSize(size) {
+      document.documentElement.style.setProperty('--font-size-base', 
+        size === 'small' ? '36px' : size === 'large' ? '52px' : '44px'
+      );
+    }
+
+    // Export progress
+    function exportProgress() {
+      const data = aelaCore.exportData();
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'aela-progress-' + new Date().toISOString().split('T')[0] + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize on load
+    window.addEventListener('load', updateProgressDisplay);
+  </script>
+</body>
+</html>

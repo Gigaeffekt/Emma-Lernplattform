@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aela's Ergebnis - Zum Teilen mit Lehrer</title>
+  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/aela-main.css">
+</head>
+<body>
+  <header>
+    <h1>📊 Aela's Ergebnis</h1>
+  </header>
+
+  <main class="container">
+    <div id="result-container" style="text-align: center; padding: 40px;">
+      <p style="font-size: 44px;">⏳ Ergebnis wird geladen...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Diesen Link kannst du deinem Lehrer zeigen! 📱</p>
+    <p><a href="../../aela/">← Zurück zur Startseite</a></p>
+  </footer>
+
+  <script src="../assets/js/core.js"></script>
+  <script>
+    // Extract UUID from URL
+    const urlPath = window.location.pathname;
+    const uuid = urlPath.split('/').pop().replace('.html', '');
+
+    // Load result
+    const result = aelaCore.getResult(uuid);
+    const container = document.getElementById('result-container');
+
+    if (result) {
+      const date = new Date(result.date).toLocaleDateString('de-DE', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      const html = `
+        <div style="background-color: #f5f5f5; padding: 40px; border: 3px solid black; border-radius: 10px; max-width: 800px; margin: 0 auto;">
+          <h1>✅ Modul abgeschlossen!</h1>
+          
+          <div style="background-color: #e6f2ff; padding: 30px; border-radius: 8px; margin: 30px 0;">
+            <p style="font-size: 44px; margin: 0;"><strong>Modul:</strong></p>
+            <p style="font-size: 48px; color: #0066cc; margin: 10px 0; font-weight: bold;">${result.module}</p>
+            
+            <p style="font-size: 44px; margin: 20px 0;"><strong>Ergebnis:</strong></p>
+            <p style="font-size: 52px; color: #009900; margin: 10px 0; font-weight: bold;">${result.score}%</p>
+            
+            <p style="font-size: 44px; margin: 20px 0;"><strong>Datum:</strong></p>
+            <p style="font-size: 40px; margin: 10px 0;">${date}</p>
+          </div>
+
+          <div style="background-color: #ffffcc; padding: 20px; border-radius: 8px; margin: 30px 0; border: 2px solid #cc9900;">
+            <p style="font-size: 36px; margin: 0;"><strong>📝 Lehrer-Information:</strong></p>
+            <p style="font-size: 32px; margin: 10px 0;">Student: ${result.student}</p>
+            <p style="font-size: 32px; margin: 10px 0;">ID: ${result.uuid}</p>
+          </div>
+
+          <a href="../../aela/" class="btn btn-primary" style="display: inline-block; margin-top: 30px;">
+            🏠 Zur Startseite
+          </a>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    } else {
+      container.innerHTML = `
+        <div class="error">
+          <h2>❌ Ergebnis nicht gefunden</h2>
+          <p style="font-size: 40px;">UUID: ${uuid}</p>
+          <p style="font-size: 40px;">Dieses Ergebnis existiert nicht oder wurde gelöscht.</p>
+          <a href="../../aela/" class="btn btn-primary">← Zur Startseite</a>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

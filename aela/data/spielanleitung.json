@@ -1,0 +1,55 @@
+{
+  "module": {
+    "id": "spielanleitung",
+    "name": "Spielanleitung & Gedicht",
+    "description": "Kreativität: Schreibe und analyse!",
+    "icon": "✨",
+    "totalXP": 300
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "type": "text-input",
+      "title": "Spielanleitung schreiben",
+      "instruction": "Schreib die Regeln eines Spiels, das du magst!",
+      "question": "Beschreibe ein Spiel und schreib die Regeln auf (mindestens 3 Sätze)",
+      "expectedAnswers": [
+        ".*"
+      ],
+      "basePoints": 100,
+      "autoRead": true,
+      "isReflection": true,
+      "hint": "Denk an Fangen, Verstecken, ein Brettspiel oder Video-Spiel"
+    },
+    {
+      "id": 2,
+      "type": "text-input",
+      "title": "Gedicht-Analyse",
+      "instruction": "Lese das Gedicht und antworte:",
+      "question": "Gedicht: 'Der Wind pfeift, die Blätter tanzen, der Himmel weint.' - Welche Nomen findest du?",
+      "expectedAnswers": [
+        "Wind",
+        "Blätter",
+        "Himmel",
+        ".*wind.*blätter.*himmel.*"
+      ],
+      "basePoints": 50,
+      "autoRead": true,
+      "hint": "Nomen sind Großwörter (Wind, Blätter, Himmel)"
+    },
+    {
+      "id": 3,
+      "type": "text-input",
+      "title": "Mein Gedicht",
+      "instruction": "Schreib ein eigenes kurzes Gedicht!",
+      "question": "Schreib ein Gedicht über Tiere, Natur oder ein Gefühl (mindestens 3 Zeilen)",
+      "expectedAnswers": [
+        ".*"
+      ],
+      "basePoints": 150,
+      "autoRead": true,
+      "isReflection": true,
+      "hint": "Es kann kurz sein! Reim ist optional."
+    }
+  ]
+}

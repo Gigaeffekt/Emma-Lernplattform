@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wortarten - Aela's Deutschkurs</title>
+  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/aela-main.css">
+  <style>
+    .exercise-nav { display: flex; gap: 20px; justify-content: space-between; margin: 40px 0; }
+    .progress-bar { width: 100%; height: 50px; background-color: #f0f0f0; border: 3px solid black; border-radius: 8px; overflow: hidden; margin: 20px 0; }
+    .progress-fill { height: 100%; background-color: #0066cc; width: 0%; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 28px; }
+    .task-counter { font-size: 40px; text-align: center; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1>📝 Wortarten</h1>
+      <a href="../" class="btn btn-secondary">← Zurück</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="task-counter">Aufgabe <span id="current-task">1</span> von <span id="total-tasks">5</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill">0%</div></div>
+    <div id="exercise-container" class="task-container"><p style="font-size: 44px; text-align: center;">⏳ Lädt Aufgabe...</p></div>
+    <div class="exercise-nav">
+      <button class="btn btn-secondary" id="prev-btn" onclick="previousExercise()" disabled>← Zurück</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextExercise()" disabled>Weiter →</button>
+    </div>
+    <div class="info" style="text-align: center; margin-top: 40px;">
+      <p>🔊 <strong>Automatische Vorlesung aktiv!</strong></p>
+      <button class="btn btn-secondary" onclick="toggleAutoRead()">🔊 Aus/An</button>
+    </div>
+  </main>
+
+  <footer><p>Du schaffst das! 💪 Grammatik ist Schritt für Schritt zu verstehen.</p></footer>
+
+  <script src="http://localhost/tools/js/axios/axios.min.js"></script>
+  <script src="../assets/js/core.js"></script>
+  <script src="../assets/js/tts.js"></script>
+  <script src="../assets/js/qrcode-gen.js"></script>
+  <script src="../assets/js/exercises.js"></script>
+
+  <script>
+    let tasks = [];
+    let currentTaskIndex = 0;
+    let exerciseScores = [];
+    let autoReadEnabled = true;
+
+    async function loadTasks() {
+      try {
+        const response = await fetch('../data/wortarten.json');
+        const data = await response.json();
+        tasks = data.tasks;
+        document.getElementById('total-tasks').textContent = tasks.length;
+        if (tasks.length > 0) loadTask(0);
+      } catch (error) {
+        console.error('Fehler:', error);
+        document.getElementById('exercise-container').innerHTML = '<p class="error">❌ Fehler beim Laden!</p>';
+      }
+    }
+
+    function loadTask(index) {
+      if (index < 0 || index >= tasks.length) return;
+      currentTaskIndex = index;
+      const task = tasks[index];
+      document.getElementById('current-task').textContent = index + 1;
+      updateProgressBar();
+
+      let exercise;
+      if (task.type === 'multiple-choice') {
+        exercise = new MultipleChoiceExercise(task);
+      } else if (task.type === 'text-input') {
+        exercise = new TextInputExercise(task);
+      }
+
+      currentExercise = exercise;
+      const container = document.getElementById('exercise-container');
+      if (exercise) {
+        container.innerHTML = exercise.render();
+        exercise.startTimer();
+        if (autoReadEnabled && task.autoRead) {
+          setTimeout(() => {
+            let text = task.question;
+            if (task.options) text += '. ' + task.options.join(', ');
+            aelaTTS.speak(text);
+          }, 500);
+        }
+      }
+
+      document.getElementById('prev-btn').disabled = index === 0;
+      document.getElementById('next-btn').disabled = true;
+    }
+
+    function updateProgressBar() {
+      const percent = Math.round((currentTaskIndex / tasks.length) * 100);
+      document.getElementById('progress-fill').style.width = percent + '%';
+      document.getElementById('progress-fill').textContent = percent + '%';
+    }
+
+    function showFeedback() {
+      const container = document.getElementById('feedback-container');
+      currentExercise.showFeedback(container);
+      exerciseScores.push(currentExercise.score);
+      const result = currentExercise.isCorrect ? 'Richtig!' : 'Leider falsch.';
+      aelaTTS.speak(result + ' Plus ' + currentExercise.score + ' Punkte');
+    }
+
+    function enableNextButton() {
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextExercise() {
+      if (currentTaskIndex < tasks.length - 1) {
+        loadTask(currentTaskIndex + 1);
+      } else {
+        finishModule();
+      }
+    }
+
+    function previousExercise() {
+      if (currentTaskIndex > 0) loadTask(currentTaskIndex - 1);
+    }
+
+    function toggleAutoRead() {
+      autoReadEnabled = !autoReadEnabled;
+      aelaTTS.speak(autoReadEnabled ? 'Automatische Vorlesung an' : 'Automatische Vorlesung aus');
+    }
+
+    function finishModule() {
+      const totalScore = exerciseScores.reduce((a, b) => a + b, 0);
+      const maxScore = tasks.reduce((sum, t) => sum + t.basePoints, 0);
+      const percentScore = Math.round((totalScore / maxScore) * 100);
+
+      aelaCore.completeModule('wortarten', percentScore);
+      aelaCore.addXP(totalScore);
+
+      const qrData = aelaqr.generateResultQR('Wortarten', percentScore);
+      const resultHTML = aelaqr.createResultCard('Wortarten', percentScore, qrData.uuid, qrData.qrImageURL);
+
+      document.getElementById('exercise-container').innerHTML = resultHTML;
+      document.getElementById('prev-btn').hidden = true;
+      document.getElementById('next-btn').innerHTML = '🏠 Zur Startseite';
+      document.getElementById('next-btn').disabled = false;
+      document.getElementById('next-btn').onclick = () => window.location.href = '../';
+
+      aelaTTS.speak(`Modul abgeschlossen! Du hast ${percentScore} Prozent erreicht. ${totalScore} neue Punkte!`);
+    }
+
+    window.addEventListener('load', loadTasks);
+  </script>
+</body>
+</html>

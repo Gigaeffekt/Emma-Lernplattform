@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rechtschreibung - Aela's Deutschkurs</title>
+  <link rel="stylesheet" href="http://localhost/tools/css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/aela-main.css">
+  <style>
+    .exercise-nav {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      margin: 40px 0;
+      flex-wrap: wrap;
+    }
+    .exercise-nav button {
+      min-width: 150px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 50px;
+      background-color: #f0f0f0;
+      border: 3px solid black;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background-color: #0066cc;
+      width: 0%;
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 28px;
+    }
+    .task-counter {
+      font-size: 40px;
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1>✏️ Rechtschreibung-Strategien</h1>
+      <a href="../" class="btn btn-secondary">← Zurück</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- PROGRESS BAR -->
+    <div class="task-counter">
+      Aufgabe <span id="current-task">1</span> von <span id="total-tasks">6</span>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill">0%</div>
+    </div>
+
+    <!-- EXERCISE CONTAINER -->
+    <div id="exercise-container" class="task-container">
+      <p style="font-size: 44px; text-align: center;">⏳ Lädt Aufgabe...</p>
+    </div>
+
+    <!-- EXERCISE NAVIGATION -->
+    <div class="exercise-nav">
+      <button class="btn btn-secondary" id="prev-btn" onclick="previousExercise()" disabled>
+        ← Zurück
+      </button>
+      
+      <button class="btn btn-primary" id="next-btn" onclick="nextExercise()" disabled>
+        Weiter →
+      </button>
+    </div>
+
+    <!-- AUTO-READ INFO -->
+    <div class="info" style="text-align: center; margin-top: 40px;">
+      <p>🔊 <strong>Automatische Vorlesung aktiv!</strong></p>
+      <p>Die Aufgaben werden dir vorgelesen.</p>
+      <button class="btn btn-secondary" onclick="toggleAutoRead()">
+        🔊 Aus/An schalten
+      </button>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Du schaffst das! 💪 Rechtschreibung braucht Übung.</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="http://localhost/tools/js/axios/axios.min.js"></script>
+  <script src="../assets/js/core.js"></script>
+  <script src="../assets/js/tts.js"></script>
+  <script src="../assets/js/qrcode-gen.js"></script>
+  <script src="../assets/js/exercises.js"></script>
+
+  <script>
+    // Module data and state
+    let tasks = [];
+    let currentTaskIndex = 0;
+    let exerciseScores = [];
+    let autoReadEnabled = true;
+
+    /**
+     * Load tasks from JSON
+     */
+    async function loadTasks() {
+      try {
+        const response = await fetch('../data/rechtschreibung.json');
+        const data = await response.json();
+        tasks = data.tasks;
+        
+        document.getElementById('total-tasks').textContent = tasks.length;
+        
+        // Load first task
+        if (tasks.length > 0) {
+          loadTask(0);
+        }
+      } catch (error) {
+        console.error('Fehler beim Laden der Aufgaben:', error);
+        document.getElementById('exercise-container').innerHTML = 
+          '<p class="error">❌ Fehler beim Laden der Aufgaben!</p>';
+      }
+    }
+
+    /**
+     * Load and render task
+     */
+    function loadTask(index) {
+      if (index < 0 || index >= tasks.length) return;
+
+      currentTaskIndex = index;
+      const task = tasks[index];
+
+      // Update counters
+      document.getElementById('current-task').textContent = index + 1;
+      updateProgressBar();
+
+      // Create exercise based on type
+      let exercise;
+      switch (task.type) {
+        case 'multiple-choice':
+          exercise = new MultipleChoiceExercise(task);
+          break;
+        case 'matching':
+          exercise = createMatchingExercise(task);
+          break;
+        case 'text-input':
+          exercise = new TextInputExercise(task);
+          break;
+        default:
+          exercise = null;
+      }
+
+      currentExercise = exercise;
+
+      // Render exercise
+      const container = document.getElementById('exercise-container');
+      if (exercise) {
+        container.innerHTML = exercise.render();
+        exercise.startTimer();
+
+        // Auto-read task
+        if (autoReadEnabled && task.autoRead) {
+          setTimeout(() => {
+            readTaskAloud(task);
+          }, 500);
+        }
+      }
+
+      // Update buttons
+      document.getElementById('prev-btn').disabled = index === 0;
+      document.getElementById('next-btn').disabled = true; // Enable after answering
+    }
+
+    /**
+     * Create matching exercise
+     */
+    function createMatchingExercise(task) {
+      class MatchExercise extends AelaExercise {
+        constructor(data) {
+          super(data);
+          this.matches = {};
+        }
+
+        checkMatches() {
+          this.endTimer();
+          let correct = 0;
+          this.data.pairs.forEach((pair, idx) => {
+            const selected = document.querySelector(`.pair-${idx} .selected-right`);
+            if (selected) {
+              const rightIdx = parseInt(selected.dataset.rightIndex);
+              if (rightIdx === pair.correctIndex) {
+                correct++;
+              }
+            }
+          });
+
+          this.isCorrect = correct === this.data.pairs.length;
+          this.calculateScore(this.isCorrect, this.data.basePoints);
+          return this.isCorrect;
+        }
+
+        render() {
+          let html = `
+            <div class="task-container">
+              <h2>${this.data.title}</h2>
+              <p style="font-size: 40px; margin: 20px 0;">${this.data.instruction}</p>
+              <div class="matching-container">
+          `;
+
+          // Left side
+          html += '<div class="matching-left">';
+          this.data.pairs.forEach((pair, idx) => {
+            html += `
+              <div class="word pair-${idx}" 
+                   onclick="selectLeftPair(${idx})"
+                   data-pair="${idx}"
+                   style="margin: 20px 0; padding: 15px; background: white; border: 2px solid black; cursor: pointer; border-radius: 8px;">
+                ${pair.left}
+              </div>
+            `;
+          });
+          html += '</div>';
+
+          // Right side
+          html += '<div class="matching-right">';
+          this.data.rightItems.forEach((item, idx) => {
+            html += `
+              <div class="word" 
+                   onclick="selectRightItem(${idx})"
+                   data-right="${idx}"
+                   style="margin: 20px 0; padding: 15px; background: white; border: 2px solid black; cursor: pointer; border-radius: 8px;">
+                ${item}
+              </div>
+            `;
+          });
+          html += '</div>';
+
+          html += `
+              </div>
+              <button class="btn btn-primary" style="display: block; margin: 40px auto;" 
+                      onclick="currentExercise.checkMatches(); enableNextButton(); showFeedback()">
+                ✔️ Überprüfen
+              </button>
+              <div id="feedback-container"></div>
+            </div>
+          `;
+
+          return html;
+        }
+      }
+
+      return new MatchExercise(task);
+    }
+
+    /**
+     * Select matching pair
+     */
+    let selectedLeft = null;
+    let selectedRight = null;
+
+    function selectLeftPair(idx) {
+      document.querySelectorAll('.matching-left .word').forEach(w => w.classList.remove('selected'));
+      document.querySelector(`.pair-${idx}`).classList.add('selected');
+      selectedLeft = idx;
+    }
+
+    function selectRightItem(idx) {
+      if (selectedLeft !== null) {
+        // Mark connection
+        const rightEl = document.querySelector(`[data-right="${idx}"]`);
+        rightEl.classList.add(`selected-right`);
+        rightEl.dataset.rightIndex = idx;
+        selectedLeft = null;
+      }
+    }
+
+    /**
+     * Read task aloud
+     */
+    function readTaskAloud(task) {
+      let text = task.question;
+      if (task.text) text += '. ' + task.text;
+      if (task.instruction) text += '. ' + task.instruction;
+      
+      aelaTTS.speak(text);
+    }
+
+    /**
+     * Update progress bar
+     */
+    function updateProgressBar() {
+      const percent = Math.round((currentTaskIndex / tasks.length) * 100);
+      const fill = document.getElementById('progress-fill');
+      fill.style.width = percent + '%';
+      fill.textContent = percent + '%';
+    }
+
+    /**
+     * Show feedback and enable next
+     */
+    function showFeedback() {
+      const container = document.getElementById('feedback-container');
+      currentExercise.showFeedback(container);
+      
+      // Store score
+      exerciseScores.push(currentExercise.score);
+
+      // Read feedback aloud
+      const result = currentExercise.isCorrect ? 'Richtig! ' : 'Leider falsch. ';
+      aelaTTS.speak(result + ' +' + currentExercise.score + ' Punkte');
+    }
+
+    /**
+     * Enable next button
+     */
+    function enableNextButton() {
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    /**
+     * Navigation
+     */
+    function nextExercise() {
+      if (currentTaskIndex < tasks.length - 1) {
+        loadTask(currentTaskIndex + 1);
+      } else {
+        finishModule();
+      }
+    }
+
+    function previousExercise() {
+      if (currentTaskIndex > 0) {
+        loadTask(currentTaskIndex - 1);
+      }
+    }
+
+    /**
+     * Toggle auto-read
+     */
+    function toggleAutoRead() {
+      autoReadEnabled = !autoReadEnabled;
+      aelaTTS.speak(autoReadEnabled ? 'Automatische Vorlesung an' : 'Automatische Vorlesung aus');
+    }
+
+    /**
+     * Finish module
+     */
+    function finishModule() {
+      // Calculate module score
+      const totalScore = exerciseScores.reduce((a, b) => a + b, 0);
+      const maxScore = tasks.reduce((sum, t) => sum + t.basePoints, 0);
+      const percentScore = Math.round((totalScore / maxScore) * 100);
+
+      // Save to progress
+      aelaCore.completeModule('rechtschreibung', percentScore);
+      aelaCore.addXP(totalScore);
+
+      // Generate QR
+      const qrData = aelaqr.generateResultQR('Rechtschreibung-Strategien', percentScore);
+
+      // Show result
+      const resultHTML = aelaqr.createResultCard(
+        'Rechtschreibung-Strategien',
+        percentScore,
+        qrData.uuid,
+        qrData.qrImageURL
+      );
+
+      document.getElementById('exercise-container').innerHTML = resultHTML;
+      document.getElementById('prev-btn').hidden = true;
+      document.getElementById('next-btn').innerHTML = '🏠 Zur Startseite';
+      document.getElementById('next-btn').disabled = false;
+      document.getElementById('next-btn').onclick = () => window.location.href = '../';
+
+      // Read result
+      aelaTTS.speak(`Modul abgeschlossen! Du hast ${percentScore} Prozent erreicht. ${totalScore} neue Punkte!`);
+    }
+
+    // Load tasks on page load
+    window.addEventListener('load', loadTasks);
+  </script>
+</body>
+</html>

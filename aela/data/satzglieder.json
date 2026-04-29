@@ -1,0 +1,59 @@
+{
+  "module": {
+    "id": "satzglieder",
+    "name": "Satzglieder",
+    "description": "Lerne Subjekt, Prädikat und Objekt!",
+    "icon": "🔗",
+    "totalXP": 150
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "type": "multiple-choice",
+      "title": "Satzglieder",
+      "question": "Im Satz 'Der Hund schläft.' - Welches ist das Subjekt?",
+      "options": [
+        "Der Hund",
+        "schläft",
+        "Der",
+        "."
+      ],
+      "correctAnswer": 0,
+      "explanation": "Richtig! 'Der Hund' ist das Subjekt - wer oder was etwas tut.",
+      "basePoints": 20,
+      "autoRead": true
+    },
+    {
+      "id": 2,
+      "type": "multiple-choice",
+      "title": "Satzglieder",
+      "question": "Im Satz 'Der Hund schläft.' - Welches ist das Prädikat?",
+      "options": [
+        "Der Hund",
+        "schläft",
+        "Der",
+        "Hund"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Genau! 'schläft' ist das Prädikat - das Verb, die Aktion.",
+      "basePoints": 20,
+      "autoRead": true
+    },
+    {
+      "id": 3,
+      "type": "multiple-choice",
+      "title": "Satzglieder",
+      "question": "Im Satz 'Der Junge wirft einen Ball.' - Welches ist das Objekt?",
+      "options": [
+        "Der Junge",
+        "wirft",
+        "einen Ball",
+        "Der"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Sehr gut! 'einen Ball' ist das Objekt - das, worauf die Aktion wirkt.",
+      "basePoints": 25,
+      "autoRead": true
+    }
+  ]
+}
